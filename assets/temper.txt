@@ -1,0 +1,21 @@
+1. Past Weather and Air Quality in Delhi
+
+-   Air Quality: The air quality in Delhi was in the "Moderate" category. The CPCB AQI was 120 at 4 PM on September 24, 2025.
+-   Temperature: There was no significant change in minimum/maximum temperatures over the past 24 hours. The temperatures were near normal, ranging from 34-36°C (maximum) and 23-24°C (minimum).
+-   Wind: Clear skies prevailed with wind primarily from the northwest/west. Wind speeds reached up to 20 kmph, with gusts reaching 32 kmph. Lighter winds (under 14 kmph) from the west occurred in the morning.
+
+2. Predicted Weather and Air Quality in Delhi (25.09.2025 - 27.09.2025)
+
+-   Sky Conditions: Mainly clear skies expected initially, becoming partly cloudy.
+-   Temperature: Maximum temperature near normal, ranging from 33-37°C. Minimum temperature also near normal, ranging from 23-26°C.
+-   Wind: Predominantly from the northwest, shifting to the northeast, with varying speeds throughout the day (morning, afternoon, evening/night).
+
+3. Predicted Mixing Depth and Ventilation Index in Delhi
+
+-   Mixing Depth: The predicted maximum mixing depth varies over the next few days (25.09.2025 - 28.09.2025), ranging from 1950m to 2700m.
+-   Ventilation Index: The ventilation index also fluctuates, ranging from 6000 m2/s to 15000 m2/s. A ventilation index below 6000 m2/s with low wind speed (below 10 kmph) is considered unfavorable for pollutant dispersion.
+
+4. Predicted Air Quality Category in Delhi
+
+-   Air Quality Category: The air quality is expected to be in the "Moderate" category.
+-   Time Period: This "Moderate" category is predicted to last from September 25, 2025, to September 28, 2025.  The outlook for the following six days also suggests the air quality will likely remain in the "Moderate" category.

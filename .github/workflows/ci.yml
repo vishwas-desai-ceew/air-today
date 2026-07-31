@@ -1,0 +1,31 @@
+name: CI
+
+# Dormant until this project is pushed to GitHub (no .git/ exists yet as of Phase 3
+# of the refactor - see project-refactor-status.md). Runs a basic sanity check
+# (compile every file) plus the pytest suite under tests/.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Compile check (catches syntax errors across the whole project)
+        run: |
+          find . -name "*.py" -not -path "./py_envs/*" -not -path "*/__pycache__/*" \
+            | xargs python -m py_compile
+
+      - name: Run tests
+        run: python -m pytest -v

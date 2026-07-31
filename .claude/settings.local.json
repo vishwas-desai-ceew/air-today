@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xxd /Users/Vishwas/Desktop/CEEW/work/aq_winter/__init__.py)"
+    ]
+  }
+}

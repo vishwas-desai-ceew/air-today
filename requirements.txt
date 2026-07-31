@@ -1,0 +1,28 @@
+# Generated from py_envs (the project's virtualenv) during the Phase 3 refactor,
+# trimmed to packages actually imported by dashboard.py / views/ / ingestion/ / config/
+# (as opposed to a raw `pip freeze`, which also lists transitive sub-dependencies).
+# Regenerate by cross-checking `pip show <pkg>` against grep of import statements.
+
+Authlib==1.6.5          # required by st.login()/st.logout(); not imported directly by app code
+beautifulsoup4==4.13.5
+certifi==2025.8.3
+google-generativeai==0.8.5   # used by ingestion/get_aqi_fc_cat.py
+google-genai==1.41.0         # used by ingestion/get_gemini_summary.py, ingestion/get_v_index.py
+numpy==2.3.0
+openmeteo-requests==1.7.2
+pandas==2.3.0
+pdfplumber==0.11.7
+plotly==6.1.2
+py-mini-racer==0.6.0
+pytz==2025.2
+requests==2.32.4
+requests-cache==1.2.1
+retry-requests==2.0.0
+streamlit==1.45.1
+streamlit-calendar-input==0.0.3
+streamlit-javascript==0.1.5
+urllib3==2.5.0
+
+# NOT pinned here: `signalsfunc`, imported by ingestion/get_fire_pbhr.py. It isn't installed
+# in this venv and isn't on PyPI under that name - it's a private/internal package (per the
+# original review). Install it from wherever it's actually sourced before running that script.

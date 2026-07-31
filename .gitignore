@@ -1,0 +1,73 @@
+# Virtual environments
+py_envs/
+venv/
+.venv/
+
+# Secrets
+.streamlit/secrets.toml
+
+# Generated data / caches
+data/
+.cache.sqlite
+.cache/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+
+# Logs / scratch
+nohup.out
+logs/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# --- Virtual environments ---
+py_envs/
+venv/
+env/
+.venv/
+
+# --- Logs & runtime output ---
+logs/
+nohup.out
+*.log
+
+# --- Data (often large / sensitive — track selectively if needed) ---
+data/
+*.csv
+!requirements*.txt
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+misc.ipynb
+
+# --- Deprecated / scratch ---
+deprecated/
+
+# --- Test artifacts ---
+.pytest_cache/
+tests/__pycache__/
+.coverage
+htmlcov/
+
+# --- OS / editor cruft ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# --- Env / secrets ---
+.env
+.env.*
+*.pem
+*.key
+

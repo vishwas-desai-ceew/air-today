@@ -1,0 +1,887 @@
+
+	13 Nov 2024 
+
+
+	Since 13 October 2024 the 24-hr average PM2.5 concentration in Delhi has been in the poor (> 90 ug/m3) and very poor (>121 ug/m3) category every single day. 
+Since the last week of October we are observing the hourly PM 2.5 concentrations slipping into the severe category(>250ug/m3) for a few hours in the night. 
+Delhis Air Quality Index (AQI) throughout November was above 350 except on two days (November 10 and 12) where it stood at 334. Wind speeds above 2 m/s on both days helped reduce the AQI slightly. 
+However the AQI deteriorated to 418 (severe) on November 13. The deterioration can be attributed to multiple sources like transportation road dust and stubble burning. According to Delhils Air Quality Early Warning System the citys AQI is forecasted to be above 350 till November 15 and drop below 350 from November 16. The wind speed is forecasted to increase beyond 3 m/s and the Ventilation Index (VI) above 12000 m²/s on November 16. VI above 6000 m²/s and wind speed above 2.78 m/s are generally favourable for the dispersion of pollutants. .
+	14 Nov 2024 
+	Delhis AQI stood at 424 on November 14 deteriorating slightly from 418 recorded on November 13 
+Low wind speed (1.16 m/s) over the last 24 hours is hindering the dispersion of air pollutants. Wind speeds above 2.78 m/s are generally favourable for the dispersion of air pollutants. 
+According to Delhils Air Quality Early Warning System the citys AQI is forecasted to be above 350 till November 15 and drop below 350 from November 16. The wind speed is forecasted to increase beyond 3 m/s and the Ventilation Index (VI) above 12000 m²/s on November 16. VI above 6000 m²/s is generally favourable for the dispersion of pollutants
+	15 Nov 2024 
+	Delhis AQI stood at 396 on November 15 improving slightly from 424 on November 14
+Wind speeds above 3 m/s were recorded between 11:30 AM and 4 PM on November 15 helping disperse the pollutants. Wind speeds above 2.78 m/s are generally favourable for pollutant dispersion. 
+According to Delhils Air Quality Early Warning System the citys AQI is forecasted to drop below 350 from November 16. The wind speed is forecasted to increase beyond 3 m/s and the Ventilation Index (VI) above 12000 m²/s on November 16. VI above 6000 m²/s is generally favourable for the dispersion of pollutants.
+
+
+	
+
+16 Nov 2024 
+	Delhis AQI stood at 417 on November 16 dropping into the ‘Severe category deteriorating from 396 (‘Very Poor) on November 15. 
+The average wind speed recorded over the last two days has been below 1.5 m/s limiting the dispersion of pollutants. Wind speeds above 2.78 m/s are generally favourable for pollutant dispersion. 
+According to Delhils Air Quality Early Warning System the citys AQI is forecasted to drop below 300 from November 169. The wind speed is forecasted to increase beyond 3 m/s and the Ventilation Index (VI) above 12000 m²/s on November 17. VI above 6000 m²/s is generally favourable for the dispersion of pollutants.
+	17 Nov 2024 
+	Delhis AQI stood at 441 on November 17 staying in the ‘Severe category and deteriorating slightly from 417 on November 16. 
+Delhi experienced very calm conditions throughout the night on November 16 and in the morning hours of November 17. The wind speed was 0 m/s for several hours. This prevented the dispersion of pollutants worsening the air quality. 
+The Air Quality Early Warning System (AQEWS) had forecasted a drop in AQI from November 17. However the forecast was incorrect. The system predicts the citys AQI to fall below 300 from November 19. The wind speed is forecasted to increase beyond 3 m/s and the Ventilation Index (VI) around 8000 m²/s from November 18. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+Wind speeds above 3 m/s were recorded between 11:30 AM and 4 PM on November 15 helping disperse the pollutants. Wind speeds above 2.78 m/s are generally favourable for pollutant dispersion. 
+According to Delhils Air Quality Early Warning System the citys AQI is forecasted to drop below 350 from November 16. The wind speed is forecasted to increase beyond 3 m/s and the Ventilation Index (VI) above 12000 m²/s on November 16. VI above 6000 m²/s is generally favourable for the dispersion of pollutants.
+
+
+	
+
+16 Nov 2024 
+	Delhis AQI stood at 417 on November 16 dropping into the ‘Severe category deteriorating from 396 (‘Very Poor) on November 15. 
+The average wind speed recorded over the last two days has been below 1.5 m/s limiting the dispersion of pollutants. Wind speeds above 2.78 m/s are generally favourable for pollutant dispersion. 
+According to Delhils Air Quality Early Warning System the citys AQI is forecasted to drop below 300 from November 169. The wind speed is forecasted to increase beyond 3 m/s and the Ventilation Index (VI) above 12000 m²/s on November 17. VI above 6000 m²/s is generally favourable for the dispersion of pollutants.
+	17 Nov 2024 
+	Delhis AQI stood at 441 on November 17 staying in the ‘Severe category and deteriorating slightly from 417 on November 16. 
+Delhi experienced very calm conditions throughout the night on November 16 and in the morning hours of November 17. The wind speed was 0 m/s for several hours. This prevented the dispersion of pollutants worsening the air quality. 
+The Air Quality Early Warning System (AQEWS) had forecasted a drop in AQI from November 17. However the forecast was incorrect. The system predicts the citys AQI to fall below 300 from November 19. The wind speed is forecasted to increase beyond 3 m/s and the Ventilation Index (VI) around 8000 m²/s from November 18. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	18 Nov 2024 
+	Delhis AQI stood at 494 on November 18 the highest so far this season staying in the ‘Severe category and deteriorating significantly from 441 on November 17. 
+Despite steady winds with speeds between 2 and 3 m/s Delhis AQI continues to be severe. There are two reasons for this: 
+○ Sentinel-5P satellite data shows plumes of stubble burning from Punjab arriving in Delhi. The stubble-burning season is almost over and farmers are rushing to clear their fields to sow wheat. 
+○ Delhi has been under a blanket of fog for more than two days now. Fog reduces the amount of solar radiation that reaches the ground thereby reducing the mixing layer height. Mixing layer height is the height to which pollutants mix vertically in the atmosphere. A low mixing layer height leads to the accumulation of pollutants near the ground. 
+The Air Quality Early Warning System (AQEWS) had forecasted a drop in AQI from November 17. However the forecast was incorrect. The system now predicts the citys AQI to fall below 300 from November 19. The wind speed is forecasted to increase beyond 3 m/s and the Ventilation Index (VI) above 6000 m²/s from November 19. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	19 Nov 2024 
+	Delhis AQI stood at 460 on November 19 dropping slightly from 494 on November 18 but still staying in the ‘Severe category.
+	
+
+
+
+  
+
+
+
+	The wind was very calm in the early hours of November 19 (between 12:00 AM and 6:00 AM) but picked up after 6:30 AM. Steady winds with speeds around 2 m/s helped disperse the pollutants to some extent. Moreover the fog blanketing the city over the last few days has lifted. 
+The Air Quality Early Warning System (AQEWS) predicts the citys AQI to fall below 300 from November 20. The forecast should be consumed with caution. The wind speed on November 20 is not forecasted to increase beyond 2 m/s and the Ventilation Index (VI) is expected to be below 6000 m²/s. Despite this the AQI is forecasted to drop. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants. 
+The most probable reason behind the counterintuitive predictions is the underestimation of fire contributions to Delhis pollution in the models. The models use the fire climatology of last year to make predictions on future fire contributions. Last year by November 15 stubble burning was almost over in Punjab. However this year we observed a spike in fire counts as late as November 18.
+	20 Nov 2024 
+	Delhis AQI stood at 419 on November 20 dropping from 460 on November 19 but still staying in the ‘Severe category. 
+The wind was very calm during the night hours of November 19 (between 08:00 PM and 12:00 AM). However steady winds with speeds around 2 m/s during the morning hours helped disperse the pollutants to some extent. 
+The Air Quality Early Warning System (AQEWS) predicts the citys AQI to be in the range of 350 - 400 over the next 10 days. 
+The average wind speed during the early hours is expected to be around 1 m/s over the next two days and just around 2 m/s during the daytime. The Ventilation Index (VI) is expected to go below 6000 m²/s till 22 November. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants. The fire counts spiked on November 18 with 1100 fire incidents reported which was the highest during this season. After this spike the numbers dropped by half on 19 November.
+	21 Nov 2024 
+	Delhis AQI dropped to 371 (Very Poor) on November 21 from 419 (Severe) on November 20 
+The winter has set in completely and we observe wind speeds dropping to 0 m/s at night. However we observe steady winds exceeding 2 m/s during the day. 
+The Air Quality Early Warning System (AQEWS) predicts the citys AQI to be in the range of 350 - 400 over the next 3 days. 
+The average wind speed during the early hours is not forecasted to exceed 2 m/s and the Ventilation Index (VI) is forecasted to be below 6000 m²/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants. 
+Stubble burning in the upwind states is almost over. However the minimum temperature in the city has dropped to around 10 degrees Celsius. We expect an uptick in emissions from biomass burning for heating.
+	22 Nov 2024 
+	Delhis AQI deteriorated slightly to 393 (Very Poor) on November 22 from 371 (Severe) on November 21 
+The wind speeds at night continue to hover around 0 m/s. Also the wind speed during daytime on November 22 did not exceed 2 m/s. 
+The Air Quality Early Warning System (AQEWS) forecasts the citys AQI to exceed 400 (Severe) on November 23 and drop gradually afterwards.
+The average wind speed is forecasted to remain below 2 m/s and the Ventilation Index (VI) is forecasted to be below 6000 m²/s on November 23. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+
+
+23 Nov 2024 
+	Delhis AQI deteriorated to 412 (Severe ) on November 23 from 393 (Very Poor) on November 22 
+The wind speeds at night continue to hover around 0 m/s. Also the wind speed during the daytime continues to be below 2 m/s. 
+The Air Quality Early Warning System (AQEWS) forecasts the citys AQI to stay ‘Severe till November 25. After November 25 the AQI is expected to improve owing to stronger winds. The average wind speed is forecasted to exceed 3 m/s and the Ventilation Index (VI) is forecasted to go above 6000 m²/s around November 25. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	24 Nov 2024 
+	Delhis AQI improved to 318 (Very poor) from 412 (Severe ) on November 24. Winds exceeding 2.5 m/s between 10 AM and 4 PM on November 24 helped disperse the pollutants. The average PM 2.5 levels in the city dropped below 90 ug/m3 around 2 PM for the first time since November 12. 
+The Air Quality Early Warning System (AQEWS) had forecasted the citys AQI to stay ‘Severe till November 25 and improve from November 26. However strong winds improved the citys AQI two days in advance. The wind speed is forecasted to exceed 3 m/s tomorrow and the AQI could improve further. 
+The Ventilation Index (VI) is forecasted to go above 6000 m²/s around November 25. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants. 
+The minimum temperature is currently around 12 degrees Celsius which is 1 degree above normal. It is forecasted to drop to 10 degrees Celsius around November 28. Moreover IMD expects dense fog to form over the city on the morning of November 28. AQEWS also forecasts the AQI to go beyond 400 (Severe) around this time.
+	25 Nov 2024 
+	Delhis AQI deteriorated slightly to 348 (Very Poor) from 318 (Very Poor) on November 25. The AQI worsened despite steady winds between 2 and 4 m/s between 7 AM and 4 PM on November 25. 
+The Air Quality Early Warning System (AQEWS) had forecasted the citys AQI to stay ‘Severe till November 25 and improve from November 26. However strong winds improved the citys AQI two days in advance. The wind speed exceeded 3 m/s as forecasted. However the AQI did not improve. 
+The deterioration is most likely due to the transportation of pollutants from the upwind states. Images from the AQEWS support this hypothesis. 
+The Ventilation Index (VI) is forecasted to go above 6000 m²/s on November 26 and the wind speed is forecasted to be above 2 m/s occasionally exceeding 3 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants. 
+The minimum temperature tonight will be around 13-14 degrees Celsius which is around 1-2 degrees above normal. It is forecasted to drop to 10 degrees Celsius around November 28. Moreover IMD expects dense fog to form over the city on the morning of November 28. AQEWS also forecasts the AQI to go beyond 400 (Severe) around this time.
+	
+
+26 Nov 2024 
+	Delhis AQI stood at 343 (Very Poor) on November 26 registering a slight improvement from 348 (Very Poor) on November 25. 
+The wind speed was below 2 m/s until 10 AM. It increased to 3 m/s around 12 PM and helped bring down PM 2.5 levels. Owing to the high wind speeds the citys average PM 2.5 concentration fell below the 90 ug/m3 (Poor) mark around 3 PM. 
+The citys AQI improved as forecasted by the Air Quality Early Warning System (AQEWS). However the AQI is set to deteriorate in the coming days. 
+According to the IMD the city will experience dense fog on November 28 and 29 pushing the AQI above 400. 
+The AQI could cross 500 around December 1. The minimum temperature will hover around 10 degrees Celsius between now and December 1. However average wind speed is expected to be around 1 m/s between November 27 and December 2. 
+The Ventilation Index (VI) is forecasted to go below 3000 m²/s between November 27 and December 2. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	27 Nov 2024 
+	Delhis AQI stood at 303 (Very Poor) on November 27 registering an improvement from 343 (Very Poor) on November 26. 
+The wind speeds over the city exceeded 3 m/s and brought down the PM 2.5 concentrations below 90 ug/m3 (Poor) around 3 PM. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is set to deteriorate in the coming days. 
+According to the IMD the city will experience dense fog on November 28 and 29 pushing the AQI above 400 (Severe). The minimum temperature is set to drop to 9 degrees Celsius on November 28 and 29 and can trigger widespread biomass burning for heating. 
+The Ventilation Index (VI) is forecasted to go below 3000 m²/s between November 28 and December 2 and the wind speed is not expected to increase beyond 2 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	28 November 
+2024
+	Delhis AQI stood at 325 (‘Very Poor) on November 28 slightly deteriorating from 303 (‘Very Poor) on November 27. 
+The wind speed over the city was above 2 m/s throughout the day. However it did not exceed 3 m/s. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is set to deteriorate in the coming days but stay below 400 (‘Severe). The AQI could cross the ‘Severe mark around December 3. 
+According to the IMD the city will experience dense fog on November 29. The minimum temperature will hover around 9-11 degrees Celsius between November 29 and December 2 and can trigger widespread biomass burning for heating. 
+The Ventilation Index (VI) is forecasted to go below 3000 m²/s between November 28 and December 2 and the wind speed is not expected to increase beyond 2 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	29 November 
+2024
+	Delhis AQI stood at 331 (‘Very Poor) on November 29 compared to 325 (‘Very Poor) on November 28. 
+The wind speed was around 0 m/s between 12:00 AM and 8:00 AM. It increased during the day but stayed between 1 and 2 m/s between 8:00 AM and 4 PM.
+According to the Air Quality Early Warning System (AQEWS) the AQI will continue to remain below the 400 (‘Severe) mark for the next few days. 
+According to the IMD the city was set to experience a dense fog event on the 29th. However fog did not form and hence the air quality did not deteriorate significantly. The Ventilation Index (VI) is expected to remain below 3000 m²/s till December 2 and the wind speed is not expected to increase beyond 2 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+
+
+	
+
+
+
+30 November 
+2024
+	Delhis AQI stood at 346 (‘Very Poor) on November 30 deteriorating slightly from 331 (‘Very Poor) on November 29. 
+The wind speed was around 0 m/s between 12:00 AM and 4:00 AM. It increased gradually to 2 m/s at around 10:30 AM. It increased further during the day and stayed between 2.5 and 3 m/s between 11:00 AM and 4:00 PM. 
+The minimum temperature stayed around 10 degrees Celsius. Biomass burning for heating continues in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 300 and 350 (‘Very Poor) till December 3. The AQI is forecasted to improve further from December 4. 
+The Ventilation Index (VI) is expected to remain below 3000 m²/s till December 2 and the wind speed is not expected to increase beyond 2 m/s. However the VI is expected to exceed 6000 m2/s between December 3 and December 6. Wind speed is also forecasted to be higher than 2.2 m/s during the daytime over these days. These conditions are likely to lead to improved air quality between December 3 and December 6. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	01 December 
+2024 
+	Delhis AQI moved to 285 (Poor) on December 1 improving significantly from 346 (‘Very Poor) on November 30. This is the lowest AQI recorded since October 29. 
+The wind speed stayed below 2 m/s till 12:30 PM. However the average wind speed during the afternoon hours was 3.3 m/s. Higher wind speed resulted in the dispersion of pollutants. 
+The minimum temperature stayed around 11 degrees Celsius. Biomass burning for heating continues in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 300 and 350 (‘Very Poor) till December 4. The AQI is forecasted to improve further from December 5. 
+The Ventilation Index (VI) is expected to remain below 6000 m²/s till December 2 and the wind speed is not expected to increase beyond 2 m/s. However the VI is expected to exceed 6000 m2/s between December 3 and December 6. Wind speed is also forecasted to be higher than 3 m/s during the daytime over these days. These conditions are likely to lead to improved air quality between December 3 and December 6. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+	According to the Air Quality Early Warning System (AQEWS) the AQI will continue to remain below the 400 (‘Severe) mark for the next few days. 
+According to the IMD the city was set to experience a dense fog event on the 29th. However fog did not form and hence the air quality did not deteriorate significantly. The Ventilation Index (VI) is expected to remain below 3000 m²/s till December 2 and the wind speed is not expected to increase beyond 2 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	30 November 
+2024
+	Delhis AQI stood at 346 (‘Very Poor) on November 30 deteriorating slightly from 331 (‘Very Poor) on November 29. 
+The wind speed was around 0 m/s between 12:00 AM and 4:00 AM. It increased gradually to 2 m/s at around 10:30 AM. It increased further during the day and stayed between 2.5 and 3 m/s between 11:00 AM and 4:00 PM. 
+The minimum temperature stayed around 10 degrees Celsius. Biomass burning for heating continues in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 300 and 350 (‘Very Poor) till December 3. The AQI is forecasted to improve further from December 4. 
+The Ventilation Index (VI) is expected to remain below 3000 m²/s till December 2 and the wind speed is not expected to increase beyond 2 m/s. However the VI is expected to exceed 6000 m2/s between December 3 and December 6. Wind speed is also forecasted to be higher than 2.2 m/s during the daytime over these days. These conditions are likely to lead to improved air quality between December 3 and December 6. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	01 December 
+2024 
+	Delhis AQI moved to 285 (Poor) on December 1 improving significantly from 346 (‘Very Poor) on November 30. This is the lowest AQI recorded since October 29. 
+The wind speed stayed below 2 m/s till 12:30 PM. However the average wind speed during the afternoon hours was 3.3 m/s. Higher wind speed resulted in the dispersion of pollutants. 
+The minimum temperature stayed around 11 degrees Celsius. Biomass burning for heating continues in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 300 and 350 (‘Very Poor) till December 4. The AQI is forecasted to improve further from December 5. 
+The Ventilation Index (VI) is expected to remain below 6000 m²/s till December 2 and the wind speed is not expected to increase beyond 2 m/s. However the VI is expected to exceed 6000 m2/s between December 3 and December 6. Wind speed is also forecasted to be higher than 3 m/s during the daytime over these days. These conditions are likely to lead to improved air quality between December 3 and December 6. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	02 December 
+2024 
+	Delhis AQI moved to 280 (Poor) on December 2 improving slightly from 285 (‘Poor) recorded on December 1. 
+The wind speed was 0 m/s till 06:00 AM. However it gradually increased and stayed between 2 and 2.5 m/s till 04:00 PM. 
+The minimum temperature is around 11 degrees Celsius a degree above normal.
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 300 and 350 (‘Very Poor) till December 4. The AQI is forecasted to improve further from December 5. 
+The Ventilation Index (VI) is expected to remain below 6000 m²/s till December 2 and the wind speed is not expected to increase beyond 2 m/s. However the VI is expected to exceed 6000 m2/s between December 3 and December 6. Wind speed is also forecasted to be higher than 3 m/s during the daytime over these days. These conditions are likely to lead to improved air quality between December 3 and December 6. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+  
+
+03 December 
+2024 
+	Delhis AQI moved to 268 (Poor) on December 3 improving slightly from 280 (‘Poor) recorded on December 2. 
+The wind speed was around 0 m/s till 07:30 AM. However it gradually increased during the daytime and stayed between 3 and 4 m/s between 01:30 PM and 04:00 PM. Higher wind speed helped in the dispersion of the pollutants. 
+The minimum temperature is around 11 degrees Celsius a degree above normal. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 300 and 350 (‘Very Poor) on December 4. The AQI is forecasted to improve further from December 5. 
+The Ventilation Index (VI) is expected to exceed 9000 m²/s between December 4 and December 6. The wind speed is also expected to be around 3 m/s during daytime over these days. These conditions are likely to lead to improved air quality between December 3 and December 6. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	04 December 
+2024 
+	Delhis AQI moved to 178 (Moderate) on December 4 improving significantly from 268 (‘Poor) recorded on December 3. This is the lowest AQI recorded since October 12. The wind speed was around 2 m/s till 08:00 AM. However it gradually increased during the daytime and stayed between 3 and 5 m/s between 11:00 AM and 04:00 PM. Higher wind speed helped in the dispersion of the pollutants. 
+The minimum temperature is around 12 degrees Celsius 2.5 degrees above normal. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 100 and 200 (‘Moderate) on December 5 and December 6. However the AQI is expected to cross the 200 mark (‘Poor) from December 7. 
+The Ventilation Index (VI) is expected to exceed 9000 m²/s on December 5 and December 6. The wind speed is also expected to be around 3 m/s during daytime over these days. These conditions are likely to lead to improved air quality on December 5 and 6. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	05 December 
+2024 
+	*  Delhis AQI slightly improved to 165 (Moderate) on December 5 from 178 (Moderate) recorded on December 4. 
+* The wind speed was around 1.5 m/s till 08:00 AM. However it gradually increased during the daytime and stayed between 2 and 5 m/s between 09:00 AM and 04:00 PM. 
+* The minimum temperature is around 9 degrees Celsius a degree below normal. Despite below normal temperature higher wind speed helped in the dispersion of the pollutants.
+* According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 100 and 200 (Moderate) on December 6. However the air quality is likely to deteriorate from December 7. 
+* The Ventilation Index (VI) is expected to exceed 9000 m²/s and the wind speed is also expected to be around 3 m/s during the daytime on December 6. These conditions are likely to improve the air quality further on December 6. However the wind speed is not expected to exceed 2 m/s on December 7. The VI is also expected to stay below 3000 m2/s on December 7. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+
+
+	
+
+
+
+
+
+06 December 
+2024 
+	Delhis AQI slightly deteriorated to 197 (Moderate) on December 6 from 165 (Moderate) recorded on December 5. 
+The wind speed did not exceed 1.5 m/s till 07:30 AM. However it gradually increased during the daytime and stayed between 2 and 4.5 m/s between 08:00 AM and 04:00 PM. The minimum temperature is around 9 degrees Celsius a degree below normal. Despite below normal temperature higher wind speed helped in the dispersion of the pollutants. The minimum temperature is expected to drop further from December 7 and this is likely to increase biomass burning incidents for heating. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 200 and 300 (Poor) from December 7. 
+The Ventilation Index (VI) is expected to be below 3000 m²/s on December 7 and the wind speed is also expected to stay below 2 m/s during the daytime. These conditions are likely to deteriorate the air quality further on December 7. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	07 December 
+2024 
+	Delhis AQI moved to to 233 (Poor) on December 7 deteriorating from 197 (Moderate) recorded on December 6. 
+The wind speed was 0 m/s till 07:30 AM except for about two hours when it stayed around 1.5 m/s. It gradually increased during the daytime and did not exceed 2.5 m/s till 04:00 PM. The minimum temperature is around 7 degrees Celsius three degrees below normal. The minimum temperature is expected to drop further from December 9 and this is likely to increase biomass burning incidents for heating. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 200 and 300 (Poor) on December 8 and December 9. 
+The Ventilation Index (VI) is expected to exceed 6000 m²/s on December 8 and the wind speed is also expected to be around 3 m/s during the daytime. These conditions are likely to improve the air quality further on December 8. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	08 December 
+2024 
+	Delhis AQI moved to 302 (Very Poor) on December 8 deteriorating from 233 (Poor) recorded on December 7. 
+The wind speed was below 2.5 m/s till 08:30 AM. It gradually increased during the daytime and stayed between 3 m/s and 5 m/s till 04:00 PM. 
+The minimum temperature is around 7 degrees Celsius about two degrees below normal. Biomass burning for heating continues in the city.
+	
+
+
+
+
+
+
+
+	The minimum temperature is expected to drop further on December 10 and December 11. This is likely to increase biomass-burning incidents for heating in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 300 and 350 (Very Poor) from December 9 till December 11. The AQI is expected to further improve from December 12. 
+The Ventilation Index (VI) is expected to exceed 6000 m²/s on December 9 and the wind speed is also expected to be below 3 m/s during the daytime. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	09 December 2024 
+	Delhis AQI improved to 186 (Moderate) on December 9 from 302 (‘Very Poor) on December 8. 
+The arrival of a Western Disturbance (WD) caused light rainfall in the city. Moreover a change in wind direction from northwest to east-southeast coupled with steady winds between 2 and 4 m/s helped bring down the pollution levels. 
+The wind direction is back to northwest now. The minimum temperature is around 8 degrees Celsius. This is about one degree Celsius below normal. Biomass burning for heating continues in the city. 
+The India Meteorological Department (IMD) has predicted the onset of a cold wave between December 9 and 12. The minimum temperature is expected to plunge to 6 degrees Celsius. This is likely to increase biomass-burning incidents for heating in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 300 on December 10 and drop steadily thereafter. The AQI is expected to go below 200 after December 11 owing to strong winds with speeds around 4 m/s 
+The Ventilation Index (VI) is expected to exceed 6000 m²/s during this time. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	10 December 2024 
+	Delhis AQI deteriorated to 234 (Poor) on December 10 from 186 (‘Moderate) on December 9. 
+However the PM 2.5 levels fell to values around 30 ug/m3 around 4 PM on account of high wind speeds exceeding 4 m/s during the day on December 10. 
+Currently the city is experiencing a cold wave with the minimum temperature being 2 degrees Celsius below normal. This is likely to increase biomass-burning incidents for heating in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to fall steeply to a value around 100 on December 11 owing to strong winds with speeds around 4 m/s 
+The Ventilation Index (VI) is expected to exceed 6000 m²/s during this time. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	11 December 2024 
+	Delhis AQI improved to 199 (‘Moderate) on December 11 from 234 (Poor) recorded on December 10. 
+The PM 2.5 levels fell to values around 30 ug/m3 around 4 PM on account of high wind speeds exceeding 3 m/s during the day on December 11.
+	Currently the city is experiencing a cold wave with the minimum temperature being 4 degrees Celsius below normal. This is likely to increase biomass-burning incidents for heating in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 150 and 200 (‘Moderate) on December 12 owing to strong winds with speeds around 4 m/s. 
+The Ventilation Index (VI) is expected to exceed 6000 m²/s during this time. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	12 December 2024 
+	Delhis AQI deteriorated to 288 (‘Poor) on December 12 from 199 (‘Moderate) recorded on December 11. 
+The air quality deteriorated due to lower wind speeds compared to the day before. The wind speed was around 1.5 m/s till 10:30 AM. It gradually increased and stayed around 3 m/s till 04:00 PM. 
+Currently the city is experiencing a cold wave with the minimum temperature being 4 degrees Celsius below normal. This is likely to increase biomass-burning incidents for heating in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 200 on December 13. However the AQI is expected to fall around 100 on December 14. 
+The Ventilation Index (VI) is expected to exceed 6000 m²/s and the wind speed is predicted to be around 3 m/s during daytime on December 13. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	13 December 2024 
+	Delhis AQI slightly improved to 262 (‘Poor) on December 13 from 288 (‘Poor) recorded on December 12. 
+The wind speed was around 2 m/s till 07:30 AM. It gradually increased and stayed between 3 and 5 m/s till 04:00 PM. 
+The minimum temperature slightly increased to 9 degrees Celsius on 13 December. Biomass burning for heating continues in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 150 on December 14. However the AQI is expected to cross the 200 mark (‘Poor) from December 15. 
+The Ventilation Index (VI) is expected to exceed 6000 m²/s and the wind speed is predicted to be around 3 m/s during daytime on December 14. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	14 December 2024 
+	Delhis AQI slightly improved to 193 (‘Moderate) on December 14 from 262 (‘Poor) on December 13. 
+The wind speed was consistently around or above 2 m/s since 5:00 PM on December 13. It touched 5 m/s occasionally during daytime on December 14. 
+The minimum temperature dropped a degree below normal to 8 degrees Celsius on December 13.
+	According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be below 250 on December 15. However the AQI is expected to cross the 300 mark (‘Very Poor) from December 16. 
+The Ventilation Index (VI) is expected to fall below 6000 m²/s and the wind speed is predicted to be around 3 m/s during daytime on December 15. The wind speed is expected to be around 1 m/s from December 16 with a VI below 3000 m²/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	15 December 2024 
+	Delhis AQI deteriorated to 294 (‘Poor) on December 15 from 193 (‘Moderate) on December 14. 
+The wind speed dropped to 0 m/s for several hours after 12:00 AM on December 15. It rarely exceeded 2 m/s during the daytime between 7 AM and 4 PM. 
+The minimum temperature dropped to 5 degrees Celsius on December 15 which is 4 degrees below normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to cross the 300 mark (‘Very Poor) from December 16 and go beyond 350 on December 17. The Ventilation Index (VI) is expected to fall below 3000 m²/s and the wind speed is predicted to be around 1 m/s for the next two days. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	16 December 2024 
+	Delhis AQI deteriorated to 379 (‘Very Poor) on December 16 from 294 (‘Poor) on December 15. 
+The wind speed dropped to 0 m/s for several hours after 08:00 PM on December 15. It did not exceed 2 m/s during the daytime between 7 AM and 4 PM on 16 December. The minimum temperature dropped to 4.5 degrees Celsius on December 16 which is about 4 degrees below normal. According to the IMD the city is expected to experience a cold wave on December 17 and 18. This is likely to increase the biomass burning for heating incidents in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around the 400 mark (‘Severe) on December 17 and 18. 
+The Ventilation Index (VI) is expected to fall below 3000 m²/s and the wind speed is predicted to be around 2 m/s for the next two days. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be below 250 on December 15. However the AQI is expected to cross the 300 mark (‘Very Poor) from December 16. 
+The Ventilation Index (VI) is expected to fall below 6000 m²/s and the wind speed is predicted to be around 3 m/s during daytime on December 15. The wind speed is expected to be around 1 m/s from December 16 with a VI below 3000 m²/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	15 December 2024 
+	Delhis AQI deteriorated to 294 (‘Poor) on December 15 from 193 (‘Moderate) on December 14. 
+The wind speed dropped to 0 m/s for several hours after 12:00 AM on December 15. It rarely exceeded 2 m/s during the daytime between 7 AM and 4 PM. 
+The minimum temperature dropped to 5 degrees Celsius on December 15 which is 4 degrees below normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to cross the 300 mark (‘Very Poor) from December 16 and go beyond 350 on December 17. The Ventilation Index (VI) is expected to fall below 3000 m²/s and the wind speed is predicted to be around 1 m/s for the next two days. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	16 December 2024 
+	Delhis AQI deteriorated to 379 (‘Very Poor) on December 16 from 294 (‘Poor) on December 15. 
+The wind speed dropped to 0 m/s for several hours after 08:00 PM on December 15. It did not exceed 2 m/s during the daytime between 7 AM and 4 PM on 16 December. The minimum temperature dropped to 4.5 degrees Celsius on December 16 which is about 4 degrees below normal. According to the IMD the city is expected to experience a cold wave on December 17 and 18. This is likely to increase the biomass burning for heating incidents in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around the 400 mark (‘Severe) on December 17 and 18. 
+The Ventilation Index (VI) is expected to fall below 3000 m²/s and the wind speed is predicted to be around 2 m/s for the next two days. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	17 December 2024 
+	Delhis AQI deteriorated to 433 (‘Severe) on December 17 from 379 (‘Very Poor) on December 16. 
+The PM2.5 levels remained in the ‘Severe category from 07:00 PM on December 16 till 01:00 PM on December 17. 
+The wind speed dropped to 0 m/s between 07:00 PM on December 16 and 09:30 AM on December 17. It rarely exceeded 2.5 m/s during the daytime on December 17. The minimum temperature is around 6 degrees Celsius on December 17 which is about 2 degrees below normal. Biomass burning for heating continues in the city. 
+According to the IMD the city is expected to experience dense fog over the next two days. Smoke from biomass burning incidents with fog can lead to further deterioration of air quality in the city.
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around the 400 mark (‘Severe) for the next three days. 
+The Ventilation Index (VI) is expected to fall below 3000 m²/s and the wind speed is predicted to be around 2 m/s for the next two days. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants
+18 December 2024 
+	Delhis AQI slightly deteriorated to 445 (‘Severe) on December 18 from 433 (‘Severe) on December 17. 
+The PM2.5 levels remained in the ‘Severe category from 07:00 PM on December 17 till 02:00 PM on December 18. 
+The wind speed dropped to 0 m/s between 07:00 PM on December 17 and 03:30 AM on December 18. It rarely exceeded 2 m/s during the daytime on December 18. 
+The minimum temperature is just above 7 degrees Celsius on December 18 which is about 1 degree below normal. Biomass burning for heating continues in the city. 
+According to the IMD the city is expected to experience very dense fog over the next two days. Smoke from biomass burning incidents with fog can lead to further deterioration of air quality in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around the 450 mark (‘Severe plus) for the next three days. 
+The Ventilation Index (VI) is expected to fall below 3000 m²/s and the wind speed is predicted to be around 2 m/s for the next two days. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+
+19 December 2024 
+	Delhis AQI slightly deteriorated to 451 (‘Severe) on December 19 from 445 (‘Severe) on December 18. 
+The PM2.5 levels remained in the ‘Severe category from 07:00 PM on December 17 till 01:00 PM on December 19. 
+The wind speed dropped to 0 m/s between 06:00 PM on December 18 and 07:00 AM on December 19. It gradually increased and stayed around 3 m/s during the daytime. The minimum temperature is around 5 degrees Celsius currently which is about 3 degree below normal. Biomass burning for heating continues in the city. 
+According to the IMD the city is expected to experience dense fog over the next three days. Smoke from biomass burning coupled with fog can lead to further deterioration of air quality in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around the 400 mark (‘Severe) on December 20. 
+The Ventilation Index (VI) is expected to fall below 3000 m²/s and the wind speed is predicted to be around 2 m/s for the next two days. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	20 December 2024 
+	Delhis AQI slightly improved to 429 (‘Severe) on December 20 from 451 (‘Severe) on December 19. 
+The PM2.5 levels remained in the ‘Severe (>250 ug/m3) category from 07:00 PM on December 19 till 01:00 PM on December 20. 
+The wind speed was 0 m/s or just around 1.5 m/s till 01:00 PM. It stayed at around 2 m/s for the rest of the day.
+The minimum temperature is around 7 degrees Celsius currently which is about 1 degree below normal. Biomass burning for heating continues in the city. 
+According to the IMD the city is expected to experience dense fog on 21 and 22 December. Smoke from biomass burning coupled with fog can lead to further deterioration of air quality in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around the 400 mark (‘Severe) on December 21. 
+The Ventilation Index (VI) is expected to fall below 3000 m²/s and the wind speed is predicted to be around 2 m/s on December 21. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+
+	The minimum temperature is around 7 degrees Celsius currently which is about 1 degree below normal. Biomass burning for heating continues in the city. 
+According to the IMD the city is expected to experience dense fog on 21 and 22 December. Smoke from biomass burning coupled with fog can lead to further deterioration of air quality in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around the 400 mark (‘Severe) on December 21. 
+The Ventilation Index (VI) is expected to fall below 3000 m²/s and the wind speed is predicted to be around 2 m/s on December 21. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	21 December 2024 
+	Delhis AQI slightly improved to 370 (‘Very Poor) on December 21 from 429 (‘Severe) on December 20. 
+The wind speed on December 21 was nearly calm till 4:00 AM. It gradually increased during the daytime and higher windspeeds of about 3 m/s during the afternoon hours helped in the dispersion of pollutants. 
+The minimum temperature in the city is around 7.5 degrees Celsius currently which is about 1 degree below normal. Biomass burning for heating continues in the city. According to the IMD the city is expected to experience moderate fog on 22 December. Smoke from biomass burning coupled with fog can lead to further deterioration of air quality in the city. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 350 and 400 on December 22. 
+The Ventilation Index (VI) is expected to fall below 3000 m²/s and the wind speed is predicted to be less than 2 m/s on December 22. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	22 December 2024 
+	Delhis AQI deteriorated to 409 (‘Severe) on December 22 from 370 (‘Very Poor) on December 21. 
+The wind speed was 0 m/s from 07:00 PM on December 21 to 09:30 AM on December 22. It gradually increased during the daytime but stayed below 2.5 m/s till 04:00 PM. The minimum temperature in the city is around 7 degrees Celsius currently. Biomass burning for heating continues in the city. 
+According to the IMD the city is expected to receive light rainfall on December 23 and this will help in the deposition of pollutants preventing further deterioration of air quality. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 400 (‘Severe) on December 23. 
+The Ventilation Index (VI) is expected to fall below 3000 m²/s and the wind speed is predicted to be less than 2 m/s on December 23. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	23 December 2024 
+	Delhis AQI marginally improved to 406 (‘Severe) on December 23 from 409 (‘Severe) recorded on December 22. 
+The city received light rainfall during the morning hours. However the wind speed stayed below 2.5 m/s throughout the day.
+	The minimum temperature in the city is around 8 degrees Celsius currently which is around 1 degree below the normal. Biomass burning for heating continues in the city. According to the IMD the city is expected to experience dense fog on December 24 and 25. Fog coupled with smoke can lead to further deterioration of the air quality in the city. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 400 (‘Severe) on December 24. 
+The Ventilation Index (VI) is expected to be around 3000 m²/s and the wind speed is predicted to be less than 2 m/s on December 24. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	24 December 2024 
+	Delhis AQI improved to 369 (‘Very Poor) on December 24 from 406 (‘Severe) recorded on December 23. 
+The wind speed remained between 1.5 and 2.5 m/s throughout the day. 
+The minimum temperature in the city is around 10 degrees Celsius currently which is around 2 degrees above the normal. Biomass burning for heating continues in the city. According to the IMD the city is expected to experience dense fog on December 25. Fog coupled with smoke can lead to further deterioration of the air quality in the city. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 350 (‘Very Poor) on December 25. 
+The Ventilation Index (VI) is expected to be less than 3000 m²/s and the wind speed is predicted to be less than 2 m/s on December 25. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	25 December 2024 
+	Delhis AQI improved slightly to 336 (‘Very Poor) on December 25 from 369 (‘Very Poor) recorded on December 23. 
+The city experienced light rainfall and steady winds on December 24 due to a Western Disturbance. However the wind speed dropped after the rain to around 0 m/s. The wind speed increased gradually and exceeded 2 m/s during daytime on December 25. 
+The minimum temperature in the city is currently around 8.5 degrees Celsius which is around 1 degree above the normal. 
+According to the IMD the city is expected to experience dense fog on December 26. Fog coupled with smoke can lead to further deterioration of the air quality in the city. Moreover the IMD expects thunderstorms in the city on December 27 and 28 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to stay above 300 (‘Very Poor) for the next two days. 
+The Ventilation Index (VI) is expected to be less than 6000 m²/s and the wind speed is predicted to be less than 2 m/s on December 26 and 27. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	26 December 2024 
+	Delhis AQI slightly deteriorated to 345 (‘Very Poor) on December 26 from 336 (‘Very Poor) recorded on December 25. 
+The wind speed remained at 0 m/s until 11:30 AM occasionally reaching up to 1.5 m/s. It gradually increased during the later part of the day but did not exceed 1.5 m/s. The minimum temperature in the city is currently around 8 degrees Celsius which is around 1 degree above the normal.
+According to the IMD the city is expected to experience thunderstorms with rainfall in the city on December 27 and 28. Rainfall will lead to the deposition of pollutants and thus will improve the air quality. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to stay around 350 (‘Very Poor) for the next two days. However the AQEWS predicts the air quality to be in the ‘Poor category from 29 December. 
+The Ventilation Index (VI) is expected to be less than 3000 m²/s on December 27. However the wind speed is predicted to be about 3 m/s during the daytime on the 27th. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+27 December 2024 
+	Delhis AQI slightly deteriorated to 353 (‘Very Poor) on December 27 from 345 (‘Very Poor) recorded on December 26. 
+Despite wind speed exceeding 2.5 m/s during the daytime on December 27 along with light rainfall the AQI did not improve. 
+Moreover the minimum temperature is around 11 degrees Celsius which is 4 degrees above normal. 
+According to the IMD the thunderstorms will continue on December 28. Fog is expected over the city on December 29 and 30 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to go below 300 (Very Poor) between December 28 and 31. 
+Both the Ventilation Index (VI) and the wind speed are expected to be below 3000 m²/s and 2 m/s respectively between December 28 and 31. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants. The improvement in AQI will be due to the rain.
+28 December 2024 
+	Delhis AQI improved to 139 (‘Moderate) on December 28 from 353 (‘Very Poor) recorded on December 27. 
+Despite wind speed remaining below 2.5 m/s during the daytime on December 28 heavy rainfall resulted in a significant improvement in air quality in the city. 
+The minimum temperature in the city is around 13 degrees Celsius which is about 6 degrees above normal. 
+According to the IMD the minimum temperature will drop to 8 degrees Celsius and the city is expected to experience very dense fog on December 29 and 30. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 200 (‘Poor)on December 29 and 30. 
+The Ventilation Index (VI) is expected to be below 6000 m²/s on December 29 and 30. The maximum wind speed is expected to be around 2.8 m/s over these days. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	29 December 2024 
+	Delhis AQI deteriorated to 225 (‘Poor) on December 29 from 139 (‘Moderate) recorded on December 28. 
+The wind speed consistently remained above 2 m/s till 11:00 AM on December 29. It stayed between 3 - 5 m/s from 11:30 AM - 04:00 PM.
+The minimum temperature in the city is around 13 degrees Celsius which is about 6 degrees above normal. 
+According to the IMD the city is expected to experience very dense fog on December 30. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 200 (‘Poor)on December 30. 
+The Ventilation Index (VI) is expected to be below 6000 m²/s on December 30. And the maximum wind speed is expected to be around 2.8 m/s on December 30. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+30 December 2024 
+	Delhis AQI improved to 173 (‘Moderate) on December 30 from 225 (‘Poor) recorded on December 29. 
+Higher wind speed of 4 m/s and above recorded during the evening hours on December 29 and consistent wind speeds of about 3 m/s on December 30 resulted in the dispersion of the pollutants. 
+The minimum temperature in the city is around 10 degrees Celsius which is about 3.5 degrees above normal. 
+According to the IMD the city is expected to experience a cold day on December 31 and dense fog on January 1. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 200 (‘Poor)on December 31. 
+The Ventilation Index (VI) is expected to be below 6000 m²/s on December 31. The wind speed is expected to be around 3 m/s during the daytime on December 31. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	31 December 2024 
+	Delhis AQI deteriorated to 283 (‘Poor) on December 31 from 173 (‘Moderate) recorded on December 30. 
+The wind speed remained below 2.5 m/s till 04:00 PM on December 31. Lower wind speeds compared to the day before resulted in deterioration of the air quality in the city. The minimum temperature in the city is around 10 degrees Celsius which is about 3 degrees above normal. 
+According to the IMD the city is expected to experience moderate fog for the next four days starting from January 1. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 200 (‘Poor) on January 1. 
+The Ventilation Index (VI) is expected to be below 6000 m²/s on January 1. However higher wind speeds between 3 - 6 m/s are expected on January 1. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+01 January 2025
+	Delhis AQI deteriorated to 348*(‘Very Poor) on January 1 from 283 (‘Poor) recorded on December 31. The AQI on January 1 is as reported by System of Air Quality and Weather Forecasting and Research (SAFAR) as the most recent AQI information from the Central Pollution Control Board (CPCB) is for 31 December. 
+The wind speed was between 1 - 2.5 m/s till 04:00 PM on January 1.
+The minimum temperature in the city is around 7 degrees Celsius which is less than a degree above normal. 
+According to the IMD the city is expected to experience dense fog on January 2. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 200 (‘Poor) on January 2. 
+The Ventilation Index (VI) is expected to be below 6000 m²/s on January 2. The wind speed is expected to be around 3 m/s on January 2. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants. 
+The data is as shown in the SAFAR application. However this should be consumed with caution. The AQI will be updated with the CPCB bulletin once the information is available on CPCB portal.
+	
+02 January 2025
+	The city recorded an AQI of 318 (‘Very Poor) on January 2. The official information on Delhis AQI for January 1 is currently unavailable due to the Central Pollution Control Board (CPCB) server error. The AQI recorded on December 31 was 283 (‘Poor). 
+The wind speed was between 1 - 2.5 m/s on January 2 occasionally crossing 3 m/s between 6:30 AM and 11:00 AM. 
+The minimum temperature in the city is around 8 degrees Celsius which is less than a degree above normal. 
+According to the IMD the city is expected to experience dense fog on January 3 and 4. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 250 (‘Poor) on January 3. 
+The Ventilation Index (VI) is expected to be below 6000 m²/s on January 3. The wind speed is expected to be less than 3 m/s on January 3. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+03 January 2025
+	Delhis AQI deteriorated to 371 (‘Very poor) on January 3 from 318 (‘Very Poor) recorded on January 2. 
+The wind speed was 0 m/s till 09:00 AM on January 3. It gradually increased during the daytime but stayed below 2 m/s till 04:00 PM. 
+The minimum temperature in the city is around 7 degrees Celsius. 
+According to the IMD the city is expected to experience dense fog on January 4. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 300 and 350 (‘Very Poor) on January 4. 
+The Ventilation Index (VI) is expected to be below 6000 m²/s on January 4. The wind speed is not expected to cross 2.5 m/s on January 4. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	04 January 2025
+	Delhis AQI deteriorated to 378 (‘Very poor) on January 4 from 371 (‘Very Poor) recorded on January 3. 
+The wind speed was 0 m/s till 6:00 AM on January 4. It gradually increased during the daytime but stayed below or around 2 m/s till 04:00 PM. 
+The minimum temperature in the city is around 8 degrees Celsius currently.
+According to the IMD the city is expected to experience dense fog on January 5 followed by a cloudy sky with light rainfall on January 6. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 300 and 350 (‘Very Poor) on January 5 and 6 and improve from January 7. The Ventilation Index (VI) is expected to be below 6000 m²/s on January 5. However the wind speed is expected to cross 2.5 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+
+05 January 2025
+Delhis AQI slightly improved to 339 (‘Very Poor) on January 5 from 378 (‘Very poor) recorded on January 4. 
+The wind speed stayed between 2 - 4 m/s throughout the day on January 5. The minimum temperature in the city is around 9 degrees Celsius currently which is about 2.5 degrees above the normal. 
+According to the IMD the city is expected to experience a cloudy sky with light rainfall on January 6. IMD has also issued warning for Dense Fog on January 6. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 300 and 350 (‘Very Poor) on January 6 and improve from January 7. The Ventilation Index (VI) and wind speed are expected to be below 6000 m²/s and 2 m/s respectively during the daytime on January 6. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+06 January 2025
+	Delhis AQI improved slightly to 335 (‘Very Poor) on January 6 from 339 (‘Very poor) recorded on January 5. 
+The city recorded steady winds between 1.5 and 3.5 m/s between 5 AM and 4 PM on January 6. Moreover there were light showers in various parts. 
+The minimum temperature in the city is around 10 degrees Celsius currently which is about 2.7 degrees above the normal. 
+According to the IMD the city is expected to experience dense fog on January 7 and 8. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 200 and 250 (‘Poor) after January 7. 
+The Ventilation Index (VI) is expected to reach 6000 m²/s and the wind speed is expected to go above 3 m/s on January 7. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+07 January 2025
+	Delhis AQI improved slightly to 296 (‘Poor) on January 7 from 335 (‘Very Poor) recorded on January 6. 
+The city recorded steady winds above 3 m/s throughout the day on January 7. Moreover there were light showers in various parts of the city. 
+The minimum temperature in the city is around 10.5 degrees Celsius currently which is about 3 degrees above the normal. 
+According to the IMD the city is expected to experience a cold day on January 8. Moreover very dense fog is expected on January 9 and 10. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 200 and 250 (‘Poor) on January 8 and 9.
+The Ventilation Index (VI) is expected to reach 6000 m²/s and the wind speed is expected to go above 3 m/s on January 8. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+08 January 2025
+	Delhis AQI marginally deteriorated to 297 (‘Poor) on January 8 from 296 (‘Poor) recorded on January 7. 
+The wind speed remained below 2 m/s till 08:30 AM on January 8. However the city recorded higher wind speeds of 4 - 5 m/s during the afternoon hours of the day. The minimum temperature in the city is around 7 degrees Celsius currently which is less than a degree above the normal. 
+According to the IMD the city is expected to experience very dense fog on January 9 and 10. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 200 and 250 (‘Poor) on January 9. 
+The Ventilation Index (VI) is expected to be below 3000 m²/s and the wind speed is expected to be lower than 2 m/s on January 9. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+09 January 2025
+	Delhis AQI marginally deteriorated to 357 (‘Very Poor) on January 9 from 297 (‘Poor) recorded on January 8. 
+The wind speed was 0 m/s till 08:00 AM on January 9. It gradually increased during the daytime staying between 1 and 2.5 m/s and reaching a maximum of 3 m/s around 04:00 PM. 
+The minimum temperature in the city is around 5 degrees Celsius currently which is about 2 degrees below the normal. 
+According to the IMD the city is expected to experience very dense fog on January 10 followed by a thunderstorm with rain on January 11. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 350 and 400 (‘Very Poor) on January 10. 
+The Ventilation Index (VI) is expected to be below 3000 m²/s and the wind speed is expected to be lower than 2 m/s on January 10. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	10 January 2025
+	Delhis AQI deteriorated to 397 (‘Very Poor) on January 10 from 357 (‘Very Poor) recorded on January 9. 
+The wind speed was less than 2.5 m/s throughout the day on January 10. The minimum temperature in the city is around 6 degrees Celsius currently. According to the IMD the city is expected to experience a thunderstorm with rain on January 11 followed by a light drizzle on January 12. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 350 (‘Very Poor) on January 11. 
+The Ventilation Index (VI) is expected to be below 6000 m²/s and the wind speed is expected to be lower than 3 m/s on January 11. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+11 January 2025
+	The latest AQI data available on the CPCB portal is for January 10. The AQI on January 10 stood at 397 (‘Very Poor) deteriorating from 357 (‘Very Poor) recorded on January 9. The city recorded predominantly higher wind speeds of 3 - 4 m/s on January 11. The minimum temperature in the city is around 8 degrees Celsius currently. According to the IMD the city is expected to experience a cloudy sky with light rain on January 12 and dense fog on January 13 and 14. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 350 (‘Very Poor) on January 12. 
+The Ventilation Index (VI) and wind speed are expected to be below 3000 m²/s and 3 m/s respectively on January 12. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+11 January 2025
+	The latest AQI data available on the CPCB portal is for January 10. The AQI on January 10 stood at 397 (‘Very Poor) deteriorating from 357 (‘Very Poor) recorded on January 9. The city recorded predominantly higher wind speeds of 3 - 4 m/s on January 11. The minimum temperature in the city is around 8 degrees Celsius currently. According to the IMD the city is expected to experience a cloudy sky with light rain on January 12 and dense fog on January 13 and 14. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 350 (‘Very Poor) on January 12. 
+The Ventilation Index (VI) and wind speed are expected to be below 3000 m²/s and 3 m/s respectively on January 12. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	12 January 2025
+	Delhis AQI improved to 278 (‘Poor) on January 12 from 327 (‘Very Poor) on January 11. The city recorded strong wind speeds going beyond 4 m/s along with rainfall on January 12. The minimum temperature in the city is around 9 degrees Celsius currently. According to the IMD the city is expected to experience dense fog on January 13 14 and 15. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be above 300 (‘Very Poor) on January 13 and 14. 
+The Ventilation Index (VI) and wind speed are expected to be below 3000 m²/s and 3 m/s respectively on January 13. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	13 January 2025
+	Delhis AQI improved to 248 (‘Poor) on January 13 from 278 (‘Poor) recorded on January 12. 
+The city recorded high wind speeds between 3 - 4 m/s between 05:00 AM and 04:00 PM on January 13. 
+The minimum temperature in the city is around 9.6 degrees Celsius currently which is 2 degrees above normal. 
+According to the IMD the city is expected to experience very dense fog on January 14 followed by a cloudy sky with light rainfall on January 15 and 16. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be above 300 (‘Very Poor) on January 14. It is expected to touch 400 (‘Severe) on January 15. The Ventilation Index (VI) and wind speed are expected to be below 3000 m²/s and 2.5 m/s respectively on January 14. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	14 January 2025
+	Delhis AQI deteriorated to 275 (‘Poor) on January 14 from 248 (‘Poor) recorded on January 13. 
+The city recorded wind speeds between 1.5 - 3.5 m/s till 04:00 PM on January 14. The minimum temperature in the city is around 9 degrees Celsius currently which is 1.5 degrees above normal. 
+According to the IMD the city is expected to experience a cloudy sky with light rainfall on January 15 and 16.
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 400 (‘Severe) on January 15. 
+The Ventilation Index (VI) and wind speed are expected to be below 3000 m²/s and 2.5 m/s respectively on January 15. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+
+
+15 January 2025
+	Delhis AQI deteriorated to 386 (‘Very Poor) on January 15 from 275 (‘Poor) recorded on January 14. 
+The city experienced a dense fog episode on the morning of January 15. The wind speed during daytime was mostly below 2.5 m/s. 
+The minimum temperature in the city is around 6 degrees Celsius currently which is about 1.4 degrees below normal. 
+According to the IMD the city is expected to experience a cloudy sky with light rainfall on January 16 followed by dense fog on January 17 and 18. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 400 (‘Severe) on January 16. 
+The Ventilation Index (VI) and wind speed are expected to be below 3000 m²/s and 2.5 m/s respectively on January 16. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	16 January 2025
+	Delhis AQI improved to 302 (‘Very Poor) on January 16 from 386 (‘Very Poor) on January 15. 
+The city experienced steady winds above 2 m/s between 12:00 AM and 10:30 AM on the 16th. 
+The minimum temperature in the city increased to around 10 degrees Celsius around 3 degrees above normal. 
+According to the IMD the city is expected to experience dense fog episodes on January 17 and 18. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 350 and 400 (‘Very Poor) on January 17 and 18. 
+The Ventilation Index (VI) and wind speed are expected to be below 3000 m²/s and 2.5 m/s respectively on January 17. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	17 January 2025
+	Delhis AQI improved to 289 (‘Poor) on January 17 from 302 (‘Very Poor) on January 16. The city experienced steady winds between 3 and 5 m/s between 09:30 AM and 04:00 PM on the 17th. 
+The minimum temperature in the city increased to around 10 degrees Celsius around 4 degrees above normal. 
+According to the IMD the city is expected to experience very dense fog episodes on January 18. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 350 and 400 (‘Very Poor) on January 18.
+ The Ventilation Index (VI) and wind speed are expected to be below 3000 m²/s and 2.5 m/s respectively on January 18. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+
+
+
+
+18 January 2025
+	Delhis AQI improved to 255 (‘Poor) on January 18 from 289 (‘Poor) on January 17. The city recorded wind speeds of less than 2.5 m/s throughout the day on January 18. The minimum temperature in the city increased to around 10 degrees Celsius around 3 degrees above normal. 
+According to the IMD the city is expected to experience dense fog episodes on January 19. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 300 (‘Very Poor) on January 19. 
+The Ventilation Index (VI) is expected to be below 6000 m²/s on January 19. However the wind speed is expected to be between 3 - 5 m/s on January 19. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	19 January 2025
+	Delhis AQI deteriorated to 368 (‘Very Poor) on January 19 from 255 (‘Poor) recorded on January 18. 
+The wind speed was mostly 0 m/s until 07:30 AM on January 19. It gradually increased during the daytime but remained below 2.5 m/s until 04:00 PM. 
+The minimum temperature in the city is around 9 degrees Celsius around 1.6 degrees above normal. 
+According to the IMD the city is expected to experience moderate fog episodes on January 20 and 21. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 300 (‘Very Poor) on January 20. 
+The Ventilation Index (VI) is expected to be below 6000 m²/s on January 20 and 21. However the wind speed is expected to exceed 3 m/s over these days. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	20 January 2025
+	Delhis AQI improved to 314 (‘Very Poor) on January 20 from 368 (‘Very Poor) recorded on January 19. 
+The wind speed was mostly below 2.5 m/s until 10:00 AM on January 20. It stayed between 3 and 4.5 m/s during the rest of the day. 
+The minimum temperature in the city is above 11 degrees Celsius around 4 degrees above normal. 
+According to the IMD the city is expected to experience a moderate fog episode on January 21 followed by a thunderstorm with rain on January 22. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 300 (‘Very Poor) on January 21. 
+The Ventilation Index (VI) is expected to be below 6000 m²/s and the wind speed is not expected to exceed 3 m/s on January 21. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+
+
+
+
+21 January 2025
+	Delhis AQI improved to 289 (‘Poor) on January 21 from 314 (‘Very Poor) recorded on January 20. 
+The city recorded steady winds of 3 - 4.5 m/s between 08:30 AM and 04:00 PM on January 21. 
+The minimum temperature in the city is 10.6 degrees Celsius around 3 degrees above normal. 
+According to the IMD the city is expected to experience a thunderstorm with rain on January 22. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 200 (‘Poor) on January 22. 
+The Ventilation Index (VI) is expected to be below 3000 m²/s and the wind speed is not expected to exceed 2.8 m/s on January 22. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	22 January 2025
+	Delhis AQI improved to 260 (‘Poor) on January 22 from 289 (‘Poor) recorded on January 21. 
+The wind speed stayed mostly below 2.5 m/s on January 22. 
+The minimum temperature in the city is around 9 degrees Celsius around 2 degrees above normal. 
+According to the IMD the city is expected to experience a cloudy sky with light rain on January 23. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 300 (‘Poor) on January 23. 
+The Ventilation Index (VI) is expected to be below 3000 m²/s and the wind speed is not expected to exceed 3 m/s on January 23. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	23 January 2025
+	Delhis AQI marginally improved to 257 (‘Poor) on January 23 from 260 (‘Poor) recorded on January 22. 
+The wind speed stayed mostly below 2.5 m/s until 11:30 AM on January 23. It increased and stayed between 3 - 5 m/s from 12:00 PM to 04:00 PM. 
+The city received light rainfall during the early morning hours on January 23. The minimum temperature in the city is around 11 degrees Celsius around 3.5 degrees above normal. 
+According to the IMD the city is expected to experience moderate fog episodes on January 24 and 25. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 150 (‘Moderate) on January 24. 
+The Ventilation Index (VI) and wind speed are expected to exceed 6000 m²/s and 3 m/s respectively on January 24. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+
+
+24 January 2025
+	Delhis AQI improved to 199 (‘Moderate) on January 24 from 257 (‘Poor) recorded on January 23. 
+The wind speed stayed mostly below 2.5 m/s until 08:30 AM on January 24. It increased and stayed between 3.5 - 5 m/s from 09:00 AM to 04:00 PM. 
+The minimum temperature in the city is around 10 degrees Celsius around 2 degrees above normal. 
+According to the IMD the city is expected to experience shallow fog episodes on January 25 and 26. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 150 (‘Moderate) on January 25. 
+The Ventilation Index (VI) and wind speed are expected to be around 6000 m²/s and 3 m/s respectively on January 25. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	25 January 2025
+	Delhis AQI improved to 174 (‘Moderate) on January 25 from 199 (‘Moderate) recorded on January 24. 
+The wind speed stayed mostly below 2.5 m/s until 08:30 AM on January 25. It increased and stayed between 3.5 - 5 m/s from 09:00 AM to 04:00 PM. 
+The minimum temperature in the city is around 8.6 degrees Celsius around 1 degree above normal. 
+According to the IMD the city is expected to experience mist on January 26 and 27. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 150 (‘Moderate) on January 26. 
+The Ventilation Index (VI) is expected to be less than 6000 m²/s on January 26. The wind speed is expected to exceed 3 m/s on January 26. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	26 January 2025
+	Delhis AQI deteriorated to 216 (‘Poor) on January 26 from 174 (‘Moderate) recorded on January 25. 
+The wind speed was 0 m/s from 10:00 PM on January 25 to 03:00 AM on January 26. Higher wind speeds of 3 - 4.5 m/s were recorded between 11:00 AM and 04:00 PM on January 26. 
+The minimum temperature in the city is around 7 degrees Celsius around 1 degree below normal. 
+According to the IMD the city is expected to experience mist on January 27. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 150 and 200 (‘Moderate) on January 27. 
+The Ventilation Index (VI) is expected to be less than 6000 m²/s on January 27. The wind speed is expected to reach up to 3 m/s on January 27. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+
+
+27 January 2025
+	Delhis AQI deteriorated to 268 (‘Poor) on January 27 from 216 (‘Poor) recorded on January 26. 
+The wind speed was 0 m/s from 08:30 PM on January 26 to 06:30 AM on January 27. Higher wind speeds of 3 - 5 m/s were recorded between 12:00 PM and 04:00 PM. The minimum temperature in the city is around 7 degrees Celsius around 1 degree below normal. 
+According to the IMD the city is expected to experience shallow fog episodes on January 28. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 150 and 200 (‘Moderate) on January 28. 
+The Ventilation Index (VI) and wind speed are expected to be less than 3000 m²/s and 2.5 m/s respectively on January 28. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	28 January 2025
+	Delhis AQI deteriorated to 276 (‘Poor) on January 28 from 268 (‘Poor) recorded on January 27. 
+The wind speed stayed mostly below 2.5 m/s on January 28. 
+The minimum temperature in the city is around 5.6 degrees Celsius around 3 degrees below normal. 
+According to the IMD the city is expected to experience shallow fog episodes from 29 to 31 January. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 300 (‘Very Poor) on January 29. 
+The Ventilation Index (VI) is expected to be less than 3000 m²/s on January 29. However the wind speed is expected to reach up to 4 m/s on January 29. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	29 January 2025
+	Delhis AQI deteriorated to 365 (‘Very Poor) on January 29 from 276 (‘Poor) recorded on January 28. 
+The wind speed stayed mostly below 2.5 m/s till 10:00 AM on January 29. It increased gradually and stayed between 3 - 4 m/s till 04:00 PM. 
+The minimum temperature in the city is around 6.4 degrees Celsius around 2 degrees below normal. 
+According to the IMD the city is expected to experience moderate fog episodes from January 30 to February 1. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be above 300 (‘Very Poor) on January 30. 
+The Ventilation Index (VI) and wind speed are expected to be less than 3000 m²/s and 2.8 m/s respectively on January 30. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+
+
+30 January 2025
+	Delhis AQI slightly improved to 363 (‘Very Poor) on January 30 from 365 (‘Very Poor) recorded on January 29. 
+The wind speed stayed mostly below 3.5 m/s till 04:00 PM on January 30. The minimum temperature in the city is around 9.2 degrees Celsius around 1 degree above normal. 
+According to the IMD the city is expected to experience moderate fog episodes on January 31 and February 1. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be above 300 (‘Very Poor) on January 31. 
+The Ventilation Index (VI) and wind speed are expected to be less than 3000 m²/s and 2.8 m/s respectively on January 31. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	31 January 2025
+	Delhis AQI slightly improved to 351 (‘Very Poor) on January 31 from 363 (‘Very Poor) recorded on January 30. 
+The wind speed stayed mostly below 2.5 m/s till 04:00 PM on January 31. The minimum temperature in the city is around 9.5 degrees Celsius around 1 degree above normal. 
+According to the IMD the city is expected to experience moderate fog episodes on February 1 and 2. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 350 (‘Very Poor) on February 1. 
+The Ventilation Index (VI) is expected to be less than 6000 m²/s. The wind speed is expected to exceed 3 m/s on February 1. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	01 February 2025
+	Delhis AQI slightly deteriorated to 355 (‘Very Poor) on February 1 from 351 (‘Very Poor) recorded on January 31. 
+The wind speed stayed mostly below 2.5 m/s till 04:00 PM on February 1. The minimum temperature in the city is around 10 degrees Celsius around 2 degrees above normal. 
+According to the IMD the city is expected to experience dense fog on February 2 followed by a cloudy sky with light drizzle on February 3. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be above 300 (‘Very Poor) on February 2. 
+The Ventilation Index (VI) is expected to exceed 6000 m²/s on February 2. The wind speed is not expected to exceed 2.2 m/s on February 2. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	02 February 2025
+	Delhis AQI slightly improved to 326 (‘Very Poor) on February 2 from 355 (‘Very Poor) recorded on February 1. 
+The wind speed stayed mostly below 3.5 m/s till 04:00 PM on February 2.
+The minimum temperature in the city is around 12 degrees Celsius around 3 degrees above normal. 
+According to the IMD the city is expected to experience a cloudy sky with light drizzle on February 3 followed by a thunderstorm on February 4. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be above 300 (‘Very Poor) on February 3. 
+The Ventilation Index (VI) is expected to be below 6000 m²/s on February 3. The wind speed is not expected to exceed 3.3 m/s on February 3. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+
+
+	
+
+
+
+
+
+03 February 2025
+	Delhis AQI improved to 286 (‘Poor) on February 3 from 326 (‘Very Poor) recorded on February 2. 
+The wind speed stayed mostly below 3 m/s till 04:00 PM on February 3. 
+The minimum temperature in the city is around 10 degrees Celsius around 2 degrees above normal. 
+According to the IMD the city is expected to experience a thunderstorm with rain on February 4. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be above 200 (‘Poor) on February 4. 
+The Ventilation Index (VI) is expected to be below 3000 m²/s on February 4. The wind speed is not expected to exceed 3.3 m/s on February 4. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	04 February 2025
+	Delhis AQI improved to 264 (‘Poor) on February 4 from 286 (‘Poor) recorded on February 3. 
+The wind speed stayed mostly below 2.5 m/s till 04:00 PM on February 4. The minimum temperature in the city is around 13 degrees Celsius around 4 degrees above normal. 
+The city received light rainfall on February 4. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be above 200 (‘Poor) on February 5. 
+The Ventilation Index (VI) is expected to be below 6000 m²/s on February 5. The wind speed is not expected to exceed 3.3 m/s on February 5. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	05 February 2025
+	Delhis AQI slightly deteriorated to 284 (‘Poor) on February 5 from 264 (‘Poor) recorded on February 4. 
+The wind speed stayed mostly below 2.5 m/s till 11:00 AM on February 5. It gradually increased and stayed between 3 - 5 m/s from 11:00 AM to 04:00 PM. 
+The minimum temperature in the city is around 11 degrees Celsius around 1.6 degrees above normal. 
+The city received trace rainfall on February 5.
+According to the IMD the city is expected to experience shallow fog episodes from February 6 to February 9. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be above 200 (‘Poor) on February 6. 
+The maximum Ventilation Index (VI) is expected to be about 12000 m²/s on February 6. The wind speed is expected to exceed 4 m/s on February 6. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+
+
+	
+
+
+
+
+
+06 February 2025
+	Delhis AQI improved t0 210 (‘Poor) on February 6 from 284 (‘Poor) recorded on February 5. 
+The wind speed stayed mostly above 4 m/s from 10:30 AM to 04:00 PM on February 6. The minimum temperature in the city is around 8 degrees Celsius around 1 degree below normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 150 (‘Moderate) on February 7. 
+The maximum Ventilation Index (VI) is expected to be above 12000 m²/s on February 7. The wind speed is expected to exceed 5 m/s on February 7. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	07 February 2025
+	Delhis AQI improved to 156 (‘Moderate) on February 7 from 210 (‘Poor) recorded on February 6. 
+The wind speed stayed mostly above 4 m/s on February 7. 
+The minimum temperature in the city is around 10 degrees Celsius less than a degree above normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 150 (‘Moderate) on February 8. 
+The maximum Ventilation Index (VI) is expected to be above 9000 m²/s on February 8. The wind speed is expected to exceed 5 m/s on February 8. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	08 February 2025
+	Delhis AQI slightly improved to 152 (‘Moderate) on February 8 from 156 (‘Moderate) recorded on February 7. 
+The wind speed stayed mostly between 3 - 4.5 m/s from 08:00 AM to 04:00 PM on February 8. 
+The minimum temperature in the city is around 10 degrees Celsius less than a degree above normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 150 (‘Moderate) on February 9. 
+The maximum Ventilation Index (VI) is expected to be below 6000 m²/s on February 9. The wind speed is expected to exceed 3 m/s on February 9. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+
+
+09 February 2025
+	Delhis AQI deteriorated to 227 (‘Poor) on February 9 from 152 (‘Moderate) on February 8. 
+The wind speed did not exceed 2 m/s throughout the day. Moreover the minimum temperature hovered around 8 degrees Celsius a degree below normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be above 200 (Poor) for the next few days. 
+The Ventilation Index (VI) is not expected cross the 6000 m²/s mark over the next two days. The wind speed is expected to be between 1.5 and 3 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	10 February 2025
+	Delhis AQI deteriorated to 271 (‘Poor) on February 10 from 227 (‘Poor) on February 9. The wind speed was 0 m/s until 06:30 AM and did not exceed 2.5 m/s for the remaining part of the day . Moreover the minimum temperature hovered around 10 degrees Celsius less than a degree below normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be above 200 (Poor) for the next few days. 
+The Ventilation Index (VI) is expected to cross 6000 m²/s mark on February 11. The wind speed is expected to be between 1.5 and 3 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	11 February 2025
+	Delhis AQI deteriorated to 293 (‘Poor) on February 11 from 271 (‘Poor) on February 10. The wind speed was 0 m/s until 10:30 AM and did not exceed 3 m/s for the remaining part of the day . Moreover the minimum temperature hovered around 10 degrees Celsius less than a degree below normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be above 200 (Poor) on February 12. 
+The maximum Ventilation Index (VI) is expected to cross 21000 m²/s mark on February 12. The wind speed is expected to exceed 6 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	12 February 2025
+	Delhis AQI improved to 212 (‘Poor) on February 12 from 293 (‘Poor) on February 11. The wind speed stayed below 2.5 m/s until 10:30 AM on February 12. It gradually increased and stayed between 3 - 5 m/s for the rest of the day. Moreover the minimum temperature hovered above 11 degrees Celsius about a degree higher than the normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be above 200 (Poor) on February 13. 
+The maximum Ventilation Index (VI) is expected to cross 12000 m²/s mark on February 13. The wind speed is expected to exceed 6 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+
+
+13 February 2025
+	Delhis AQI improved to 134 (‘Moderate) on February 13 from 212 (‘Poor) on February 12. The wind speed stayed above 3 m/s throughout the day on February 13. Moreover the minimum temperature hovered above 12 degrees Celsius about two degrees higher than the normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 100 and 200 (Moderate) on February 14. 
+The maximum Ventilation Index (VI) is expected to cross 12000 m²/s mark on February 14. The wind speed is expected to reach up to 5 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	14 February 2025
+	Delhis AQI improved to 131 (‘Moderate) on February 14 from 134 (‘Moderate) on February 13. 
+The wind speed mostly stayed above 3 m/s on February 14. Moreover the minimum temperature hovered above 10 degrees Celsius less than a degree above the normal. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 100 and 150 (Moderate) on February 15. 
+The maximum Ventilation Index (VI) is expected to be below 6000 m²/s mark on February 15. The wind speed is expected to exceed 3 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	15 February 2025
+	Delhis AQI deteriorated to 191 (‘Moderate) on February 15 from 131 (‘Moderate) on February 14. 
+The wind speed mostly stayed below 2.5 m/s on February 15. Moreover the minimum temperature hovered above 10 degrees Celsius about a degree below the normal. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be above 200 (Poor) on February 16. 
+The maximum Ventilation Index (VI) is expected to be below 6000 m²/s mark on February 16. The wind speed is expected to be below 2.5 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	16 February 2025
+	Delhis AQI deteriorated to 294 (‘Poor) on February 16 from 191 (‘Moderate) on February 15. 
+The wind speed mostly stayed below 2 m/s on February 16. Moreover the minimum temperature hovered above 10 degrees Celsius about a degree below the normal. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 250 (Poor) on February 17. 
+The maximum Ventilation Index (VI) is expected to be below 6000 m²/s mark on February 17. The wind speed is expected to stay below 3 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	17 February 2025
+	Delhis AQI improved to 231 (‘Poor) on February 17 from 294 (‘Poor) on February 16.
+The wind speed was 0 m/s till 09:00 AM on February 17. It stayed below 2.5 m/s for the rest of the day. Moreover the minimum temperature hovered around 11 degrees Celsius. According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 250 (Poor) on February 18. 
+According to the IMD the city is expected to experience thunderstorm with rain on February 19. 
+The maximum Ventilation Index (VI) is expected to be below 3000 m²/s mark on February 18. The wind speed is expected to stay below 3 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+
+
+18 February 25
+	Delhis AQI improved to 209 (‘Poor) on February 18 from 231 (‘Poor) on February 17. The wind speed mostly stayed below 3 m/s until 04:00 PM on February 18. Moreover the minimum temperature hovered around 13 degrees Celsius which is about 2 degrees above the normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 250 (Poor) on February 19. 
+According to the IMD the city is expected to experience thunderstorm with rain on February 19. 
+The maximum Ventilation Index (VI) is expected to be around 6000 m²/s on February 19. The wind speed is expected to stay below 3 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	19 February 25
+	Delhis AQI improved to 180 (‘Moderate) on February 19 from 209 (‘Poor) on February 18. The wind speed mostly stayed below 2.5 m/s until 04:00 PM on February 19. It occasionally touched 3 m/s. Moreover the minimum temperature hovered around 10 degrees Celsius which is about less than a degree above the normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 300 (Very Poor) on February20. 
+According to the IMD the city is expected to experience a cloudy sky with light drizzle on February 20. 
+The maximum Ventilation Index (VI) is expected to be around 12000 m²/s on February 20. The wind speed is expected to stay around 5 m/s during the daytime. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	20 February 2025
+	Delhis AQI improved to 160 (‘Moderate) on February 20 from 180 (‘Moderate) on February 19. 
+The city recorded higher wind speeds above 3.5 m/s between 10:00 AM and 04:00 PM on February 20. Moreover the minimum temperature hovered around 15 degrees Celsius which is about three degrees above the normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 300 (Very Poor) on February 21.
+The maximum Ventilation Index (VI) is expected to be less than 9000 m²/s on February 21. The wind speed is expected to stay below 3 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+
+
+	
+
+
+
+
+
+21 February 25
+	Delhis AQI improved to 158 (‘Moderate) on February 21 from 160 (‘Moderate) on February 20. 
+The wind speed stayed below 1.5 m/s until 11:30 AM on February 21. However it stayed above 4 m/s between 12:30 and 04:00 PM. Moreover the minimum temperature hovered around 12 degrees Celsius which is less than a degree above the normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 200 and 300 (Poor) on February 22. 
+The maximum Ventilation Index (VI) is expected to be around 12000 m²/s on February 22. The maximum wind speed is expected to be around 3 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	22 February 25
+	Delhis AQI improved to 155 (‘Moderate) on February 22 from 158 (‘Moderate) on February 21. 
+The wind speed consistently stayed above 2 m/s throughout the day. The city recorded higher wind speed above 4 m/s between 01:30 PM and 04:00 PM. Moreover the minimum temperature hovered around 12 degrees Celsius which is less than a degree above the normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 100 and 200 (Moderate) on February 23. 
+The maximum Ventilation Index (VI) is expected to be around 9000 m²/s on February 23. The maximum wind speed is expected to be around 3 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	23 February 25
+	Delhis AQI improved to 144 (‘Moderate) on February 23 from 155 (‘Moderate) on February 22. 
+The wind speed consistently stayed above 2.5 m/s between 11:00 AM and 04:00 PM on February 23. Moreover the minimum temperature hovered around 10 degrees Celsius which is about a degree below the normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 200 and 250 (Poor) on February 24. 
+The maximum Ventilation Index (VI) is expected to be around 6000 m²/s on February 24. The maximum wind speed is expected to be around 3 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	24 February 25
+	Delhis AQI deteriorated to 186 (‘Moderate) on February 24 from 144 (‘Moderate) on February 23. 
+The wind speed was 0 m/s during the early morning hours on February 24. However it stayed mostly below 2.5 m/s for the rest of the day.
+The minimum temperature hovered around 11 degrees Celsius which is about a degree below the normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 200 and 250 (Poor) on February 25. 
+The maximum Ventilation Index (VI) is expected to be less than 9000 m²/s on February 25. The maximum wind speed is expected to be around 3 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+
+
+25 February 2025
+	Delhis AQI deteriorated to 208 (‘Poor) on February 25 from 186 (‘Moderate) on February 24. 
+The wind speed was 0 m/s until 06:00 AM on February 25. However it stayed mostly below 2.5 m/s for the rest of the day. 
+The minimum temperature hovered around 12 degrees Celsius which is about a degree below the normal. 
+According to IMD the city is expected to receive light drizzle on February 26 followed by thunderstorm and rain on February 27 and 28. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 300 (Very Poor) on February 26. 
+The maximum Ventilation Index (VI) is expected to be less than 3000 m²/s on February 26. The maximum wind speed is expected to be around 3 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	26 February 2025
+	Delhis AQI deteriorated to 247 (‘Poor) on February 26 from 208 (‘Poor) on February 25. The wind speed was 0 m/s until 04:30 AM on February 26. However it stayed mostly below 2.5 m/s for the rest of the day. 
+The minimum temperature hovered around 15 degrees Celsius which is about three degrees above the normal. 
+According to IMD the city is expected to experience a thunderstorm with rain on February 27 and 28. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 350 (Very Poor) on February 27. 
+The maximum Ventilation Index (VI) is expected to be around 6000 m²/s on February 27. The maximum wind speed is expected to be around 5 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	27 February 2025
+	Delhis AQI improved to 215 (‘Poor) on February 27 from 247 (‘Poor) on February 26. The wind speed stayed above 3 m/s from 08:00 AM to 04:00 PM. 
+The minimum temperature hovered around 19 degrees Celsius which is about seven degrees above the normal. 
+According to IMD the city is expected to experience a thunderstorm with rain on February 28. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 300 (Very Poor) on February 28.
+The maximum Ventilation Index (VI) is expected to be less than 6000 m²/s on February 28. The maximum wind speed is expected to be around 5 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+
+
+28 February 2025
+	Delhis AQI improved to 121 (‘Moderate) on February 28 from 215 (‘Poor) on February 27. The wind speed mostly stayed above 3 m/s from 04:30 AM to 04:00 PM on February 28. The minimum temperature hovered around 18 degrees Celsius which is about six degrees above the normal. Moreover the city received trace rainfall on February 28. 
+According to IMD the city is expected to experience a cloudy sky with light drizzle on March 1. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 300 and 350 (Very Poor) on March 1. 
+The maximum Ventilation Index (VI) is expected to be less than 3000 m²/s on March 1. The maximum wind speed is expected to be around 3 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	01 March 2025
+	Delhis AQI slightly deteriorated to 126 (‘Moderate) on March 1 from 121 (‘Moderate) on February 28. 
+The wind speed mostly stayed below 3 m/s while touching 4 m/s between 09:00 AM and 12:00 PM on March 1. 
+The minimum temperature hovered around 17 degrees Celsius which is about four degrees above the normal. Moreover the city received light rainfall on March 1. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 250 (Poor) on March 2. 
+The maximum Ventilation Index (VI) is expected to be above 9000 m²/s on March 2. The maximum wind speed is expected to be around 4 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	02 March 2025
+	Delhis AQI slightly improved to 125 (‘Moderate) on March 2 from 126 (‘Moderate) on March 1. 
+The wind speed mostly stayed above 3 m/s between 10:00 AM and 04:00 PM on March 2. The minimum temperature hovered around 14 degrees Celsius which is about one degree above the normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 250 (Poor) on March 3. 
+The maximum Ventilation Index (VI) is expected to be around 3000 m²/s on March 3. The maximum wind speed is expected to be around 4 m/s. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+03 March 2025
+	Delhis AQI slightly deterioared to 156 (‘Moderate) on March 3 from 125 (‘Moderate) on March 2. 
+The wind speed mostly stayed below 2 m/s on March 3.
+The minimum temperature hovered around 10 degrees Celsius which is about four degrees below the normal. 
+According to the IMD the city is expected to experience strong surface winds during the daytime on March 4. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be around 200 (Poor) on March 4. 
+The maximum Ventilation Index (VI) is expected to be around 27000 m²/s on March 4. The wind speed is expected to be around 5 m/s during the daytime. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	
+
+
+
+
+
+04 March 2025
+	Delhis AQI slightly improved to 148 (‘Moderate) on March 4 from 156 (‘Moderate) on March 3. 
+The wind speed stayed above 3 m/s between 08:30 AM and 04:00 PM on March 4. The minimum temperature hovered around 16 degrees Celsius which is about two degrees above the normal. 
+According to the IMD the city is expected to experience strong surface winds during the daytime on March 5. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 50 and 100 (Satisfactory) on March 5. 
+The maximum Ventilation Index (VI) is expected to be around 27000 m²/s on March 5. The wind speed is expected to be around 7 m/s during the daytime. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.
+	05 March 2025
+	Delhis AQI slightly improved to 119 (‘Moderate) on March 5 from 148 (‘Moderate) on March 4. 
+The wind speed stayed above 3 m/s throughout the day on March 5. 
+The minimum temperature hovered around 12 degrees Celsius which is about two degrees below the normal. 
+According to the Air Quality Early Warning System (AQEWS) the AQI is expected to be between 50 and 100 (Satisfactory) on March 6. 
+The maximum Ventilation Index (VI) is expected to be around 15000 m²/s on March 6. The maximum wind speed is expected to be around 5 m/s during the daytime. Wind speeds above 2.8 m/s and VI above 6000 m²/s are generally favourable for the dispersion of pollutants.

@@ -1,0 +1,13 @@
+[server]
+port = 8501
+enableCORS = true
+
+
+[theme]
+base="light"
+primaryColor="#1B4FD6"
+
+[browser]
+gatherUsageStats = false
+serverAddress = "localhost"
+serverPort = 8501
