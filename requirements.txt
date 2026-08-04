@@ -14,7 +14,7 @@ pandas==2.3.0
 pdfplumber==0.11.7
 plotly==6.1.2
 py-mini-racer==0.6.0
-pytz==2025.2
+pytz==2026.3.post1
 requests==2.32.4
 requests-cache==1.2.1
 retry-requests==2.0.0
