@@ -1,46 +1,37 @@
 import sys
 import pandas as pd
-from datetime import time, datetime, timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
-from get_met_details import get_tomorrow_avg, get_fire_count, get_fc_aqi, get_v_index_df, get_aqi_cat
 
 PARENT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PARENT_DIR))
-from config.settings import EFFECTIVE_DATE_CUTOFF
+from config.settings import (
+    ARCHIVE_JSON, ARCHIVE_TEMP, CPCB_AQI_CSV as AQI_CSV_FILE, DATA_DIR,
+    MISSING_FORECAST_DAYS, effective_today,
+)
 from config.formatting import ordinal
 from config.logging_config import get_logger
-from ingestion.json_store import write_json_atomic
-
-DATA_DIR = PARENT_DIR / "data"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-AQI_CSV_FILE = DATA_DIR / "delhi_aqi_cpcb.csv"
-ARCHIVE_JSON = DATA_DIR / "archive.json"
-ARCHIVE_TEMP = DATA_DIR / "archive_temp.json"
+from ingestion.json_store import read_json, write_json_atomic
+from ingestion.get_met_details import get_tomorrow_avg, get_fire_count, get_fc_aqi, get_v_index_df, get_aqi_cat
 
 logger = get_logger(__name__)
 
 
-def get_last_two_days(csv_path=AQI_CSV_FILE):
-    today = datetime.today().date()
-    yesterday = today - timedelta(days=1)
-    day_before = today - timedelta(days=2)
-    cutoff = EFFECTIVE_DATE_CUTOFF
-    # Decide which dates to use
-    now = datetime.now()
-    if now.time() < cutoff:
-        dates_needed = [yesterday, day_before]
-    else:
-        dates_needed = [today, yesterday]
-
+def get_last_two_days(csv_path=AQI_CSV_FILE, today=None):
+    """CPCB rows for the effective "today" and the day before, newest first.
+    Single implementation shared by the summary builder and the dashboard."""
+    today = today or effective_today()
+    dates_needed = [today, today - timedelta(days=1)]
     df = pd.read_csv(csv_path)
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d").dt.date
+    df['aqi'] = pd.to_numeric(df['aqi'], errors='coerce')
     filtered = df[df['date'].isin(dates_needed)].sort_values('date', ascending=False)
     return filtered
 
 
 def save_missing_forecast_days(mf_days):
     try:
-        with open(DATA_DIR / "missing_forecast_days.txt") as f:
+        with open(MISSING_FORECAST_DAYS) as f:
             existing_dates = {line.strip() for line in f}
     except FileNotFoundError:
         existing_dates = set()
@@ -48,20 +39,13 @@ def save_missing_forecast_days(mf_days):
     new_dates = [d for d in mf_days if d not in existing_dates]
 
     if new_dates:
-        with open(DATA_DIR / "missing_forecast_days.txt", "a") as f:
+        with open(MISSING_FORECAST_DAYS, "a") as f:
             for date in new_dates:
                 f.write(f"{date}\n")
    
 
 def get_aqi_summary(df):
-    cutoff = EFFECTIVE_DATE_CUTOFF
-    # --- Decide which dates to use ---
-    now = datetime.now()
-    if now.time() < cutoff:
-        today = datetime.today().date() - timedelta(days=1)
-    else:
-        today = datetime.today().date()
-   
+    today = effective_today()
     prev_date = today - timedelta(days=1)
     next_date = today + timedelta(days=1)
 
@@ -71,7 +55,7 @@ def get_aqi_summary(df):
     # --- initialize all forecast variables ---
     min_temp = avg_wind = avg_rainfall = None
     aqi_forecast = aqi_forecast_cat = v_index_fc = aqi_cat_fallback = None
-    fire_counts = {}
+    fire_counts = None
 
     # ---fetch met + forecast data ---
     try:
@@ -98,36 +82,24 @@ def get_aqi_summary(df):
         fire_counts = get_fire_count(prev_date)
     except Exception as e:
         logger.warning("get_fire_count failed: %s", e)
-        fire_counts = {}
 
     # --- observed AQI summary ---
-    if df.empty:
+    rows = df.dropna(subset=["aqi"]) if not df.empty else df
+    if rows.empty or rows.iloc[0]["date"] != today:
         aqi_obs_line = (
             f"Delhi's Air Quality Index (AQI) is N/A for {fmt_date(today)} as the CPCB bulletin is not yet released."
         )
     else:
-        df1, df2 = df.iloc[0], df.iloc[1]
-
-        if df1.empty or df2.empty:
-            logger.warning("df1 or df2 is empty")
-
-        curr_date = df1["date"]
-        curr_date_str = fmt_date(curr_date)
-        prev_date_str = fmt_date(df2["date"]) if df2 is not None else fmt_date(prev_date)
-        next_date_str = fmt_date(curr_date + timedelta(days=1))
-
-        # Compute AQI difference safely
-        try:
-            diff = int(df1["aqi"]) - int(df2["aqi"]) if df2 is not None else 0
-        except Exception:
-            diff = 0
-
-        trend = "deteriorating" if diff > 0 else "improving" if diff < 0 else "unchanged"
-        
-        aqi_obs_line = (
-            f"Delhi's Air Quality Index (AQI) stood at {df1['aqi']} on {curr_date_str}, "
-            f"{trend} from {df2['aqi']} on {prev_date_str}."
-        )
+        df1 = rows.iloc[0]
+        aqi_now = int(df1["aqi"])
+        aqi_obs_line = f"Delhi's Air Quality Index (AQI) stood at {aqi_now} on {fmt_date(df1['date'])}"
+        if len(rows) > 1:
+            df2 = rows.iloc[1]
+            diff = aqi_now - int(df2["aqi"])
+            trend = "deteriorating" if diff > 0 else "improving" if diff < 0 else "unchanged"
+            aqi_obs_line += f", {trend} from {int(df2['aqi'])} on {fmt_date(df2['date'])}."
+        else:
+            aqi_obs_line += "."
 
     # ---- missing forecasts ---- 
     missing_forecast_days = []
@@ -180,9 +152,12 @@ def get_aqi_summary(df):
     else:
         temp_fc = "Temperature forecast unavailable."
 
-    fire_line = (
-        f"Fire count on {fmt_date(prev_date)} is {sum(fire_counts.values())} (Punjab: {fire_counts.get('Punjab', 0)}, Haryana: {fire_counts.get('Haryana', 0)})."
-    )
+    if fire_counts is None:
+        fire_line = f"Fire count for {fmt_date(prev_date)} is currently unavailable."
+    else:
+        fire_line = (
+            f"Fire count on {fmt_date(prev_date)} is {sum(fire_counts.values())} (Punjab: {fire_counts.get('Punjab', 0)}, Haryana: {fire_counts.get('Haryana', 0)})."
+        )
 
     # --- Combine all lines into final summary ---
     aqi_summary = [
@@ -199,18 +174,23 @@ def get_aqi_summary(df):
 
 
 def save_file_to_json(date, summary):
+    """Writes today's summary for the dashboard and merges it straight into the
+    archive (previously a separate 9 PM cron, update_archive_json.py, did the
+    merge - if it didn't run, the day was lost from the archive)."""
     date_str = date.strftime("%Y-%m-%d")
     summary_dict = {date_str: summary}
     write_json_atomic(ARCHIVE_TEMP, summary_dict, indent=2, default=str)
+    archive = read_json(ARCHIVE_JSON)
+    archive.update(summary_dict)
+    write_json_atomic(ARCHIVE_JSON, archive, indent=2, default=str)
 
 
-def main():
+def run():
     df = get_last_two_days()
-    print(df)
     date_curr, summary_aqi = get_aqi_summary(df)
-    #print(summary_aqi)
     save_file_to_json(date_curr, summary_aqi)
+    return {"date": str(date_curr), "lines": len(summary_aqi), "aqi_line": summary_aqi[0]}
 
 
 if __name__ == "__main__":
-   main()
+    print(run())

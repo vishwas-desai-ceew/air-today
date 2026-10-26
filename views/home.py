@@ -1,90 +1,21 @@
-import pandas as pd
 import streamlit as st
-from datetime import datetime, timedelta
 
-from config.settings import EFFECTIVE_DATE_CUTOFF
-from ingestion.get_met_details import get_fire_count
-from views.delhi_weather import STYLES, get_last_two_days
-from views.render_aqi_fc import get_error_message
-from views.components import metric_card, section_header
-
-
-def _effective_today():
-    now = datetime.now()
-    if now.time() >= EFFECTIVE_DATE_CUTOFF:
-        return now.date()
-    return (now - timedelta(days=1)).date()
+from views.components import outage_banner, section_header
+from views.delhi_weather import get_insights
+from views.widgets import render_kpi_grid
 
 
 def render_home_overview(error_flag, is_mobile=False):
-    """Landing page: the one number that matters (today's AQI), 3 supporting KPIs,
-    and the data-freshness strip - see design.md 'Home Dashboard'."""
-    today = _effective_today()
-    section_header("Overview", caption=f"Delhi NCR &middot; {today.strftime('%d %B %Y')}")
-
-    df = get_last_two_days()
-    df1 = df.iloc[0] if not df.empty else None
-    df2 = df.iloc[1] if len(df) > 1 else None
-
-    aqi_value, aqi_category, aqi_delta = None, None, None
-    if df1 is not None and not pd.isna(df1.get("aqi")):
-        aqi_value = int(df1["aqi"])
-        aqi_category = df1["category"]
-        if df2 is not None and not pd.isna(df2.get("aqi")):
-            aqi_delta = aqi_value - int(df2["aqi"])
-
-    fire_total = None
+    """Landing page: weather-style KPI cards for air and met conditions, then
+    the day's written update."""
+    section_header("Conditions now", caption="Air quality, dispersion and weather for Delhi at a glance")
+    render_kpi_grid()
+    if error_flag:
+        outage_banner(compact=is_mobile)
     try:
-        fire_counts = get_fire_count(today - timedelta(days=1))
-        if fire_counts:
-            fire_total = sum(fire_counts.values())
+        st.markdown(get_insights(), unsafe_allow_html=True)
     except Exception:
-        fire_total = None
-
-    tomorrow_aqi, tomorrow_category = None, None
-    try:
-        _, df_aqi = get_error_message()
-        tomorrow = today + timedelta(days=1)
-        row = df_aqi[df_aqi["date"].dt.date == tomorrow]
-        if not row.empty:
-            tomorrow_aqi = round(row.iloc[0]["AQI_overall"])
-            tomorrow_category = row.iloc[0].get("category")
-    except Exception:
-        pass
-
-    n_cols = 2 if is_mobile else 4
-    cols = st.columns(n_cols)
-
-    with cols[0 % n_cols]:
-        metric_card(
-            "Latest AQI (Delhi)",
-            aqi_value if aqi_value is not None else "—",
-            caption=aqi_category or "No bulletin yet",
-            delta=aqi_delta,
-            delta_good_when="down",
-            color=STYLES.get(aqi_category, {}).get("bg") if aqi_category else None,
-        )
-    with cols[1 % n_cols]:
-        metric_card(
-            "Fire count (Punjab + Haryana)",
-            fire_total if fire_total is not None else "—",
-            caption="yesterday, NASA VIIRS",
-        )
-    with cols[2 % n_cols]:
-        metric_card(
-            "Tomorrow's AQI forecast",
-            tomorrow_aqi if tomorrow_aqi is not None else "—",
-            caption=tomorrow_category or "AQEWS forecast",
-            color=STYLES.get(tomorrow_category, {}).get("bg") if tomorrow_category else None,
-        )
-    with cols[3 % n_cols]:
-        metric_card(
-            "Data status",
-            "Outage" if error_flag else "OK",
-            caption="AQEWS portal",
-            color="#E91902" if error_flag else "#1E8E5A",
-        )
-
+        st.info("Today's written update hasn't been generated yet.")
 
 
 def render_glossary():

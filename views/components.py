@@ -97,15 +97,13 @@ def render_status_strip(error_flag):
 def section_header(title, caption=None):
     """Page/section title + optional caption, replacing ad hoc `st.markdown('### ...')`
     + manual hr() pairs scattered across dashboard.py."""
+    # One element: the old open-div / caption / close-div trio rendered as
+    # three siblings, so the wrapper never actually wrapped anything.
+    caption_html = f"<div class='ceew-caption'>{caption}</div>" if caption else ""
     st.markdown(
-        f"<div class='ceew-section-header'><div class='ceew-h1'>{title}</div>",
+        f"<div class='ceew-section-header'><div class='ceew-h1'>{title}</div>{caption_html}</div>",
         unsafe_allow_html=True,
     )
-    if caption:
-        st.markdown(
-            f"<div class='ceew-caption'>{caption}</div>", unsafe_allow_html=True
-        )
-    st.markdown("</div>", unsafe_allow_html=True)
 
 
 def metric_card(

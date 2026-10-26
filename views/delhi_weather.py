@@ -9,11 +9,7 @@ from config.formatting import ordinal
 from ingestion.json_store import read_json
 
 
-PARENT_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = PARENT_DIR / "data"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-AQI_CSV_FILE = DATA_DIR / "delhi_aqi_cpcb.csv"
-ARCHIVE_TEMP = DATA_DIR / "archive_temp.json"
+from config.settings import ARCHIVE_TEMP, CPCB_AQI_CSV as AQI_CSV_FILE
 
 
 STYLES = {
@@ -35,20 +31,9 @@ AQI_CATEGORY_CLASSES = {
 }
 
 def get_last_two_days(csv_path=AQI_CSV_FILE):
-    today = datetime.today().date()
-    yesterday = today - timedelta(days=1)
-    day_before = today - timedelta(days=2)
-    cutoff = EFFECTIVE_DATE_CUTOFF
-    now = datetime.now()
-    if now.time() < cutoff:
-        dates_needed = [yesterday, day_before]
-    else:
-        dates_needed = [today, yesterday]
-
-    df = pd.read_csv(csv_path)
-    df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d").dt.date
-    filtered = df[df['date'].isin(dates_needed)].sort_values('date', ascending=False)
-    return filtered
+    # One implementation, shared with the daily-summary builder.
+    from ingestion.get_aqi_summary import get_last_two_days as _shared
+    return _shared(csv_path)
 
 
 def render_aqi_card(period, date, new_df, difference=None):
@@ -68,7 +53,7 @@ def render_aqi_card(period, date, new_df, difference=None):
                 <span class='aqi-period'>{period}</span>
                 <span class='aqi-card-date'>{date}</span>
             </div>
-            <div class='aqi-value'>{new_df["aqi"]}<span class='aqi-label'>AQI</span></div>
+            <div class='aqi-value'>{int(new_df["aqi"])}<span class='aqi-label'>AQI</span></div>
             <span class='aqi-category' style='background-color:{style['bg']}; color:{style['color']};'>
                 {new_df["category"]}
             </span>

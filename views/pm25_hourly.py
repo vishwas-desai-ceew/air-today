@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import streamlit.components.v2 as components
+import streamlit.components.v1 as components
 from datetime import datetime, timedelta
 
 def day_suffix(day):
@@ -37,5 +37,5 @@ def render_pm25_hourly(isMobile=False, compact=False):
             </script>
             """, unsafe_allow_html=True)
         else:
-            components.iframe(src, height=950, width="100%", scrolling=True)
+            components.iframe(src, height=950, scrolling=True)
         

@@ -5,9 +5,15 @@ enableCORS = true
 
 [theme]
 base="light"
-primaryColor="#1B4FD6"
+primaryColor="#0B6BCB"
+backgroundColor="#F4F9FF"
+secondaryBackgroundColor="#EAF4FF"
+textColor="#0D2440"
 
 [browser]
 gatherUsageStats = false
-serverAddress = "localhost"
+# Must use the same host as auth.redirect_uri in secrets.toml, otherwise the
+# Google sign-in cookie is set on one host and the callback arrives on the
+# other (dashboard.py also redirects mismatched hosts before sign-in).
+serverAddress = "127.0.0.1"
 serverPort = 8501
