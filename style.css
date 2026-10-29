@@ -361,10 +361,36 @@ button:focus-visible,
 }
 
 .auth-login-copy {
-  margin-top: -1.5rem;
   max-width: 29rem;
+  margin: 0 auto 0.25rem;
   text-align: center;
-  margin-bottom: -3.5rem;
+}
+
+/* Centre every child of the login tile (logo, copy, button) on one axis */
+.st-key-auth-login,
+.st-key-auth-login [data-testid="stElementContainer"] {
+  align-items: center;
+}
+
+.st-key-auth-login [data-testid="stImage"],
+.st-key-auth-login [data-testid="stImage"] img {
+  margin: 0 auto;
+}
+
+/* The logo PNG has a lot of transparent padding; pull the copy up under it */
+.st-key-auth-login [data-testid="stHorizontalBlock"] {
+  margin-bottom: -2.5rem;
+}
+
+/* Streamlit reserves room for a hover anchor-link icon beside every
+   heading, which pushed "Air Today" off centre */
+.st-key-auth-login [data-testid="stHeaderActionElements"],
+.st-key-auth-login h1 a {
+  display: none !important;
+}
+
+.st-key-auth-login [data-testid="stElementToolbar"] {
+  display: none;
 }
 
 .auth-login-eyebrow {
@@ -392,9 +418,13 @@ button:focus-visible,
   line-height: 1.55 !important;
 }
 
-.st-key-auth-login [data-testid="stButton"] {
-  margin: 0 auto;
+.st-key-auth-login [data-testid="stButton"],
+.st-key-auth-login [data-testid="stLinkButton"],
+.st-key-auth-login [data-testid="stCaptionContainer"] {
+  width: 100%;
   max-width: 20rem;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .st-key-auth-login [data-testid="stButton"] button {
@@ -612,12 +642,15 @@ details.recent-trend p {
   }
 }
 
-/* ----- App hero (views/widgets.py: render_hero) ----- */
-.sky-hero {
+/* ----- App hero (views/widgets.py: render_hero) -----
+   A keyed st.container so it can hold the Key insights button. Not
+   overflow:hidden - the data-health dropdown has to spill out of it. */
+.st-key-sky-hero,
+.sky-topbar {
   position: relative;
-  overflow: hidden;
+  z-index: 5;
   margin: 0 0 1.5rem;
-  padding: clamp(1.25rem, 3vw, 2.25rem);
+  padding: clamp(1.25rem, 3vw, 2.25rem) !important;
   border-radius: 22px;
   background:
     radial-gradient(ellipse at 15% 110%, rgba(255, 255, 255, 0.35), transparent 45%),
@@ -627,10 +660,24 @@ details.recent-trend p {
   color: #ffffff;
 }
 
+.st-key-sky-hero {
+  gap: 0 !important;
+}
+
+.sky-topbar {
+  padding: 0.85rem 1.25rem !important;
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(11, 79, 158, 0.18);
+}
+
+.sky-topbar .hero-eyebrow {
+  margin: 0;
+}
+
 .sky-hero-clouds {
   position: absolute;
-  inset: auto -5% -35% 30%;
-  height: 70%;
+  inset: 40% 0 0 25%;
+  border-radius: 0 0 22px 0;
   background:
     radial-gradient(closest-side, rgba(255, 255, 255, 0.28), transparent) 10% 40% / 40% 70% no-repeat,
     radial-gradient(closest-side, rgba(255, 255, 255, 0.22), transparent) 45% 60% / 45% 80% no-repeat,
@@ -638,7 +685,15 @@ details.recent-trend p {
   pointer-events: none;
 }
 
-.sky-hero-top,
+.sky-hero-top {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.25rem;
+}
+
 .sky-hero-body {
   position: relative;
   display: flex;
@@ -669,7 +724,7 @@ details.recent-trend p {
   box-shadow: 0 0 0 4px rgba(255, 226, 138, 0.3);
 }
 
-.sky-hero .hero-title {
+.st-key-sky-hero .hero-title {
   margin: 0 0 1rem !important;
   padding: 0 !important;
   color: #ffffff !important;
@@ -679,15 +734,43 @@ details.recent-trend p {
   line-height: 1 !important;
 }
 
-.hero-aqi {
+/* The three hero boxes (AQI, Key insights, weather) share one glass style */
+.hero-box,
+.st-key-hero-insights {
   display: flex;
   align-items: center;
   gap: 1rem;
+  min-height: 7.4rem;
   padding: 0.75rem 1.1rem 0.75rem 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.14);
   backdrop-filter: blur(6px);
+  box-sizing: border-box;
+}
+
+.st-key-hero-insights {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.15rem !important;
+  padding: 0.75rem 1.1rem !important;
+}
+
+.hero-box-eyebrow {
+  margin-bottom: 0.15rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-ins-title {
+  color: #ffffff;
+  font-size: 1.35rem;
+  font-weight: 750;
+  line-height: 1.15;
 }
 
 .hero-aqi-value {
@@ -736,9 +819,8 @@ details.recent-trend p {
 }
 
 .hero-wx {
-  display: flex;
-  align-items: center;
   gap: 0.9rem;
+  padding-left: 1.1rem;
 }
 
 .hero-wx-icon {
@@ -869,9 +951,21 @@ details.recent-trend p {
 }
 
 @media (max-width: 768px) {
-  .sky-hero {
-    margin: 0.75rem 0 2.25rem;
+  .st-key-sky-hero {
+    margin: 1.75rem 0 2.25rem;
     border-radius: 16px;
+  }
+
+  /* The global mobile rule gives element containers overflow-x:auto, which
+     also clips vertically - it was cutting off the hero's H/L line */
+  .st-key-sky-hero .element-container,
+  .st-key-sky-hero [data-testid="stElementContainer"] {
+    overflow: visible !important;
+  }
+
+  .hero-health ul {
+    position: static !important;
+    margin-top: 0.5rem !important;
   }
 
   .sky-kpi-grid {
@@ -2376,4 +2470,367 @@ iframe:hover {
     border-radius:4px;
     border: 1px solid #0a0d10;
     display:inline-block;
+}
+
+/* ----- Header actions: data health + signed-in user (views/widgets.py) ----- */
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-left: auto;
+}
+
+.hero-health {
+  position: relative;
+  font-size: 0.78rem;
+}
+
+.hero-health summary {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 650;
+  list-style: none;
+  backdrop-filter: blur(6px);
+}
+
+.hero-health summary::-webkit-details-marker {
+  display: none;
+}
+
+.hero-caret {
+  opacity: 0.8;
+  transition: transform 0.15s ease;
+}
+
+.hero-health[open] .hero-caret {
+  transform: rotate(180deg);
+}
+
+.hero-health ul {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  z-index: 20;
+  min-width: 17rem;
+  margin: 0 !important;
+  padding: 0.6rem 0.8rem !important;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 14px 30px rgba(10, 61, 122, 0.2);
+  list-style: none;
+}
+
+.hero-health .health-row {
+  color: var(--text-primary);
+}
+
+.hero-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.2rem 0.3rem 0.2rem 0.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 650;
+  backdrop-filter: blur(6px);
+}
+
+.hero-avatar {
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border-radius: 50%;
+  background: #ffe28a;
+  color: var(--sky-900);
+  font-size: 0.72rem;
+  font-weight: 800;
+  object-fit: cover;
+}
+
+.hero-user-name {
+  max-width: 12rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hero-logout {
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--sky-700) !important;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-decoration: none !important;
+}
+
+.hero-logout:hover {
+  background: var(--sky-100);
+}
+
+/* Key insights button inside the hero */
+.st-key-open_insights {
+  margin-top: 0.45rem;
+}
+
+.st-key-hero-insights [data-testid="stElementContainer"] {
+  width: 100%;
+}
+
+/* Streamlit gives Markdown blocks a negative bottom margin, which let the
+   View button ride up over the summary line */
+.st-key-hero-insights [data-testid="stElementContainer"]:has(.hero-ins-title) {
+  margin-bottom: 0.35rem !important;
+}
+
+.st-key-hero-insights [data-testid="stMarkdownContainer"] {
+  margin-bottom: 0 !important;
+}
+
+.st-key-open_insights button {
+  white-space: nowrap;
+}
+
+.st-key-open_insights button {
+  min-height: 2rem !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: #ffffff !important;
+  box-shadow: 0 6px 16px rgba(10, 61, 122, 0.22);
+  color: var(--sky-900) !important;
+  font-weight: 700 !important;
+  padding: 0.25rem 0.95rem !important;
+}
+
+.st-key-open_insights button:hover {
+  background: #fff8dc !important;
+}
+
+.st-key-open_insights [data-testid="stIconMaterial"] {
+  color: #e0a000;
+}
+
+/* ----- Key insights: compact icon grid (views/widgets.py) ----- */
+.ins-headline {
+  margin: 0 0 0.9rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.ins-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.5rem;
+}
+
+.ins-row {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--sky-50);
+}
+
+.ins-icon {
+  display: grid;
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--sky-100);
+  color: var(--sky-700);
+}
+
+.ins-row.good .ins-icon {
+  background: #e3f6ec;
+  color: #13704a;
+}
+
+.ins-row.bad .ins-icon {
+  background: #fdebe7;
+  color: #b42318;
+}
+
+.ins-label {
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.ins-value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem;
+  color: var(--text-primary);
+  font-size: 1.3rem;
+  font-weight: 750;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.ins-value small {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.ins-chip {
+  align-self: center;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  background: var(--chip);
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.ins-note {
+  color: var(--text-secondary);
+  font-size: 0.74rem;
+}
+
+.ins-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.7rem;
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+}
+
+.ins-dot {
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-left: 0.6rem;
+  border-radius: 3px;
+}
+
+.ins-dot:first-child {
+  margin-left: 0;
+}
+
+.ins-dot.good {
+  background: #13704a;
+}
+
+.ins-dot.bad {
+  background: #b42318;
+}
+
+.st-key-insights-inline {
+  margin: 0.5rem 0 1.25rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+/* ----- Sidebar logo: contained in a light-blue rounded panel ----- */
+[data-testid="stSidebarHeader"] {
+  height: auto !important;
+  align-items: flex-start !important;
+  padding-bottom: 0.25rem;
+}
+
+[data-testid="stSidebarHeader"] > div:first-child {
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: center;
+  padding: 0.7rem 1rem;
+  border: 1px solid #cfe3f8;
+  border-radius: 14px;
+  background: linear-gradient(160deg, #e6f2ff 0%, #f5faff 100%);
+}
+
+[data-testid="stSidebarLogo"] {
+  width: auto !important;
+  max-width: 100% !important;
+  height: 3.6rem !important;
+  max-height: 3.6rem !important;
+  object-fit: contain;
+}
+
+/* ----- Hero boxes: stack on narrow screens ----- */
+@media (max-width: 768px) {
+  .hero-box,
+  .st-key-hero-insights {
+    min-height: 0;
+  }
+}
+
+/* ----- Archived text with copy icon (st.code restyled as prose) ----- */
+.st-key-archived-text pre,
+.st-key-archived-text code {
+  background: var(--sky-50) !important;
+  color: var(--text-primary) !important;
+  font-family: inherit !important;
+  font-size: 0.86rem !important;
+  line-height: 1.6 !important;
+  white-space: pre-wrap !important;
+}
+
+/* Streamlit only reveals the code block's toolbar (with the copy icon) on
+   hover; keep it visible so people know they can copy */
+.st-key-archived-text [data-testid="stCode"] div:has([data-testid="stBaseButton-elementToolbar"]),
+.st-key-archived-text [data-testid="stCode"] div:has([data-testid="stBaseButton-elementToolbar"]) * {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.st-key-archived-text [data-testid="stBaseButton-elementToolbar"] {
+  color: var(--sky-700) !important;
+}
+
+/* ----- Sidebar IST clock ----- */
+.ist-clock {
+  margin-bottom: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.ist-clock-label {
+  color: var(--text-secondary);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ist-clock-time {
+  color: var(--sky-900);
+  font-size: 1.6rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.ist-clock-date {
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  font-weight: 600;
 }

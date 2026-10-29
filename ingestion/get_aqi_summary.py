@@ -7,7 +7,7 @@ PARENT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PARENT_DIR))
 from config.settings import (
     ARCHIVE_JSON, ARCHIVE_TEMP, CPCB_AQI_CSV as AQI_CSV_FILE, DATA_DIR,
-    MISSING_FORECAST_DAYS, effective_today,
+    INSIGHTS_JSON, MISSING_FORECAST_DAYS, effective_today,
 )
 from config.formatting import ordinal
 from config.logging_config import get_logger
@@ -45,6 +45,14 @@ def save_missing_forecast_days(mf_days):
    
 
 def get_aqi_summary(df):
+    today, aqi_summary, _ = build_daily_update(df)
+    return today, aqi_summary
+
+
+def build_daily_update(df):
+    """Returns (date, sentences, facts). The sentences are the archived daily
+    update; `facts` is the same content as numbers, for the dashboard's
+    compact Key Insights view (so it never has to re-parse the prose)."""
     today = effective_today()
     prev_date = today - timedelta(days=1)
     next_date = today + timedelta(days=1)
@@ -84,6 +92,7 @@ def get_aqi_summary(df):
         logger.warning("get_fire_count failed: %s", e)
 
     # --- observed AQI summary ---
+    aqi_now = aqi_prev = prev_obs_date = pollutant = category = None
     rows = df.dropna(subset=["aqi"]) if not df.empty else df
     if rows.empty or rows.iloc[0]["date"] != today:
         aqi_obs_line = (
@@ -92,9 +101,12 @@ def get_aqi_summary(df):
     else:
         df1 = rows.iloc[0]
         aqi_now = int(df1["aqi"])
+        category = df1.get("category")
+        pollutant = df1.get("pollutant") if isinstance(df1.get("pollutant"), str) else None
         aqi_obs_line = f"Delhi's Air Quality Index (AQI) stood at {aqi_now} on {fmt_date(df1['date'])}"
         if len(rows) > 1:
             df2 = rows.iloc[1]
+            aqi_prev, prev_obs_date = int(df2["aqi"]), df2["date"]
             diff = aqi_now - int(df2["aqi"])
             trend = "deteriorating" if diff > 0 else "improving" if diff < 0 else "unchanged"
             aqi_obs_line += f", {trend} from {int(df2['aqi'])} on {fmt_date(df2['date'])}."
@@ -170,7 +182,35 @@ def get_aqi_summary(df):
         rain_fc
     ]
 
-    return today, aqi_summary
+    def num(v, digits=1):
+        return None if v is None or pd.isna(v) else round(float(v), digits)
+
+    if aqi_forecast is not None and aqi_forecast_cat is not None:
+        fc_source = "AQEWS model"
+    elif aqi_cat_fallback is not None:
+        fc_source = "AQEWS bulletin"
+    else:
+        fc_source = None
+    facts = {
+        "date": str(today),
+        "forecast_date": str(next_date),
+        "fire_date": str(prev_date),
+        "aqi": {"value": aqi_now, "category": category, "pollutant": pollutant,
+                "prev_value": aqi_prev, "prev_date": str(prev_obs_date) if prev_obs_date else None},
+        "forecast": {"aqi": None if aqi_forecast is None else int(aqi_forecast),
+                     "category": str(aqi_forecast_cat or aqi_cat_fallback) if (aqi_forecast_cat or aqi_cat_fallback) else None,
+                     "source": fc_source},
+        "wind_ms": num(avg_wind, 2),
+        "min_temp_c": num(min_temp),
+        "ventilation_index": num(v_index_fc, 0),
+        "rain_mm": num(avg_rainfall),
+        "fires": None if fire_counts is None else {
+            "total": int(sum(fire_counts.values())),
+            "punjab": int(fire_counts.get("Punjab", 0)),
+            "haryana": int(fire_counts.get("Haryana", 0)),
+        },
+    }
+    return today, aqi_summary, facts
 
 
 def save_file_to_json(date, summary):
@@ -187,8 +227,9 @@ def save_file_to_json(date, summary):
 
 def run():
     df = get_last_two_days()
-    date_curr, summary_aqi = get_aqi_summary(df)
+    date_curr, summary_aqi, facts = build_daily_update(df)
     save_file_to_json(date_curr, summary_aqi)
+    write_json_atomic(INSIGHTS_JSON, facts, indent=2, default=str)
     return {"date": str(date_curr), "lines": len(summary_aqi), "aqi_line": summary_aqi[0]}
 
 

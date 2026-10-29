@@ -19,6 +19,7 @@ DATA_DIR.mkdir(parents=True, exist_ok=True)
 CPCB_AQI_CSV = DATA_DIR / "delhi_aqi_cpcb.csv"
 ARCHIVE_JSON = DATA_DIR / "archive.json"
 ARCHIVE_TEMP = DATA_DIR / "archive_temp.json"
+INSIGHTS_JSON = DATA_DIR / "insights_today.json"
 MISSING_FORECAST_DAYS = DATA_DIR / "missing_forecast_days.txt"
 METEO_HOURLY_CSV = DATA_DIR / "meteo_api_hourly.csv"
 AQEWS_AQI_CSV = DATA_DIR / "AQEWS_AQI_forecast.csv"

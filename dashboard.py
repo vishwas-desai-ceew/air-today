@@ -15,8 +15,7 @@ from views.render_aqi_fc import render_aqi_fc, get_error_message
 from views.render_pm25_fc import render_pm25_fc
 from views.components import hr, outage_banner, section_header
 from views.home import render_home_overview, render_glossary
-from views.widgets import render_hero, render_sidebar_health
-from html import escape
+from views.widgets import render_hero, render_insights_panel, render_topbar
 from pathlib import Path
 from config.access import is_allowed_user, origin_mismatch, ALLOWED_EMAIL_DOMAIN
 
@@ -109,7 +108,10 @@ def page_overview():
 
 def page_today():
     section_header("Daily update", caption="CPCB bulletin, key insights and health advisory")
-    aqi_rows = render_aqi_delhi(compact=is_mobile)
+    aqi_rows = render_aqi_delhi(compact=is_mobile, show_insights=False)
+    with st.container(key="insights-inline"):
+        st.markdown("<div class='aqi-panel-title'>Key insights</div>", unsafe_allow_html=True)
+        render_insights_panel()
     render_health_advisory(aqi_rows)
     if error_flag:
         outage_banner(compact=is_mobile)
@@ -202,25 +204,46 @@ pages = {
 }
 
 ist = pytz.timezone("Asia/Kolkata")
-upd_time = datetime.now(ist).strftime("%d %b %Y, %I:%M %p")
 
 # st.navigation always renders first in the sidebar, so the brand goes in
 # st.logo (which Streamlit places above it) rather than a markdown block.
-st.logo("assets/ceew_bg_t.png", size="large", icon_image="assets/icon.png")
+st.space(2)
+st.logo("assets/ceew_bg_t.png", size="small", icon_image="assets/icon.png")
 
 nav = st.navigation(pages, position="sidebar", expanded=True)
-render_sidebar_health()
-if AUTH_CONFIGURED:
-    with st.sidebar.container(key="sidebar-user"):
-        st.markdown(f'<div class="sidebar-user-name">{escape(st.user.name or st.user.email)}</div>', unsafe_allow_html=True)
-        st.button("Log out", on_click=st.logout, key="logout_button_2", type="tertiary", icon=":material/logout:")
-st.sidebar.markdown(
+# Overview has the full hero; every other page gets the slim top bar with
+# the same data-health and user controls.
+if nav.url_path:
+    render_topbar()
+# New Delhi clock: rendered server-side, then ticked in the browser (no app
+# reruns needed). The interval is stored on window so reruns don't stack timers.
+now_ist = datetime.now(ist)
+st.sidebar.html(
     f"""
     <div class="sidebar-footer">
-        <div>Page loaded {upd_time} IST</div>
-        <div>© {datetime.now(ist).year} CEEW. All rights reserved.</div>
+        <div class="ist-clock" aria-live="off">
+            <div class="ist-clock-label">New Delhi time (IST)</div>
+            <div class="ist-clock-time" id="ist-clock-time">{now_ist.strftime("%H:%M")}</div>
+            <div class="ist-clock-date" id="ist-clock-date">{now_ist.strftime("%d %B %Y").lstrip("0")}</div>
+        </div>
+        <div>© {now_ist.year} CEEW. All rights reserved.</div>
     </div>
+    <script>
+    (function () {{
+        const tick = () => {{
+            const now = new Date();
+            const t = document.getElementById("ist-clock-time");
+            const d = document.getElementById("ist-clock-date");
+            if (!t || !d) return;
+            t.textContent = now.toLocaleTimeString("en-GB", {{timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hour12: false}});
+            d.textContent = now.toLocaleDateString("en-GB", {{timeZone: "Asia/Kolkata", day: "numeric", month: "long", year: "numeric"}});
+        }};
+        tick();
+        if (window.__istClock) clearInterval(window.__istClock);
+        window.__istClock = setInterval(tick, 10000);
+    }})();
+    </script>
     """,
-    unsafe_allow_html=True,
+    unsafe_allow_javascript=True,
 )
 nav.run()

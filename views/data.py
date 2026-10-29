@@ -11,7 +11,7 @@ import pandas as pd
 import streamlit as st
 
 from config.settings import (
-    AQEWS_AQI_CSV, AQEWS_CATEGORY_CSV, CPCB_AQI_CSV, FIRE_CSV, IMD_BULLETIN_PDF,
+    AQEWS_AQI_CSV, AQEWS_CATEGORY_CSV, ARCHIVE_TEMP, CPCB_AQI_CSV, FIRE_CSV, IMD_BULLETIN_PDF, INSIGHTS_JSON,
     IST, METEO_HOURLY_CSV, PIPELINE_STATUS_JSON, VENTILATION_CSV, effective_today,
 )
 from ingestion.json_store import read_json
@@ -98,14 +98,15 @@ def meteo_hourly() -> pd.DataFrame:
     return df
 
 
-@st.cache_data(ttl=900, show_spinner=False)
+@st.cache_data(ttl=300, show_spinner=False)
 def current_weather() -> dict:
-    """Live Open-Meteo conditions (15-min cache). Falls back to the nearest hour
-    of the last cron forecast if the API can't be reached."""
-    from ingestion.weather import fetch_current
+    """Observed METAR conditions (Safdarjung) + Open-Meteo gaps, 5-min cache.
+    Falls back to the nearest hour of the last cron forecast if both APIs
+    are unreachable."""
+    from ingestion.weather import fetch_live
 
     try:
-        return fetch_current()
+        return fetch_live()
     except Exception:
         df = meteo_hourly()
         if df.empty:
@@ -164,3 +165,16 @@ def source_health() -> list[dict]:
             state, note = "ok", "Up to date"
         rows.append({"key": key, "label": label, "state": state, "note": note, "when": when})
     return rows
+
+
+@st.cache_data(ttl=600)
+def insights_today() -> dict:
+    """Structured daily update written by ingestion/get_aqi_summary.py."""
+    return read_json(INSIGHTS_JSON)
+
+
+@st.cache_data(ttl=600)
+def daily_update_text() -> list:
+    """The archived sentences for the latest update."""
+    archive = read_json(ARCHIVE_TEMP)
+    return next(iter(archive.values()), []) if archive else []

@@ -183,7 +183,7 @@ def get_aqi_error_html():
     return error_message
     
 
-def render_aqi_delhi(compact=False):
+def render_aqi_delhi(compact=False, show_insights=True):
     df = get_last_two_days()
 
     def render_fallback_view():
@@ -225,8 +225,8 @@ def render_aqi_delhi(compact=False):
         else:
             st.info("Yesterday's AQI bulletin is not available yet.")
 
-    insights = get_insights()
-    st.markdown(insights, unsafe_allow_html=True)
+    if show_insights:
+        st.markdown(get_insights(), unsafe_allow_html=True)
     return df
 
 

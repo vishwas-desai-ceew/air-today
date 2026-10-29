@@ -6,13 +6,19 @@ openmeteo_requests/requests_cache/retry_requests stack and its
 weather cards need (humidity, wind direction, apparent temperature, cloud,
 visibility).
 
-`fetch_current()` is also called live by the dashboard (cached 15 min), so the
-weather cards show conditions now rather than at the last cron run.
+`fetch_live()` is called by the dashboard (cached 5 min, auto-refreshed): it
+takes OBSERVED values from the METAR reports of Safdarjung (VIDD, IMD's
+reference station for Delhi; IGI airport VIDP as fallback) via NOAA's
+aviationweather.gov API (no key, refreshed every 30 min), and fills the gaps
+METAR doesn't report (feels-like, mixing height, daily high/low) from the
+Open-Meteo model.
 
 Usage (cron, daily ~17:30 IST):  python ingestion/weather.py
 """
 import sys
+import math
 import time
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -20,7 +26,7 @@ import requests
 
 PARENT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PARENT_DIR))
-from config.settings import DELHI_LAT, DELHI_LON, HTTP_HEADERS, METEO_HOURLY_CSV, OPEN_METEO_FORECAST_URL
+from config.settings import DELHI_LAT, DELHI_LON, HTTP_HEADERS, IST, METEO_HOURLY_CSV, OPEN_METEO_FORECAST_URL
 from config.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -84,6 +90,79 @@ def fetch_current() -> dict:
             current["boundary_layer_height"] = blh
             break
     current["source"] = "Open-Meteo"
+    return current
+
+
+METAR_URL = "https://aviationweather.gov/api/data/metar"
+METAR_STATIONS = {"VIDD": "Safdarjung", "VIDP": "IGI Airport"}
+METAR_WEATHER = {  # present-weather codes most relevant to Delhi
+    "TS": "Thunderstorm", "RA": "Rain", "DZ": "Drizzle", "SH": "Showers", "FG": "Fog",
+    "BR": "Mist", "HZ": "Haze", "FU": "Smoke", "DU": "Dust", "SA": "Sand",
+}
+METAR_CLOUDS = {"SKC": "Clear sky", "CLR": "Clear sky", "NSC": "Clear sky", "CAVOK": "Clear sky",
+                "FEW": "Mostly clear", "SCT": "Partly cloudy", "BKN": "Mostly cloudy", "OVC": "Overcast"}
+
+
+def _relative_humidity(temp_c, dewpoint_c):
+    """Magnus formula - METAR reports dew point, not humidity."""
+    a, b = 17.625, 243.04
+    return round(100 * math.exp(a * dewpoint_c / (b + dewpoint_c) - a * temp_c / (b + temp_c)))
+
+
+def describe_metar(obs) -> str:
+    wx = (obs.get("wxString") or "").strip()
+    if wx:
+        intensity = "Light " if wx.startswith("-") else "Heavy " if wx.startswith("+") else ""
+        words = [label for code, label in METAR_WEATHER.items() if code in wx]
+        if words:
+            return (intensity + " and ".join(words[:2])).strip().capitalize()
+    return METAR_CLOUDS.get(obs.get("cover") or "", "")
+
+
+def fetch_metar() -> dict:
+    """Latest observation from Safdarjung, else IGI. Units converted to the
+    dashboard's (m/s, metres, %)."""
+    r = requests.get(METAR_URL, params={"ids": ",".join(METAR_STATIONS), "format": "json"},
+                     headers=HTTP_HEADERS, timeout=15)
+    r.raise_for_status()
+    by_station = {m["icaoId"]: m for m in r.json()}
+    for icao, name in METAR_STATIONS.items():
+        obs = by_station.get(icao)
+        if not obs or obs.get("temp") is None:
+            continue
+        observed = datetime.fromtimestamp(obs["obsTime"], IST)
+        out = {
+            "temperature_2m": float(obs["temp"]),
+            "observed_at": observed.isoformat(timespec="minutes"),
+            "station": f"{name} ({icao})",
+            "condition": describe_metar(obs),
+        }
+        if obs.get("dewp") is not None:
+            out["relative_humidity_2m"] = _relative_humidity(obs["temp"], obs["dewp"])
+        if obs.get("wspd") is not None:
+            out["wind_speed_10m"] = round(obs["wspd"] * 0.514444, 1)   # knots -> m/s
+        if isinstance(obs.get("wdir"), (int, float)):                    # "VRB" for variable
+            out["wind_direction_10m"] = obs["wdir"]
+        visib = obs.get("visib")
+        if isinstance(visib, (int, float)):
+            out["visibility"] = round(visib * 1609.344, -2)              # statute miles -> m
+        if obs.get("altim") is not None:
+            out["surface_pressure"] = obs["altim"]
+        return out
+    raise ValueError("No usable METAR for Delhi stations")
+
+
+def fetch_live() -> dict:
+    """Open-Meteo model fields, overwritten by observed METAR values where available."""
+    current = fetch_current()
+    current["source"] = "Open-Meteo model"
+    current["observed_at"] = None
+    try:
+        obs = fetch_metar()
+        current.update(obs)
+        current["source"] = f"Observed at {obs['station']} (METAR) · gaps from Open-Meteo"
+    except Exception as e:
+        logger.warning("METAR unavailable, using Open-Meteo only: %s", e)
     return current
 
 

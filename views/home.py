@@ -1,21 +1,16 @@
 import streamlit as st
 
 from views.components import outage_banner, section_header
-from views.delhi_weather import get_insights
 from views.widgets import render_kpi_grid
 
 
 def render_home_overview(error_flag, is_mobile=False):
-    """Landing page: weather-style KPI cards for air and met conditions, then
-    the day's written update."""
+    """Landing page: weather-style KPI cards for air and met conditions. The
+    day's written update lives in the hero's Key insights dialog."""
     section_header("Conditions now", caption="Air quality, dispersion and weather for Delhi at a glance")
     render_kpi_grid()
     if error_flag:
         outage_banner(compact=is_mobile)
-    try:
-        st.markdown(get_insights(), unsafe_allow_html=True)
-    except Exception:
-        st.info("Today's written update hasn't been generated yet.")
 
 
 def render_glossary():
