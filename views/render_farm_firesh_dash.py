@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import streamlit.components.v2 as components
+import streamlit.components.v1 as components
 
 
 def render_fires_dashboard():

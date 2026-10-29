@@ -1,17 +1,26 @@
-from google import genai
-import streamlit as st
+import os
+import sys
 import json
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from config.settings import DATA_DIR, IMD_BULLETIN_PDF
 
-PARENT_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = PARENT_DIR / "data"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
 GEMINI_JSON = DATA_DIR / "gemini_summary.json"
 
+
+def _api_key():
+    if os.environ.get("GEMINI_API_KEY"):
+        return os.environ["GEMINI_API_KEY"]
+    import streamlit as st
+    return st.secrets["GEMINI_API_KEY"]
+
+
 def get_gemini_summary():
-    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
-    pdf_path = client.files.upload(file="/Users/Vishwas/Desktop/CEEW/work/aq_winter/data/imd_bulletin_today.pdf")
+    from google import genai
+
+    client = genai.Client(api_key=_api_key())
+    pdf_path = client.files.upload(file=str(IMD_BULLETIN_PDF))
     prompt = """
     You are analyzing the provided PDF document.  
     Your task:
