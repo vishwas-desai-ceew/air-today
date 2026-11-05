@@ -6,6 +6,7 @@ from views.farm_fires import render_farm_fires
 from views.pm25_hourly import render_pm25_hourly
 from views.recent_trends import render_recent_trends
 from views.archive import render_archive_data
+from views.grap import render_grap
 from views.weather_fcast import render_weather_fcast
 from views.delhi_weather import render_aqi_delhi, render_health_advisory
 from views.render_aqi_pdf import render_aqi_pdf
@@ -173,6 +174,10 @@ def page_archive():
     section_header("Archived Updates", caption="View past updates")
     render_archive_data()
 
+def page_grap():
+    section_header("GRAP orders - Winter 2025-26", caption="Pick a highlighted date to read the CAQM order(s) issued that day")
+    render_grap()
+
 def page_glossary():
     section_header("Glossary")
     render_glossary()
@@ -195,6 +200,7 @@ pages = {
         st.Page(page_bulletin, title="IMD bulletin", url_path="imd-bulletin", icon=":material/picture_as_pdf:"),
         st.Page(page_general_info, title="Briefing note", url_path="briefing-note", icon=":material/description:"),
         st.Page(page_archive, title="Archive", url_path="archive", icon=":material/history:"),
+        st.Page(page_grap, title="GRAP", url_path="grap", icon=":material/gavel:"),
     ],
     "Learn": [
         st.Page(page_trends, title="Recent trends", url_path="trends", icon=":material/bar_chart:"),

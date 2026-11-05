@@ -2834,3 +2834,85 @@ iframe:hover {
   font-size: 0.8rem;
   font-weight: 600;
 }
+
+/* ----- GRAP orders page (views/grap.py) ----- */
+.st-key-grap-cal {
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+/* Keep the 7-day grid on one row on phones (Streamlit stacks columns < 640px). */
+.st-key-grap-cal [data-testid="stHorizontalBlock"] {
+  flex-wrap: nowrap !important;
+  gap: var(--space-1) !important;
+}
+.st-key-grap-cal [data-testid="stColumn"] {
+  min-width: 0 !important;
+  flex: 1 1 0 !important;
+  width: auto !important;
+}
+.st-key-grap-cal button {
+  min-height: 2.4rem;
+  padding: 0 !important;
+  font-variant-numeric: tabular-nums;
+}
+.st-key-grap-cal button:disabled {
+  color: var(--text-secondary);
+  opacity: 0.55;
+}
+.grap-cal-title,
+.grap-list-title {
+  font-size: var(--font-h2);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+.st-key-grap-cal .element-container,
+.element-container:has(.grap-order),
+.element-container:has(.grap-dlg-date) {
+  /* the mobile-wide overflow-x:auto clips markdown's negative bottom margin */
+  overflow: visible !important;
+}
+.grap-wd-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-1);
+}
+.grap-wd {
+  text-align: center;
+  font-size: var(--font-caption);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.grap-blank { min-height: 2.4rem; }
+.grap-dlg-date { font-size: var(--font-h1); font-weight: 700; color: var(--text-primary); }
+.grap-dlg-count { font-size: var(--font-caption); color: var(--text-secondary); margin-bottom: var(--space-2); }
+.grap-order {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+  background: var(--surface);
+}
+.grap-order-head { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; margin-bottom: var(--space-2); }
+.grap-stage {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: var(--surface-alt);
+  color: var(--sky-900);
+}
+.grap-stage.invoked { background: #fde7e4; color: var(--danger); }
+.grap-stage.revoked { background: #e3f4ea; color: var(--success); }
+.grap-note { font-size: var(--font-caption); color: var(--text-secondary); font-style: italic; }
+.grap-order dl { margin: 0; }
+.grap-order dt {
+  font-size: var(--font-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  margin-top: var(--space-2);
+}
+.grap-order dd { margin: 2px 0 0 0; font-size: var(--font-body); color: var(--text-primary); line-height: 1.5; }
