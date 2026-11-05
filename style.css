@@ -3067,3 +3067,123 @@ iframe:hover {
   .wxc { grid-template-columns: 1fr; }
   .wxc-day { grid-template-columns: 48px 26px 40px 30px 1fr 30px; gap: 6px; }
 }
+
+/* ----- Learn pages: shared stat cards (Recent trends, Interventions) ----- */
+.lrn-stats { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin: 0.3rem 0 0.8rem; }
+@media (max-width: 1100px) { .lrn-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .lrn-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.lrn-stats--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.lrn-stat {
+  border-radius: 14px; padding: 0.7rem 0.9rem; background: var(--surface); border: 1px solid var(--border);
+  border-top: 4px solid var(--c, var(--brand)); box-shadow: 0 6px 16px rgba(11,107,203,0.06);
+}
+.lrn-stat span { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); }
+.lrn-stat b { display: block; font-size: 1.8rem; font-weight: 750; line-height: 1.15; color: var(--c, var(--text-primary)); }
+.lrn-stat small { font-size: 0.78rem; color: var(--text-secondary); }
+.lrn-strip-label { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px; }
+.lrn-strip { display: flex; height: 26px; border-radius: 8px; overflow: hidden; margin-bottom: 1rem; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05); }
+.lrn-strip > div { display: grid; place-items: center; color: #fff; font-size: 0.75rem; font-weight: 700; min-width: 2px; }
+.lrn-mini { font-size: 0.78rem; color: var(--text-secondary); margin-top: 6px; }
+.st-key-trend-grap-chips { gap: 2px !important; flex-wrap: wrap; }
+.st-key-trend-grap-chips button { font-size: 0.82rem !important; }
+[class*="st-key-trend-"][class*="-card"] { background: var(--surface); border-radius: 16px; }
+
+/* Day-by-day heatmap */
+.element-container:has(.lrn-hm) { overflow: visible !important; }
+.lrn-hm { display: flex; flex-direction: column; gap: 4px; padding-top: 8px; }
+.lrn-hm-row i:hover { outline: 2px solid var(--text-primary); }
+.lrn-hm-row { display: grid; grid-template-columns: 30px repeat(31, minmax(0, 1fr)); gap: 2px; align-items: center; }
+.lrn-hm-row span { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); }
+.lrn-hm-row i { height: 34px; border-radius: 3px; display: block; }
+.lrn-hm-row i.empty { background: var(--surface-alt); }
+.lrn-hm-row i.none { background: transparent; }
+.lrn-hm-head em { font-style: normal; font-size: 0.62rem; color: var(--text-secondary); text-align: center; white-space: nowrap; overflow: visible; }
+
+/* Season notes timeline */
+.lrn-timeline { list-style: none; margin: 0.6rem 0 0; padding: 0 0 0 1.4rem; border-left: 2px solid var(--border); counter-reset: n; }
+.lrn-timeline li { position: relative; margin: 0 0 0.9rem; counter-increment: n; }
+.lrn-timeline li::before {
+  content: counter(n); position: absolute; left: -2.15rem; top: 0; width: 1.4rem; height: 1.4rem; border-radius: 50%;
+  background: var(--brand); color: #fff; font-size: 0.72rem; font-weight: 700; display: grid; place-items: center;
+}
+.lrn-timeline b { color: var(--text-primary); }
+.lrn-timeline p { margin: 2px 0 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; }
+
+/* ----- Sectoral interventions ----- */
+[class*="st-key-int-card-"] { background: var(--surface); border-radius: 16px; height: 100%; }
+.int-head, .int-dlg-head { display: flex; gap: 12px; align-items: flex-start; }
+.int-icon {
+  flex: none; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+  background: linear-gradient(160deg, var(--sky-700), var(--sky-500)); color: #fff;
+}
+.int-icon .sky-icon { color: #fff; }
+.int-group { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand); }
+.int-title { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+.int-stat { display: flex; align-items: baseline; gap: 8px; margin: 10px 0 0; padding: 6px 10px; border-radius: 10px; background: var(--sky-50); }
+.int-stat b { font-size: 1.4rem; color: var(--sky-900); }
+.int-stat span { font-size: 0.8rem; color: var(--text-secondary); }
+.int-preview {
+  font-size: 0.86rem; color: var(--text-secondary); line-height: 1.45; margin: 10px 0 4px;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.int-stat-big { margin: 12px 0 4px; font-size: 0.95rem; color: var(--text-secondary); }
+.int-stat-big b { font-size: 1.6rem; color: var(--sky-900); margin-right: 4px; }
+.int-lede { font-size: 0.95rem; color: var(--text-primary); line-height: 1.55; margin: 10px 0; }
+.int-actions { padding-left: 1.3rem; margin: 0.4rem 0; }
+.int-actions li { margin-bottom: 0.7rem; line-height: 1.55; color: var(--text-primary); }
+.int-actions li.now { background: #ecf8f1; border-radius: 8px; padding: 6px 8px; }
+.int-tag {
+  display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 700;
+  background: var(--success); color: #fff; vertical-align: 1px;
+}
+.int-key { font-size: 0.8rem; color: var(--text-secondary); border-top: 1px solid var(--border); padding-top: 8px; }
+.element-container:has(.int-actions) { overflow: visible !important; }
+@media (max-width: 640px) { .lrn-stats--3 { grid-template-columns: 1fr 1fr 1fr; } .lrn-stat b { font-size: 1.4rem; } }
+
+/* ----- Glossary ----- */
+.st-key-glossary-scale { background: var(--surface); border-radius: 16px; }
+.element-container:has(.gs) { overflow: visible !important; }
+.gs-title { font-size: var(--font-h2); font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+.gs-bar { position: relative; height: 54px; }
+.gs-band {
+  position: absolute; top: 0; bottom: 0; color: #fff; display: flex; flex-direction: column; justify-content: center;
+  padding: 0 8px; overflow: hidden; white-space: nowrap; border-right: 2px solid #fff;
+}
+.gs-band:first-child { border-radius: 10px 0 0 10px; }
+.gs-band:last-child { border-radius: 0 10px 10px 0; border-right: 0; }
+.gs-band b { font-size: 0.85rem; }
+.gs-band small { font-size: 0.7rem; opacity: 0.9; }
+.gs-ticks { position: relative; height: 16px; }
+.gs-ticks em { position: absolute; transform: translateX(-50%); font-style: normal; font-size: 0.7rem; color: var(--text-secondary); }
+.gs-ticks em:first-child { transform: none; }
+.gs-ticks em:last-child { transform: translateX(-100%); }
+.gs-stages { position: relative; height: 34px; margin-top: 2px; }
+.gs-stage {
+  position: absolute; top: 0; height: 28px; border: 2px solid var(--sky-900); border-top: 0; border-radius: 0 0 8px 8px;
+  display: grid; place-items: center; background: var(--sky-50);
+}
+.gs-stage span { font-size: 0.74rem; font-weight: 700; color: var(--sky-900); white-space: nowrap; }
+.gl-count { font-size: 0.78rem; color: var(--text-secondary); margin: 0.2rem 0 0.4rem; }
+.gl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.gl-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 0.85rem 1rem;
+  border-left: 5px solid var(--gl, var(--brand)); box-shadow: 0 6px 16px rgba(11,107,203,0.05);
+}
+.gl-air { --gl: #e8590c; } .gl-weather { --gl: #7048e8; } .gl-policy { --gl: #c22a1e; }
+.gl-institutions { --gl: #0b6bcb; } .gl-data { --gl: #6b7f99; }
+.gl-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.gl-term { font-size: 1.25rem; font-weight: 800; color: var(--gl); }
+.gl-cat { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); }
+.gl-exp { font-weight: 650; color: var(--text-primary); font-size: 0.9rem; margin-top: 2px; }
+.gl-card p { font-size: 0.86rem; color: var(--text-secondary); line-height: 1.5; margin: 6px 0 4px; }
+.gl-src { font-size: 0.72rem; color: var(--brand) !important; text-decoration: none; }
+.gl-src::before { content: "Source: "; color: var(--text-secondary); }
+@media (max-width: 640px) {
+  .gs-band b { font-size: 0.62rem; } .gs-band small { display: none; } .gs-band { padding: 0 3px; }
+  .gs-stage span { font-size: 0.6rem; }
+}
+/* equal-height intervention cards with the button pinned to the bottom */
+[data-testid="stColumn"]:has(> div > [class*="st-key-int-card-"]) > div,
+[data-testid="stColumn"]:has([class*="st-key-int-card-"]) > [data-testid="stVerticalBlock"] { height: 100%; }
+[class*="st-key-int-card-"] { flex: 1 1 auto; }
+[class*="st-key-int-card-"] > div:last-child { margin-top: auto; }

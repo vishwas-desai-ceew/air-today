@@ -15,7 +15,8 @@ from views.render_google_doc import render_google_doc
 from views.render_aqi_fc import render_aqi_fc, get_error_message
 from views.render_pm25_fc import render_pm25_fc
 from views.components import hr, outage_banner, section_header
-from views.home import render_home_overview, render_glossary
+from views.home import render_home_overview
+from views.glossary import render_glossary
 from views.widgets import render_hero, render_insights_panel, render_topbar
 from pathlib import Path
 from config.access import is_allowed_user, origin_mismatch, ALLOWED_EMAIL_DOMAIN
@@ -160,7 +161,7 @@ def page_bulletin():
 
 
 def page_interventions():
-    section_header("AQ Sectoral Interventions")
+    section_header("Sectoral interventions", caption="Priority actions for cleaner air in Delhi NCR, by source and policy lever. Open a card for the full list.")
     render_interventions()
 
 
@@ -170,7 +171,7 @@ def page_general_info():
 
 
 def page_trends():
-    section_header("Recent Trends")
+    section_header("Recent trends", caption="Winter air quality season by season, from the CPCB daily AQI record")
     render_recent_trends()
 
 
@@ -183,7 +184,7 @@ def page_grap():
     render_grap()
 
 def page_glossary():
-    section_header("Glossary")
+    section_header("Glossary", caption="Terms, scales and thresholds used across Air Today")
     render_glossary()
 
 
