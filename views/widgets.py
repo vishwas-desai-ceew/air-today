@@ -23,6 +23,14 @@ ICONS = {
     "sun": '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
     "moon": '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/>',
     "cloud": '<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/>',
+    "cloud-sun": '<path d="M12 2v2M4.93 4.93l1.41 1.41M20 12h2M19.07 4.93l-1.41 1.41"/><path d="M15.95 12.65A4 4 0 0 0 8.4 9.5"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6z"/>',
+    "cloud-moon": '<path d="M13 16a3 3 0 1 1 0 6H7a5 5 0 1 1 4.9-6z"/><path d="M10.1 9A6 6 0 0 1 16 4a4.24 4.24 0 0 0 6 6 6 6 0 0 1-3 5.2"/>',
+    "fog": '<path d="M20 15.5A4.5 4.5 0 0 0 17.5 7h-1.79A7 7 0 1 0 4 13"/><path d="M4 17h16M6 21h12"/>',
+    "storm": '<path d="M19 16.9A5 5 0 0 0 18 7h-1.26a8 8 0 1 0-11.62 9"/><path d="m13 11-4 6h6l-4 6"/>',
+    "drop": '<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>',
+    "gauge": '<path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/>',
+    "sunrise": '<path d="M12 2v8M4.93 10.93l1.41 1.41M2 18h2M20 18h2M19.07 10.93l-1.41 1.41M22 22H2M8 6l4-4 4 4M16 18a4 4 0 0 0-8 0"/>',
+    "sunset": '<path d="M12 10V2M4.93 10.93l1.41 1.41M2 18h2M20 18h2M19.07 10.93l-1.41 1.41M22 22H2M16 6l-4 4-4-4M16 18a4 4 0 0 0-8 0"/>',
 }
 
 AQI_COLOURS = {
@@ -122,6 +130,8 @@ def _top_row():
 
 def render_topbar():
     """Slim sky strip for every page except Overview (which has the full hero)."""
+    from views.sky import apply_sky  # sky imports this module
+    apply_sky()
     st.markdown(_html(f'<section class="sky-topbar">{_top_row()}</section>'), unsafe_allow_html=True)
 
 
@@ -182,10 +192,10 @@ def _hero_weather():
     wx = data.current_weather()
     if not wx:
         return
-    sky = "sun" if wx.get("is_day", 1) else "moon"
-    if wx.get("weather_code") not in (0, 1, None) or wx.get("condition") not in (None, "", "Clear sky", "Mostly clear"):
-        sky = "cloud"
+    from views.sky import sky_phase, wx_icon_name
     desc = wx.get("condition") or describe_weather(wx.get("weather_code"), wx.get("is_day", 1))
+    sky = wx_icon_name(wx.get("weather_code"), sky_phase() in ("day", "dawn", "dusk") if wx.get("is_day") is None
+                       else wx.get("is_day"), wx.get("precipitation"), condition=desc)
     at = _obs_time(wx)
     where = wx.get("station", "Open-Meteo model").split(" (")[0]
     st.markdown(_html(f"""
@@ -201,6 +211,8 @@ def _hero_weather():
 
 
 def render_hero():
+    from views.sky import apply_sky  # sky imports this module
+    apply_sky()
     # A keyed container (not one HTML block) so the three boxes can mix HTML
     # with a real button (Key insights) and a self-refreshing fragment (weather).
     with st.container(key="sky-hero"):

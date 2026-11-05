@@ -34,6 +34,7 @@ logger = get_logger(__name__)
 HOURLY_VARS = [
     "temperature_2m", "boundary_layer_height", "wind_speed_10m", "rain",
     "relative_humidity_2m", "wind_direction_10m", "precipitation_probability",
+    "weather_code", "cloud_cover", "is_day", "apparent_temperature",
 ]
 CURRENT_VARS = [
     "temperature_2m", "apparent_temperature", "relative_humidity_2m", "wind_speed_10m",

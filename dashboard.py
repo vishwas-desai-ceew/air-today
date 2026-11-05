@@ -119,24 +119,28 @@ def page_today():
 
 
 def page_forecast():
-    section_header("AQEWS 10-day Forecast", caption="AQI and PM2.5 forecasts")
-    fc_options = ["**AQI**", "**PM2.5**"]
+    section_header("AQEWS Forecast", caption="IITM Air Quality Early Warning System, next 10 days for Delhi")
+    st.markdown(
+        '<a class="portal-link" href="https://ews.tropmet.res.in/" target="_blank" rel="noopener">'
+        'Open the AQEWS portal ↗</a>',
+        unsafe_allow_html=True,
+    )
+    fc_options = ["AQI", "PM2.5"]
     selection = st.segmented_control(
-            "**Select Variable**",
+            "**Variable**",
             options=fc_options,
             selection_mode="single",
             default=fc_options[0],
             key="var_selection",
         )
-    hr(margin_top="-1rem", margin_bottom="1rem", style="dashed")
-    if selection == fc_options[0]:
-        render_aqi_fc(compact=is_mobile)
+    if selection == "PM2.5":
+        render_pm25_fc(compact=is_mobile)
     else:
-        render_pm25_fc()
+        render_aqi_fc(compact=is_mobile)
 
 
 def page_weather():
-    section_header("Weather Forecast", caption="Open-Meteo, next 3 days")
+    section_header("Weather Forecast", caption="Next 3 days for Delhi, read for what it means for pollution")
     render_weather_fcast()
 
 
@@ -175,7 +179,7 @@ def page_archive():
     render_archive_data()
 
 def page_grap():
-    section_header("GRAP orders - Winter 2025-26", caption="Pick a highlighted date to read the CAQM order(s) issued that day")
+    section_header("GRAP orders", caption="Pick a winter, then a highlighted date to read the CAQM order(s) issued that day")
     render_grap()
 
 def page_glossary():
@@ -189,11 +193,11 @@ pages = {
     "Today": [
         st.Page(page_overview, title="Overview", icon=":material/partly_cloudy_day:", default=True),
         st.Page(page_today, title="Daily update", url_path="daily-update", icon=":material/article:"),
-        st.Page(page_forecast, title="Forecast", url_path="forecast", icon=":material/trending_up:"),
+        st.Page(page_forecast, title="AQEWS Forecast", url_path="forecast", icon=":material/trending_up:"),
     ],
     "Trackers": [
         st.Page(page_pm25, title="Pollutants (CAAQMS)", url_path="pollutants", icon=":material/aq:"),
-        st.Page(page_weather, title="Weather", url_path="weather", icon=":material/air:"),
+        st.Page(page_weather, title="Weather Forecast", url_path="weather", icon=":material/air:"),
         st.Page(page_fires, title="Farm fires", url_path="fires", icon=":material/local_fire_department:"),
     ],
     "Reports": [

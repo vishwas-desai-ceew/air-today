@@ -22,7 +22,6 @@ py-mini-racer==0.6.0    # ingestion/aqews.py evaluates the AQEWS Chart.js datase
 pytz==2026.3.post1
 requests==2.32.4
 streamlit==1.60.0
-streamlit-calendar-input==0.0.3
 urllib3==2.5.0
 
 # NOT pinned here: `signalsfunc`, imported by ingestion/get_fire_pbhr.py. It isn't installed
