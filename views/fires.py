@@ -9,7 +9,6 @@ fine because the states don't overlap.
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
-import streamlit.components.v1 as components
 
 from config.settings import FIRE_INSTRUMENTS, FIRE_STATE_CSVS
 from views import data
@@ -64,6 +63,19 @@ def render_kpis(df):
             )
 
 
+@st.dialog("Earthmetry Signals: fires in Punjab and Haryana", width="large")
+def signals_dialog():
+    """The external dashboard, embedded with st.iframe (Streamlit's supported
+    replacement for the deprecated components.iframe)."""
+    st.markdown(
+        f"<div class='signals-note'>Interactive dashboard by Earthmetry Signals · "
+        f"<a href='{EXTERNAL_DASHBOARD}' target='_blank' rel='noopener'>open in a new tab ↗</a></div>",
+        unsafe_allow_html=True,
+    )
+    with st.container(key="signals-dashboard"):
+        st.iframe(EXTERNAL_DASHBOARD, height=780)
+
+
 def render_fires_page():
     choice = st.segmented_control(
         "**State**", options=[*FIRE_STATE_CSVS, BOTH], selection_mode="single",
@@ -94,5 +106,7 @@ def render_fires_page():
             st.download_button("Download CSV", table.to_csv(index=False).encode("utf-8"),
                                file_name=f"fires_{slug}.csv", mime="text/csv")
 
-    with st.expander("Detailed dashboard (Earthmetry Signals)"):
-        components.iframe(EXTERNAL_DASHBOARD, height=950)
+    with st.container(key="signals-open"):
+        if st.button("Open the Earthmetry Signals dashboard", key="open_signals_dashboard",
+                     icon=":material/dashboard:", type="primary"):
+            signals_dialog()

@@ -3378,3 +3378,58 @@ iframe:hover {
 }
 .aqb .aqb-sec p, .aqb p.aqb-foot { margin: 0 !important; color: var(--text-primary); font-size: 0.88rem !important; line-height: 1.6; }
 .aqb p.aqb-foot { margin: 0 0 0.6rem 2.4rem !important; color: var(--text-secondary); }
+
+/* ----- Pollutants and AQI page (views/pollutants.py): weather-page strips ----- */
+.pol-period {
+  margin: 0.15rem 0 0.55rem; color: var(--sky-900); font-size: 0.82rem; font-weight: 650; line-height: 1.35;
+}
+.pol-period span {
+  display: inline-block; margin: 0 0.4rem 0.2rem 0; padding: 0.08rem 0.45rem; border-radius: 999px;
+  background: var(--sky-900); color: #fff; font-size: 0.6rem; font-weight: 750; letter-spacing: 0.07em;
+  text-transform: uppercase; vertical-align: 0.1rem;
+}
+.pol-info-stat { margin: 0.2rem 0 0.35rem; }
+.pol-stat-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.15rem 0.4rem; }
+.pol-stat-line small { flex-basis: 100%; color: var(--text-secondary); font-size: 0.68rem; font-weight: 750; letter-spacing: 0.06em; text-transform: uppercase; }
+.pol-stat-line b { font-size: 2.1rem; font-weight: 800; line-height: 1.05; }
+.pol-stat-line > span { color: var(--text-secondary); font-size: 0.8rem; font-weight: 650; }
+.pol-chip {
+  padding: 0.12rem 0.5rem; border-radius: 999px; background: var(--c); color: #fff;
+  font-size: 0.72rem; font-style: normal; font-weight: 750; align-self: center;
+}
+.pol-info-sub { color: var(--text-secondary); font-size: 0.76rem; line-height: 1.4; margin-bottom: 0.2rem; }
+.pol-info-sub.muted { font-style: italic; }
+.pol-info p { margin-top: 0.5rem !important; }
+.st-key-pol-strip-pm, .st-key-pol-strip-aqi { margin-bottom: 0.9rem; }
+@media (max-width: 768px) {
+  .st-key-pol-strip-pm [data-testid="stElementContainer"]:has(.wx-info),
+  .st-key-pol-strip-pm [data-testid="stElementContainer"]:has(.band-legend),
+  .st-key-pol-strip-pm [data-testid="stElementContainer"]:has(.chart-source),
+  .st-key-pol-strip-aqi [data-testid="stElementContainer"]:has(.wx-info),
+  .st-key-pol-strip-aqi [data-testid="stElementContainer"]:has(.band-legend),
+  .st-key-pol-strip-aqi [data-testid="stElementContainer"]:has(.chart-source),
+  .st-key-pol-strip-aqi [data-testid="stElementContainer"]:has(.fc-cals) { overflow: visible !important; height: auto !important; }
+}
+@media (max-width: 768px) {
+  [data-testid="stElementContainer"]:has(.fc-cals) { overflow: visible !important; height: auto !important; }
+}
+
+/* Pollutants page: band legend on one line (scrolls sideways on narrow screens rather than wrapping) */
+.st-key-pol-strip-pm .band-legend,
+.st-key-pol-strip-aqi .band-legend {
+  flex-wrap: nowrap; gap: 6px 12px; overflow-x: auto; white-space: nowrap;
+  font-size: 0.76rem; padding-bottom: 2px; scrollbar-width: thin;
+}
+.st-key-pol-strip-pm .band-legend span,
+.st-key-pol-strip-aqi .band-legend span { flex: 0 0 auto; }
+
+
+/* ----- Fires page: Earthmetry Signals dashboard dialog ----- */
+.st-key-signals-open { margin-top: 0.4rem; }
+.st-key-open_signals_dashboard button {
+  border-color: var(--sky-900) !important; background: var(--sky-900) !important; color: #fff !important;
+}
+.st-key-open_signals_dashboard button:hover { border-color: #072c59 !important; background: #072c59 !important; }
+/* widen this dialog (the dashboard needs the room) */
+div[role="dialog"]:has(.st-key-signals-dashboard) { width: min(1400px, 95vw) !important; max-width: 95vw !important; }
+.signals-note { margin: -0.3rem 0 0.6rem; color: var(--text-secondary); font-size: 0.82rem; }
