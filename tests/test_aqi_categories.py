@@ -1,6 +1,6 @@
 import pandas as pd
 
-from ingestion import get_aqews_aqi
+from ingestion import aqews
 
 
 def _hourly(date_str, pm25_value, pm10_value):
@@ -12,7 +12,6 @@ def _hourly(date_str, pm25_value, pm10_value):
 
 
 def _run(tmp_path, monkeypatch, rows):
-    monkeypatch.setattr(get_aqews_aqi, "DATA_DIR", tmp_path)
     pm25_frames, pm10_frames = [], []
     for date_str, pm25_value, pm10_value in rows:
         p25, p10 = _hourly(date_str, pm25_value, pm10_value)
@@ -21,7 +20,7 @@ def _run(tmp_path, monkeypatch, rows):
     df_pm25 = pd.concat(pm25_frames, ignore_index=True)
     df_pm10 = pd.concat(pm10_frames, ignore_index=True)
 
-    get_aqews_aqi.save_aqi_to_csv(df_pm25, df_pm10)
+    aqews.save_aqi_to_csv(df_pm25, df_pm10, out_path=tmp_path / "AQEWS_AQI_forecast.csv")
 
     out = pd.read_csv(tmp_path / "AQEWS_AQI_forecast.csv")
     return dict(zip(out["date"].astype(str), out["category"]))

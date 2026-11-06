@@ -1,0 +1,178 @@
+{
+  "season": "2025-26",
+  "source": "AS - Winter GRAP Orders 01Oct2026.xlsx",
+  "orders": {
+    "2025-10-14": [
+      {
+        "sr_no": 1,
+        "stage": "Stage I invoked",
+        "aqi_category": "Poor",
+        "aqi_trigger": "Delhi AQI recorded 211 on 14-Oct-2025",
+        "key_decision": "Stage-I actions under the extant GRAP were invoked across the entire NCR with immediate effect. Agencies were directed to implement, monitor and review the measures, maintain strict vigilance and intensify action so that AQI levels do not slip further. Citizens may be requested to follow the Stage-I citizen charter",
+        "reason": "The Sub-Committee reviewed the regional air-quality situation along with IMD/IITM forecasts, which indicated that Delhi's AQI was expected to remain in the Poor category in the coming days.",
+        "date_label": ""
+      }
+    ],
+    "2025-10-19": [
+      {
+        "sr_no": 2,
+        "stage": "Stage II invoked (in addition to Stage I already in force)",
+        "aqi_category": "Very Poor",
+        "aqi_trigger": "Delhi AQI reached 296 at 4 PM and 302 at 7 PM on 19-Oct-2025, crossing into the Very Poor category (301–400).",
+        "key_decision": "Stage-II actions under the extant GRAP were invoked across the entire NCR with immediate effect, in addition to Stage-I measures already in force. Agencies must implement, monitor and review Stage I and II actions in right earnest, keep strict vigil and intensify measures so the AQI does not slip further. Citizens may be requested to follow the Citizen Charter under Stages I and II. Agencies must also take note of the actions and targeted timelines in the Commission's comprehensive policy to curb air pollution in NCR, particularly the dust mitigation measures.",
+        "reason": "The Sub-Committee reviewed the air quality and the IMD/IITM forecast on 19.10.2025. Delhi's AQI had been rising since morning and crossed 300 by 7 PM, and the forecast predicted further deterioration, so it escalated from Stage I to Stage II.",
+        "date_label": ""
+      }
+    ],
+    "2025-11-11": [
+      {
+        "sr_no": 3,
+        "stage": "Stage III, Action Point 6 modified (clarification; no new stage invoked)",
+        "aqi_category": "Not specified (relates to Stage III, Severe)",
+        "aqi_trigger": "No AQI value or trigger given. Clarification to the Stage III invocation order of 11.11.2025.",
+        "key_decision": "Stage III, Action Point 6 was modified. It now reads: the GNCTD is not to permit BS-IV diesel-operated LCVs (goods carriers) registered outside Delhi to enter Delhi, except those carrying essential commodities or providing essential services.\nThe clarification adds that, under Direction No. 88, BS-III and below diesel-operated LCVs registered outside Delhi were already barred from entering Delhi. This applies even when they carry essential commodities or provide essential services.",
+        "reason": "Direction No. 88 (03.06.2025, amended 17.10.2025) allows all BS-IV commercial goods vehicles to enter Delhi until 31.10.2026 and restricts BS-III and below commercial goods vehicles registered outside Delhi from 01.11.2025. As GRAP is an emergency measure, it prevails on restrictions on entry of BS-IV diesel LCVs, so Stage III Action Point 6 was modified accordingly. The order also clarifies that BS-III and below diesel LCVs registered outside Delhi are already barred under Direction No. 88, even with essential goods.",
+        "date_label": "Clarification order"
+      },
+      {
+        "sr_no": 4,
+        "stage": "Stage III invoked (in addition to Stages I and II already in force)",
+        "aqi_category": "Severe (Stage III, AQI 401-450)",
+        "aqi_trigger": "Delhi AQI was 362 on 10-Nov-2025 (Very Poor) and rose sharply to 425 at 9:00 AM on 11-Nov-2025 (Severe), owing to calm winds, stable atmosphere and unfavourable meteorological conditions.",
+        "key_decision": "Stage-III actions under the extant GRAP were invoked across the entire NCR with immediate effect, in addition to the Stage-I and Stage-II actions already in force. All agencies were directed to implement, monitor and review Stage-I, II and III measures so that AQI levels do not slip further, keep strict vigil and intensify measures. Citizens were requested to strictly adhere to the Stage-III citizen charter.",
+        "reason": "The Sub-Committee held an urgent meeting on 11.11.2025 and reviewed the sharp rise in Delhi's AQI along with the IMD/IITM forecasts. Stage III was invoked to prevent further deterioration of air quality.",
+        "date_label": "Invocation order"
+      }
+    ],
+    "2025-11-19": [
+      {
+        "sr_no": 5,
+        "stage": "Not a GRAP-stage order (standalone direction; no stage invoked or amended)",
+        "aqi_category": "Not specified",
+        "aqi_trigger": "No AQI value given. The order refers to adverse air quality in November and December and to the air quality trends prevailing in the area where each event is scheduled.",
+        "key_decision": "CAQM considered it necessary for the NCR State Governments and GNCTD to take immediate and appropriate action so that physical school sports competitions scheduled in November and December can be postponed, keeping in view the air quality trends in the area where each event is to be held. The Governments should also ensure that students are not unduly disadvantaged, by exploring ways to reschedule events or provide alternative opportunities later.",
+        "reason": "The Supreme Court, hearing M.C. Mehta v. Union of India, was concerned that school sports competitions were being held during hazardous air quality, which could harm children's health. It asked CAQM to issue directions to postpone such events in November and December. After an urgent stakeholder consultation on 19.11.2025, CAQM issued the direction to the NCR State Governments and GNCTD.",
+        "date_label": ""
+      }
+    ],
+    "2025-11-21": [
+      {
+        "sr_no": 6,
+        "stage": "GRAP schedule revised; no stage invoked or revoked.",
+        "aqi_category": "Poor, Very Poor and Severe (Stages I-III)",
+        "aqi_trigger": "No new AQI trigger. Stages I, II and III were already invoked (14-Oct, 19-Oct and 11-Nov-2025), and the AQI bands are unchanged: Stage I 201-300, Stage II 301-400, Stage III 401-450.",
+        "key_decision": "CAQM amended the GRAP schedule with immediate effect so that selected measures now apply at an earlier (less severe) stage: \nFour Stage II measures now apply from Stage I: uninterrupted power supply to discourage DG set use, synchronised traffic movement with more personnel at congestion points, public alerts in newspapers, TV and radio, and more CNG/electric buses and metro services with differential off-peak fares.\nStaggered timings for public offices and municipal bodies moved from Stage III to Stage II. GNCTD and NCR State Governments are to stagger timings in Delhi, Gurugram, Faridabad, Ghaziabad and Gautam Budh Nagar. For other NCR areas, State Governments may decide. For Central Government offices, the Centre may decide.\nThe measure on 50% office strength with the rest working from home moved from Stage IV to Stage III. NCR State Governments/GNCTD are to take a decision, and the Centre may decide for its own offices.\nAll agencies responsible for GRAP must implement the changes immediately.",
+        "reason": "The Supreme Court, hearing M.C. Mehta v. Union of India, observed that CAQM could take proactive action after consulting stakeholders to prevent further deterioration of air quality in Delhi-NCR. CAQM had already proposed revisions to the Court, and its GRAP Sub-Committee consulted stakeholders on 20.11.2025 before agreeing to the amendments.",
+        "date_label": ""
+      }
+    ],
+    "2025-11-26": [
+      {
+        "sr_no": 7,
+        "stage": "Stage III revoked; Stages I and II remain invoked",
+        "aqi_category": "Very Poor (Stage II, AQI 301-400)",
+        "aqi_trigger": "Delhi AQI recorded 327 on 26-Nov-2025 and had been improving for the preceding days. IMD/IITM forecast the AQI to remain in the \"very poor\" category in the coming days.",
+        "key_decision": "CAQM's Sub-Committee on GRAP revoked its order of 11.11.2025 invoking Stage III, with immediate effect.\nStages I and II stay invoked and are to be implemented as per the modified GRAP of 21.11.2025.\nAll implementing agencies must keep strict vigil and intensify Stage I and II measures, so the AQI does not slip back into the \"Severe\" or \"Severe +\" category.\nC&D sites that were issued specific closure orders for violations must not resume operations without a specific order from the Commission.\nCitizens are requested to follow the Citizen Charter under Stages I and II.\nThe Sub-Committee will keep watching the air quality and review the situation from time to time.",
+        "reason": "The Sub-Committee met on 26.11.2025 and reviewed the air quality and the IMD/IITM forecast. Delhi's AQI had been improving and stood at 327 that day, so it decided to revoke Stage III. The forecast still showed the AQI staying \"very poor\", so Stages I and II were kept and their measures intensified so that the AQI does not slip further to the Severe or Severe+ category. Citizens were also asked to follow the Citizen Charter, given the winter season and unfavourable weather.",
+        "date_label": ""
+      }
+    ],
+    "2025-12-13": [
+      {
+        "sr_no": 8,
+        "stage": "Stage IV invoked (in addition to Stages I, II and III already in force)",
+        "aqi_category": "Severe+ (Stage IV, AQI >450)",
+        "aqi_trigger": "AQI of Delhi was 401 at 10 AM, 431 at 4 PM, 436 at 5 PM, 441 at 6 PM and 448 at 7 PM. The 450 threshold had not yet been crossed. Stage IV was invoked on the rising trend and the forecast of calm winds and unfavourable weather, before the AQI crossed 450.",
+        "key_decision": "CAQM's Sub-Committee on GRAP invoked all Stage IV actions across NCR with immediate effect, on top of Stages I, II and III (Stage III had been invoked earlier the same day).\nStage IV Action Point 1 modified: entry of BS-IV trucks into Delhi is stopped, except those carrying essential commodities or providing essential services. LNG/CNG/electric/BS-VI diesel trucks are still allowed.\nClarified that BS-III and below diesel-operated commercial goods vehicles (LGVs, MGVs, HGVs) registered outside Delhi are already barred under Direction No. 88 (since 01.11.2025), even with essential goods. \nAgencies must keep strict vigil and intensify measures; citizens are asked to follow the Stage IV Citizen Charter.",
+        "reason": "Delhi's AQI kept rising through the day, from 401 in the morning to 448 by 7 PM, because of very low wind speed, a stable atmosphere and weather unfavourable for dispersing pollutants. The forecast showed these conditions continuing, with partly cloudy skies, mist and haze at night. The Sub-Committee held an urgent evening meeting and invoked Stage IV to prevent further deterioration of air quality.",
+        "date_label": "Invocation of Stage- IV"
+      },
+      {
+        "sr_no": 9,
+        "stage": "Stage III invoked (in addition to Stages I and II already in force)",
+        "aqi_category": "Severe (Stage III, AQI 401-450)",
+        "aqi_trigger": "Delhi's AQI was 259 on 10-Dec (Poor), 307 on 11-Dec and 349 on 12-Dec (Very Poor). On 13-Dec it was 387 at 6 AM, 393 at 8 AM and 401 at 10 AM, already crossing the Severe mark.",
+        "key_decision": "CAQM's Sub-Committee on GRAP invoked all Stage III actions across NCR with immediate effect, on top of Stages I and II.\nStage III Action Point 6 modified: entry of BS-IV diesel LCVs (goods carriers) registered outside Delhi is not permitted, except those carrying essential commodities or providing essential services.\nClarified that BS-III and below diesel-operated commercial goods vehicles (LGVs, MGVs, HGVs) registered outside Delhi are already barred under Direction No. 88 (since 01.11.2025), even with essential goods.\nAgencies must keep strict vigil and intensify measures so that AQI levels do not slip further; citizens are requested to follow the Stage III Citizen Charter.",
+        "reason": "Delhi's AQI rose steadily from 259 on 10-Dec to 401 by 10 AM on 13-Dec, driven by very low wind speed, a stable atmosphere and unfavourable weather that trapped pollutants. A change in wind direction since 12-Dec, with easterly winds, further worsened PM2.5, the predominant pollutant at almost all stations. IMD/IITM forecast these conditions to continue for a couple of days. After an earlier meeting on 12-Dec (decided to keep a close watch) and an urgent meeting at 10 AM on 13-Dec, the Sub-Committee invoked Stage III to prevent further deterioration of air quality.",
+        "date_label": "Invocation of Stage- III"
+      }
+    ],
+    "2025-12-24": [
+      {
+        "sr_no": 10,
+        "stage": "Stage IV revoked; Stages I, II and III remain invoked",
+        "aqi_category": "Poor (AQI 271 on 24-Dec); Stage IV (Severe+) revoked",
+        "aqi_trigger": "Delhi AQI recorded 271 (\"Poor\") on 24-Dec-2025, a significant improvement since the previous night. IMD/IITM forecast the AQI to increase again in the coming days due to slower winds.",
+        "key_decision": "CAQM's Sub-Committee on GRAP revoked, with immediate effect, its order of 13.12.2025 invoking Stage IV.\nStages I, II and III remain invoked and are to be implemented as per the modified GRAP of 21.11.2025.\nAll implementing agencies must keep strict vigil and intensify Stage I, II and III measures, so the AQI does not slip back into the \"Severe+\" category.\nCitizens are requested to follow the Citizen Charter under Stages I, II and III.\nThe Sub-Committee will keep watching the air quality and review the situation from time to time.",
+        "reason": "The Sub-Committee met on 24.12.2025 and reviewed the air quality and the IMD/IITM forecast. Delhi's AQI had improved significantly since the previous night because of high winds and favourable meteorological conditions, and stood at 271 that day, so it revoked Stage IV. The forecast pointed to a rise in AQI from slower winds, so Stages I, II and III were kept and their measures intensified, given the winter season and weather that may not always be favourable.",
+        "date_label": ""
+      }
+    ],
+    "2026-01-02": [
+      {
+        "sr_no": 11,
+        "stage": "Stage III revoked; Stages I and II remain invoked",
+        "aqi_category": "Poor (AQI 236 on 02-Jan); Stage III (Severe) revoked",
+        "aqi_trigger": "Delhi AQI recorded 236 on 02-Jan-2026, a significant improvement. IMD/IITM forecast the AQI to remain in the poor to very poor category in the coming days.",
+        "key_decision": "CAQM's Sub-Committee on GRAP revoked, with immediate effect, its order of 13.12.2025 invoking Stage III.\nStages I and II remain invoked and are to be implemented as per the modified GRAP of 21.11.2025.\nAll implementing agencies must keep strict vigil and intensify Stage I and II measures, so the AQI does not slip back into the \"Severe\" or \"Severe+\" category.\nC&D sites issued specific closure orders for violations must not resume without a specific order from the Commission.\nCitizens are requested to follow the Citizen Charter under Stages I and II.\nThe Sub-Committee will keep watching the air quality and review the situation from time to time.",
+        "reason": "The Sub-Committee met on 24.12.2025 and reviewed the air quality and the IMD/IITM forecast. Delhi's AQI had improved significantly since the previous night because of high winds and favourable meteorological conditions, and stood at 271 that day, so it revoked Stage IV. The forecast pointed to a rise in AQI from slower winds, so Stages I, II and III were kept and their measures intensified so that the AQI does not slip further to the Severe+ category. Citizens were also asked to follow the Citizen Charter, given the winter season and weather that may not always be favourable.",
+        "date_label": ""
+      }
+    ],
+    "2026-01-16": [
+      {
+        "sr_no": 12,
+        "stage": "Stage III invoked (in addition to Stages I and II already in force)",
+        "aqi_category": "Severe (Stage III, AQI 401-450)",
+        "aqi_trigger": "Delhi AQI recorded 354 on 16-Jan-2026 and showed an increasing trend. The 401 threshold had not yet been crossed. IMD/IITM forecast the AQI may reach the \"severe\" category in the coming days.",
+        "key_decision": "CAQM's Sub-Committee on GRAP invoked all Stage III actions across NCR with immediate effect, on top of Stages I and II.\nStage III Action Point 6 modified: entry of BS-IV diesel LCVs (goods carriers) registered outside Delhi is not permitted, except those carrying essential commodities or providing essential services.\nClarified that BS-III and below diesel-operated commercial goods vehicles (LGVs, MGVs, HGVs) registered outside Delhi are already barred under Direction No. 88 (since 01.11.2025), even with essential goods.\nAgencies must keep strict vigil and intensify measures; citizens are requested to follow the Stage III Citizen Charter.",
+        "reason": "The Sub-Committee met on 16-Jan-2026 and reviewed the air quality and the IMD/IITM forecast. Delhi's AQI was rising and stood at 354. The forecast indicated it could deteriorate into the \"severe\" category in the coming days because of unfavourable meteorological conditions and slow, variable wind speeds. Keeping in view this trend, the Sub-Committee invoked Stage III to prevent further deterioration of air quality.",
+        "date_label": ""
+      }
+    ],
+    "2026-01-17": [
+      {
+        "sr_no": 13,
+        "stage": "Stage IV invoked (in addition to Stages I, II and III already in force)",
+        "aqi_category": "Severe+ (Stage IV, AQI >450)",
+        "aqi_trigger": "Delhi AQI was 400 at 4 PM (Very Poor) and 428 at 8 PM. The 450 threshold had not yet been crossed. Stage IV was invoked proactively, on the sharp increasing trend and the IMD/IITM forecast of further deterioration.",
+        "key_decision": "CAQM's Sub-Committee on GRAP proactively invoked all Stage IV actions across NCR with immediate effect, on top of Stages I, II and III. Stage IV Action Point 1 modified: entry of BS-IV trucks into Delhi is stopped, except those carrying essential commodities or providing essential services. LNG/CNG/electric/BS-VI diesel trucks are still allowed. Clarified that BS-III and below diesel-operated commercial goods vehicles (LGVs, MGVs, HGVs) registered outside Delhi are already barred under Direction No. 88 (since 01.11.2025), even with essential goods. Agencies must keep strict vigil and intensify measures so that AQI levels do not slip further; citizens are requested to follow the Stage IV Citizen Charter.",
+        "reason": "Delhi's AQI rose sharply through the day, from 400 at 4 PM to 428 at 8 PM, because of calm winds, a stable atmosphere and unfavourable meteorological conditions that trapped pollutants. IMD/IITM forecast further deterioration. The Sub-Committee held an urgent meeting at 8:15 PM and invoked Stage IV proactively to prevent further deterioration of air quality.",
+        "date_label": ""
+      }
+    ],
+    "2026-01-20": [
+      {
+        "sr_no": 14,
+        "stage": "Stage IV revoked; Stages I, II and III remain in force",
+        "aqi_category": "Very Poor (Stage II, AQI 301-400)",
+        "aqi_trigger": "Delhi AQI recorded 378 (\"Very Poor\") on 20-Jan-2026, an improvement owing to favourable meteorological conditions and increased wind speed. IMD/IITM forecast the AQI to remain in this range in the coming days.",
+        "key_decision": "CAQM's Sub-Committee on GRAP revoked, with immediate effect, its order of 17.01.2026 invoking Stage IV.\nStages I, II and III remain in force and are to be implemented as per the modified GRAP of 21.11.2025.\nAll implementing agencies must keep strict vigil and intensify Stage I, II and III measures, so the AQI does not slip back into the \"Severe+\" category.\nCitizens are requested to follow the Citizen Charter under Stages I, II and III.\nThe Sub-Committee will keep watching the air quality and review the situation from time to time.",
+        "reason": "The Sub-Committee met on 20-Jan-2026 and reviewed the air quality and the IMD/IITM forecast. Delhi's AQI had improved because of favourable meteorological conditions and higher wind speed, and stood at 378, so it revoked Stage IV. The forecast showed the AQI staying in the Very Poor range, so Stages I, II and III were kept and their measures intensified so that the AQI does not slip further to the Severe+ category. Citizens were also asked to follow the Citizen Charter, given the winter season and weather that may not always be favourable.",
+        "date_label": ""
+      }
+    ],
+    "2026-01-22": [
+      {
+        "sr_no": 15,
+        "stage": "Stage III revoked; Stages I and II remain invoked",
+        "aqi_category": "Very Poor (Stage II, AQI 301-400)",
+        "aqi_trigger": "Delhi AQI recorded 322 on 22-Jan-2026 and had been improving. IMD/IITM forecast the AQI to remain in the \"moderate\" to \"poor\" category in the coming days.",
+        "key_decision": "CAQM's Sub-Committee on GRAP revoked, with immediate effect, its order of 16.01.2026 invoking Stage III.\nStages I and II remain invoked and are to be implemented as per the modified GRAP of 21.11.2025.\nAll implementing agencies must keep strict vigil and intensify Stage I and II measures, so the AQI does not slip back into the \"Severe\" or \"Severe+\" category.\nC&D sites issued specific closure orders for violations must not resume without a specific order from the Commission.\nCitizens are requested to follow the Citizen Charter under Stages I and II.\nThe Sub-Committee will keep watching the air quality and review the situation from time to time.",
+        "reason": "The Sub-Committee met on 22-Jan-2026 and reviewed the air quality and the IMD/IITM forecast. Delhi's AQI had been improving because of favourable meteorological conditions and stood at 322, so it revoked Stage III. The forecast showed the AQI moving to the moderate to poor range, so Stages I and II were kept and their measures intensified so that the AQI does not slip further to the Severe or Severe+ category. Citizens were also asked to follow the Citizen Charter, given the winter season and weather that is not so favourable.",
+        "date_label": ""
+      }
+    ],
+    "2026-02-18": [
+      {
+        "sr_no": 16,
+        "stage": "Stage II revoked; Stage I remains invoked",
+        "aqi_category": "Poor (Stage I, AQI 201-300)",
+        "aqi_trigger": "Delhi AQI recorded 214 at 4:00 PM on 18-Feb-2026, an improvement owing to favourable meteorological conditions. IMD/IITM forecast the AQI to remain in the poor/moderate category in the coming days.",
+        "key_decision": "CAQM's Sub-Committee on GRAP revoked, with immediate effect, its order of 19.10.2025 invoking Stage II.\nStage I remains invoked and is to be implemented, monitored and reviewed by all agencies concerned across NCR.\nAll implementing agencies must keep strict vigil and intensify Stage I measures, so the AQI does not deteriorate further.\nThe Sub-Committee will keep watching the air quality and review the situation from time to time.",
+        "reason": "The Sub-Committee met on 18-Feb-2026 and reviewed the air quality and the IMD/IITM forecast. Delhi's AQI had improved because of favourable meteorological conditions and stood at 214 at 4 PM, so it revoked Stage II. The forecast showed the AQI staying in the poor/moderate range, so Stage I was kept and its measures intensified so that the AQI does not deteriorate further.",
+        "date_label": ""
+      }
+    ]
+  }
+}

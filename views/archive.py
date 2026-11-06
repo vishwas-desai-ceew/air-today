@@ -1,11 +1,11 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime, timedelta, time, timezone
-from streamlit_calendar_input import calendar_input
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from config.settings import EFFECTIVE_DATE_CUTOFF
 from ingestion.json_store import read_json
-from views.components import warning_card, danger_card, render_forecast_availability
+from views.calendar_grid import month_calendar, month_picker
+from views.components import danger_card, render_forecast_availability
 
 PARENT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = PARENT_DIR / "data"
@@ -61,12 +61,32 @@ def _build_archive_table(archived_data, missing_dates, current_year):
     return pd.DataFrame(rows)[columns].sort_values("date", ascending=False)
 
 
+@st.dialog("Archived update", width="large")
+def archive_dialog(date_str):
+    archived_data = load_json_data()
+    day = datetime.strptime(date_str, "%Y-%m-%d")
+    desc = archived_data.get(date_str) or []
+    st.markdown(
+        f"<div class='cal-dlg-date'>{day:%A} · {day.day} {day:%B %Y}</div>"
+        f"<div class='cal-dlg-sub'>{len(desc)} insight{'s' if len(desc) != 1 else ''} archived</div>",
+        unsafe_allow_html=True,
+    )
+    if date_str in set(load_missing_days()):
+        danger_card("AQI forecasts were unavailable as the AQEWS website was temporarily down", "Note:")
+    if desc:
+        st.markdown(
+            "<ul class='archive-dlg-list'>" + "".join(f"<li>{item}</li>" for item in desc) + "</ul>",
+            unsafe_allow_html=True,
+        )
+    else:
+        st.write("No description available.")
+
+
 def render_archive_data():
     archived_data = load_json_data()
     archive_dates = []
     for date_str in archived_data:
         try:
-            #archive_dates.append(datetime.strptime(date_str, "%Y-%m-%d"))
             archive_dates.append(datetime.strptime(date_str, "%Y-%m-%d").date())
         except ValueError:
             continue
@@ -75,36 +95,27 @@ def render_archive_data():
         st.info("No archived updates are available yet.")
         return
 
-    year_options = sorted({str(date.year) for date in archive_dates}, reverse=True)
-    col1, col2, _ = st.columns([2, 1, 4])
+    year_options = sorted({str(d.year) for d in archive_dates}, reverse=True)
+    col1, col2 = st.columns([4, 1], vertical_alignment="bottom")
     with col1:
         year_selection = st.segmented_control(
-            "**Select year**",
+            "**Year**",
             options=year_options,
             selection_mode="single",
             default=year_options[0],
             key="archive_year_selection",
         )
-
     # A keyed segmented control normally always returns a value, but this
     # fallback also handles a stale session state after the archive changes.
     if year_selection not in year_options:
         year_selection = year_options[0]
+    with col2:
+        view_mode = st.toggle("**Table view**", value=False, key="archive_table_view")
 
     current_year = int(year_selection)
-    filtered_dates = sorted(date for date in archive_dates if date.year == current_year)
+    year_dates = sorted(d for d in archive_dates if d.year == current_year)
     missing_dates = set(load_missing_days())
-    with col2:
-        st.space(40)
-        view_mode = st.toggle(
-            "**Table View**",
-            value=False,
-            key="archive_table_view",
-            help="Select View Mode",
-            label_visibility="visible",
-            width="content",
-        )
-    
+
     if view_mode:
         table_df = _build_archive_table(archived_data, missing_dates, current_year)
         st.dataframe(
@@ -115,9 +126,7 @@ def render_archive_data():
                 "date": st.column_config.DateColumn("Date"),
                 "day": st.column_config.TextColumn("Day"),
                 "insights_count": st.column_config.NumberColumn("Insights"),
-                "forecast_missing": st.column_config.CheckboxColumn(
-                    "AQEWS forecast missing"
-                ),
+                "forecast_missing": st.column_config.CheckboxColumn("AQEWS forecast missing"),
             },
         )
         st.download_button(
@@ -126,60 +135,42 @@ def render_archive_data():
             file_name=f"aq_archive_{current_year}.csv",
             mime="text/csv",
         )
-        st.write("")
         return
 
-    col1, col2 = st.columns([1, 3])
-    with col1:
-        # The calendar component keeps client-side state. Changing the key
-        # when the year changes creates a fresh instance with only that
-        # year's available dates, avoiding stale selections/view state.
-        selected_date = calendar_input(
-            available_dates=filtered_dates, key=f"archive_calendar_{current_year}"
+    # Only months that actually have updates; open on the latest one.
+    months = sorted({(d.year, d.month) for d in year_dates})
+    year, month = month_picker(f"archive_month_{current_year}", months, default=months[-1])
+    month_dates = [d for d in year_dates if (d.year, d.month) == (year, month)]
+    markers = {d: "warn" for d in month_dates if d.isoformat() in missing_dates}
+
+    cal_col, side_col = st.columns([3, 2], gap="large")
+    with cal_col:
+        month_calendar(
+            f"archive_{current_year}", year, month, set(month_dates),
+            on_select=lambda d: archive_dialog(d.isoformat()),
+            markers=markers,
+            caption="Highlighted dates have an archived update. Click one to read it.",
         )
+    with side_col:
+        st.markdown(f"<div class='cal-side-title'>{date(year, month, 1):%B %Y} at a glance</div>", unsafe_allow_html=True)
+        st.markdown(
+            f"""
+            <div class="cal-stats">
+              <div><strong>{len(month_dates)}</strong><span>updates archived</span></div>
+              <div><strong>{len(markers)}</strong><span>days without AQEWS forecast</span></div>
+            </div>
+            <div class="cal-legend">
+              <span><i class="cal-key on"></i>Update archived</span>
+              <span><i class="cal-key warn"></i>Update archived, AQEWS forecast missing</span>
+              <span><i class="cal-key off"></i>No update</span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        latest = month_dates[-1]
+        if st.button(f"Open latest: {latest.day} {latest:%b}", key=f"archive_latest_{year}_{month}",
+                     icon=":material/open_in_new:", width="stretch"):
+            archive_dialog(latest.isoformat())
 
-    with col2:
-        if selected_date and selected_date.year == current_year:
-            date_str = selected_date.strftime("%Y-%m-%d")
-        else:
-            effective_date = get_effective_date_utc()
-            # When viewing a prior year, today's effective date is not a
-            # useful fallback. Show the most recent archived update instead.
-            date_str = (
-                effective_date
-                if effective_date in archived_data and effective_date.startswith(f"{current_year}-")
-                else filtered_dates[-1].strftime("%Y-%m-%d")
-            )
-        insights_col = st.columns(1)
-        if date_str in archived_data:
-            desc = archived_data[date_str]
-            with insights_col[0].container(border=True):
-                st.markdown(
-                    f"""
-                    <span class="archive_insights">
-                        {datetime.strptime(date_str, "%Y-%m-%d").strftime('%A')} |
-                        {datetime.strptime(date_str, "%Y-%m-%d").strftime('%d %B %Y')} 
-                    </span>
-                """,
-                    unsafe_allow_html=True,
-                )
-                st.space(3)
-                if date_str in missing_dates:
-                    danger_card("AQI forecasts were unavailable as the AQEWS website was temporarily down", "Note:")
-                st.space(3)
-                if len(desc) >= 1:
-                    st.markdown(
-                        "<ul style='padding-left:10px;padding-right:50px; "
-                        "list-style-type:square; margin-top:5px;'>"
-                        + "".join(f"<li>{item}</li>" for item in desc)
-                        + "</ul>",
-                        unsafe_allow_html=True,
-                    )
-                else:
-                    st.write("No description available.")
-
-        else:
-            st.error("Please select a date in green to view the archive.")
-
-    render_forecast_availability(missing_dates, current_year)
-   
+    with st.expander("AQEWS forecast availability through the year", icon=":material/calendar_month:"):
+        render_forecast_availability(missing_dates, current_year)

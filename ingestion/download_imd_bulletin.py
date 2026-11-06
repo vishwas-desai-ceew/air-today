@@ -21,11 +21,14 @@ def download_pdf():
     try:
         r = requests.get(PDF_URL, timeout=60)
         r.raise_for_status()
+        if not r.content.startswith(b"%PDF"):
+            raise ValueError("IMD returned a non-PDF response")
         with open(OUTPUT_FILE, "wb") as f:
             f.write(r.content)
         logger.info("PDF downloaded successfully")
     except Exception as e:
         logger.error(f"Error downloading PDF: {e}")
+        raise
 
 
 if __name__ == "__main__":

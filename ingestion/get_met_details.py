@@ -1,25 +1,20 @@
 import sys
 import pandas as pd
-from datetime import datetime, timedelta
 from pathlib import Path
-import streamlit as st
 
 PARENT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PARENT_DIR))
 from config.logging_config import get_logger
+from config.settings import (
+    AQEWS_AQI_CSV as AQI_FC_FILE, AQEWS_CATEGORY_CSV as AQI_FC_CAT,
+    FIRE_CSV, METEO_HOURLY_CSV as METEO_CSV, VENTILATION_CSV,
+)
 logger = get_logger(__name__)
-
-DATA_DIR = PARENT_DIR / "data"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-METEO_CSV = DATA_DIR / "meteo_api_hourly.csv"
-AQI_FC_FILE = DATA_DIR / "AQEWS_AQI_forecast.csv"
-FIRE_CSV = DATA_DIR / "fire_pbhr.csv"
-AQI_FC_CAT = DATA_DIR / "AQI_forecast_category.csv"
 
 
 def get_tomorrow_avg(c_date, csv_file=METEO_CSV):
     df = pd.read_csv(csv_file)
-    df['date'] = pd.to_datetime(df['date'])
+    df['date'] = pd.to_datetime(df['date'], utc=True).dt.tz_convert("Asia/Kolkata")
     #tomorrow = (datetime.now() + timedelta(days=1)).date()
     c_date = pd.to_datetime(c_date).date()
     
@@ -33,9 +28,14 @@ def get_tomorrow_avg(c_date, csv_file=METEO_CSV):
     return min_temp, avg_wind, avg_rainfall
 
 def get_fire_count(p_date, csv_file=FIRE_CSV):
+    """{state: count} for p_date, {} for a fetched day with no fires, or None
+    when the fire feed hasn't covered p_date yet (so it isn't reported as 0)."""
     df = pd.read_csv(csv_file)
     p_date = pd.to_datetime(p_date).date()
-    fire_df = df[pd.to_datetime(df['date']).dt.date == p_date]
+    dates = pd.to_datetime(df['date']).dt.date
+    if df.empty or dates.max() < p_date:
+        return None
+    fire_df = df[dates == p_date]
     if fire_df.empty:
         return {}
     fire_counts = fire_df.groupby('state_name')['count_of_incidents'].sum().to_dict()
@@ -52,7 +52,7 @@ def get_fc_aqi(c_date, csv_file=AQI_FC_FILE):
     return None, None
 
 
-def get_v_index_df(c_date, csv_file=DATA_DIR / "ventilation_index_forecast.csv"):
+def get_v_index_df(c_date, csv_file=VENTILATION_CSV):
     try:
         df = pd.read_csv(csv_file)
     except FileNotFoundError:
