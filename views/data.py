@@ -11,7 +11,7 @@ import pandas as pd
 import streamlit as st
 
 from config.settings import (
-    AQEWS_AQI_CSV, AQEWS_CATEGORY_CSV, ARCHIVE_TEMP, CPCB_AQI_CSV, FIRE_CSV, IMD_BULLETIN_PDF, INSIGHTS_JSON,
+    AQEWS_AQI_CSV, AQEWS_CATEGORY_CSV, ARCHIVE_TEMP, CPCB_AQI_CSV, FIRE_HEADLINE_INSTRUMENT, FIRE_STATE_CSVS, IMD_BULLETIN_PDF, INSIGHTS_JSON,
     IST, METEO_HOURLY_CSV, PIPELINE_STATUS_JSON, VENTILATION_CSV, effective_today,
 )
 from ingestion.json_store import read_json
@@ -119,15 +119,23 @@ def current_weather() -> dict:
 
 
 @st.cache_data(ttl=600)
+def state_fires(state) -> pd.DataFrame:
+    """date + one count column per instrument for `state`."""
+    from ingestion.get_fire_pbhr import read_state_fires
+    return read_state_fires(state)
+
+
 def fire_counts(day):
-    """{state: count} for `day`, or None if the fire feed hasn't covered it."""
-    df = _read_csv(FIRE_CSV)
-    if df.empty:
-        return None
-    dates = pd.to_datetime(df["date"]).dt.date
-    if dates.max() < day:
-        return None
-    return df[dates == day].groupby("state_name")["count_of_incidents"].sum().to_dict()
+    """{state: headline-instrument count} for `day`, or None if the fire feed
+    hasn't covered it."""
+    counts = {}
+    for state in FIRE_STATE_CSVS:
+        df = state_fires(state)
+        row = df[df["date"] == day]
+        if row.empty:
+            return None
+        counts[state] = int(row[FIRE_HEADLINE_INSTRUMENT].iloc[0])
+    return counts
 
 
 SOURCE_FILES = {
@@ -135,7 +143,7 @@ SOURCE_FILES = {
     "aqews": ("AQEWS forecast", AQEWS_AQI_CSV),
     "weather": ("Weather", METEO_HOURLY_CSV),
     "imd": ("IMD bulletin", IMD_BULLETIN_PDF),
-    "fires": ("Farm fires", FIRE_CSV),
+    "fires": ("Farm fires", FIRE_STATE_CSVS["Punjab"]),
 }
 
 

@@ -10,7 +10,7 @@ from views.grap import render_grap
 from views.weather_fcast import render_weather_fcast
 from views.delhi_weather import render_aqi_delhi, render_health_advisory
 from views.render_aqi_pdf import render_aqi_pdf
-from views.render_farm_firesh_dash import render_fires_dashboard
+from views.fires import render_fires_page
 from views.render_google_doc import render_google_doc
 from views.render_aqi_fc import render_aqi_fc, get_error_message
 from views.render_pm25_fc import render_pm25_fc
@@ -146,8 +146,8 @@ def page_weather():
 
 
 def page_fires():
-    section_header("Fire counts - Punjab & Haryana")
-    render_fires_dashboard()
+    section_header("Farm fires - Punjab & Haryana", caption="Daily satellite fire detections by instrument")
+    render_fires_page()
     with st.expander("Context: farm fires in Punjab and Haryana"):
         render_farm_fires()
 

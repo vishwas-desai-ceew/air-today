@@ -7,7 +7,7 @@ sys.path.insert(0, str(PARENT_DIR))
 from config.logging_config import get_logger
 from config.settings import (
     AQEWS_AQI_CSV as AQI_FC_FILE, AQEWS_CATEGORY_CSV as AQI_FC_CAT,
-    FIRE_CSV, METEO_HOURLY_CSV as METEO_CSV, VENTILATION_CSV,
+    FIRE_HEADLINE_INSTRUMENT, FIRE_STATE_CSVS, METEO_HOURLY_CSV as METEO_CSV, VENTILATION_CSV,
 )
 logger = get_logger(__name__)
 
@@ -27,19 +27,20 @@ def get_tomorrow_avg(c_date, csv_file=METEO_CSV):
 
     return min_temp, avg_wind, avg_rainfall
 
-def get_fire_count(p_date, csv_file=FIRE_CSV):
-    """{state: count} for p_date, {} for a fetched day with no fires, or None
-    when the fire feed hasn't covered p_date yet (so it isn't reported as 0)."""
-    df = pd.read_csv(csv_file)
+def get_fire_count(p_date):
+    """{state: count} for p_date from the headline instrument (NOAA/VIIRS),
+    or None when the fire feed hasn't covered p_date yet (so it isn't
+    reported as 0)."""
+    from ingestion.get_fire_pbhr import read_state_fires
     p_date = pd.to_datetime(p_date).date()
-    dates = pd.to_datetime(df['date']).dt.date
-    if df.empty or dates.max() < p_date:
-        return None
-    fire_df = df[dates == p_date]
-    if fire_df.empty:
-        return {}
-    fire_counts = fire_df.groupby('state_name')['count_of_incidents'].sum().to_dict()
-    return fire_counts
+    counts = {}
+    for state in FIRE_STATE_CSVS:
+        df = read_state_fires(state)
+        row = df[df["date"] == p_date]
+        if row.empty:
+            return None
+        counts[state] = int(row[FIRE_HEADLINE_INSTRUMENT].iloc[0])
+    return counts
 
 
 def get_fc_aqi(c_date, csv_file=AQI_FC_FILE):
