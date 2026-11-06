@@ -41,6 +41,9 @@ FIRE_INSTRUMENTS = ["NOAA/VIIRS", "Aqua/MODIS", "Terra/MODIS"]
 FIRE_HEADLINE_INSTRUMENT = "NOAA/VIIRS"
 IMD_BULLETIN_PDF = DATA_DIR / "imd_bulletin_today.pdf"
 PIPELINE_STATUS_JSON = DATA_DIR / "pipeline_status.json"
+# Delhi hourly PM2.5 / PM10, in the shape signalsfunc returns (observation_hour_start,
+# PM25[, PM10]). A sample file for now; the pipeline will write the live one here.
+SIGNALS_HOURLY_CSV = DATA_DIR / "signalsfunc_pm25_sample_data.csv"
 
 # ---- Location + upstream URLs ----
 DELHI_LAT, DELHI_LON = 28.6448, 77.216721

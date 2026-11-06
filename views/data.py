@@ -12,7 +12,7 @@ import streamlit as st
 
 from config.settings import (
     AQEWS_AQI_CSV, AQEWS_CATEGORY_CSV, ARCHIVE_TEMP, CPCB_AQI_CSV, FIRE_HEADLINE_INSTRUMENT, FIRE_STATE_CSVS, IMD_BULLETIN_PDF, INSIGHTS_JSON,
-    IST, METEO_HOURLY_CSV, PIPELINE_STATUS_JSON, VENTILATION_CSV, effective_today,
+    IST, METEO_HOURLY_CSV, PIPELINE_STATUS_JSON, SIGNALS_HOURLY_CSV, VENTILATION_CSV, effective_today,
 )
 from ingestion.json_store import read_json
 
@@ -124,6 +124,20 @@ def current_weather() -> dict:
         row["time"] = row.pop("date").isoformat()
         row["source"] = "Open-Meteo (cached forecast)"
         return row
+
+
+@st.cache_data(ttl=600)
+def pm_hourly() -> pd.DataFrame:
+    """Delhi hourly PM2.5 (and PM10 when present): time, PM2.5[, PM10], sorted."""
+    df = _read_csv(SIGNALS_HOURLY_CSV)
+    if df.empty or "observation_hour_start" not in df.columns:
+        return pd.DataFrame()
+    df = df.rename(columns={"observation_hour_start": "time", "PM25": "PM2.5"})
+    df["time"] = pd.to_datetime(df["time"])
+    keep = ["time"] + [c for c in ("PM2.5", "PM10") if c in df.columns]
+    for c in keep[1:]:
+        df[c] = pd.to_numeric(df[c], errors="coerce")
+    return df[keep].sort_values("time").reset_index(drop=True)
 
 
 @st.cache_data(ttl=600)

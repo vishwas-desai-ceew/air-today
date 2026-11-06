@@ -58,6 +58,12 @@ PM10_BANDS = [
     ("Severe", 431, None, "#e91902"),
 ]
 
+# National Ambient Air Quality Standards (CPCB notification B-29016/20/90/PCI-L,
+# 18 Nov 2009), µg/m³, industrial/residential/rural areas. There is no 1-hour
+# standard for PM2.5 or PM10: only 24-hour and annual limits.
+NAAQS_24H = {"PM2.5": 60, "PM10": 100}
+NAAQS_ANNUAL = {"PM2.5": 40, "PM10": 60}
+
 # CPCB Table 3.12, as worded in the source.
 AQI_HEALTH = {
     "Good": "Minimal impact",

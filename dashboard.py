@@ -2,8 +2,7 @@ import pytz
 import streamlit as st
 from datetime import datetime
 from views.interventions import render_interventions
-from views.farm_fires import render_farm_fires
-from views.pm25_hourly import render_pm25_hourly
+from views.pollutants import render_pollutants_page
 from views.recent_trends import render_recent_trends
 from views.archive import render_archive_data
 from views.grap import render_grap
@@ -152,12 +151,10 @@ def page_weather():
 def page_fires():
     section_header("Farm fires - Punjab & Haryana", caption="Daily satellite fire detections by instrument")
     render_fires_page()
-    with st.expander("Context: farm fires in Punjab and Haryana"):
-        render_farm_fires()
 
 def page_pm25():
-    section_header("Pollutant and AQI tracker", caption="CAAQMS station data")
-    render_pm25_hourly(isMobile=is_mobile)
+    section_header("Pollutants and AQI", caption="Delhi hourly PM2.5 and PM10 against the CPCB bands, and the last 7 days of CPCB AQI")
+    render_pollutants_page(compact=is_mobile)
 
 def page_bulletin():
     section_header("IMD - AQ Bulletin")
@@ -201,7 +198,7 @@ pages = {
         st.Page(page_forecast, title="AQEWS Forecast", url_path="forecast", icon=":material/trending_up:"),
     ],
     "Trackers": [
-        st.Page(page_pm25, title="Pollutants (CAAQMS)", url_path="pollutants", icon=":material/aq:"),
+        st.Page(page_pm25, title="Pollutants and AQI", url_path="pollutants", icon=":material/aq:"),
         st.Page(page_weather, title="Weather Forecast", url_path="weather", icon=":material/air:"),
         st.Page(page_fires, title="Farm fires", url_path="fires", icon=":material/local_fire_department:"),
     ],
