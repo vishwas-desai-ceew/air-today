@@ -10,6 +10,7 @@ Suggested crontab (IST machine clock):
     20 16 * * *  cd /path/to/aq_winter && py_envs/bin/python ingestion/run_daily.py
     10 18 * * *  cd /path/to/aq_winter && py_envs/bin/python ingestion/run_daily.py
     30 2  * * *  cd /path/to/aq_winter && py_envs/bin/python ingestion/run_daily.py --only imd fires
+(fires needs `signalsfunc`; run it with an interpreter that has it installed.)
 The 16:20 run picks up the CPCB bulletin as soon as it is out; the 18:10 run
 is a safety net. Every step is idempotent, so re-running is always safe.
 
@@ -61,8 +62,7 @@ def _imd_summary():
 def _fires():
     # Depends on the private `signalsfunc` package; skipped where it isn't installed.
     from ingestion import get_fire_pbhr
-    get_fire_pbhr.main()
-    return {}
+    return get_fire_pbhr.run()
 
 
 def _summary():

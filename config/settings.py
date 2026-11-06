@@ -26,7 +26,17 @@ AQEWS_AQI_CSV = DATA_DIR / "AQEWS_AQI_forecast.csv"
 AQEWS_PM25_CSV = DATA_DIR / "AQEWS_PM25_forecast.csv"
 AQEWS_CATEGORY_CSV = DATA_DIR / "AQI_forecast_category.csv"
 VENTILATION_CSV = DATA_DIR / "ventilation_index_forecast.csv"
-FIRE_CSV = DATA_DIR / "fire_pbhr.csv"
+FIRE_CSV = DATA_DIR / "fire_pbhr.csv"  # legacy: Suomi-NPP/VIIRS only, both states, up to Nov 2025
+# One file per state: date + one count column per satellite instrument.
+FIRE_STATE_CSVS = {
+    "Punjab": DATA_DIR / "fires_punjab.csv",
+    "Haryana": DATA_DIR / "fires_haryana.csv",
+}
+FIRE_INSTRUMENTS = ["NOAA/VIIRS", "Aqua/MODIS", "Terra/MODIS"]
+# The one instrument used for headline counts (KPI card, daily summary).
+# Counts from different satellites are separate detections of overlapping
+# fires, so they are never summed across instruments.
+FIRE_HEADLINE_INSTRUMENT = "NOAA/VIIRS"
 IMD_BULLETIN_PDF = DATA_DIR / "imd_bulletin_today.pdf"
 PIPELINE_STATUS_JSON = DATA_DIR / "pipeline_status.json"
 
