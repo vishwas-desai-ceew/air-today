@@ -18,7 +18,7 @@ import streamlit as st
 
 from config.settings import DELHI_LAT, DELHI_LON, IST
 from views import data
-from views.widgets import _fmt, compass, describe_weather, icon
+from views.widgets import _fmt, compass, describe_weather, icon, metar_src, observed_fields, src
 
 HAZY = ("haze", "smoke", "mist", "fog", "dust", "sand")
 
@@ -125,6 +125,7 @@ def render_weather_card():
                              condition=cond)
     obs = (wx.get("observed_at") or wx.get("time") or "")[11:16]
     where = (wx.get("station") or "Delhi").split(" (")[0]
+    obs_note = " · gaps from Open-Meteo"
 
     hours_html = ""
     if not df.empty:
@@ -166,17 +167,36 @@ def render_weather_card():
     ]
     details_html = "".join(f"<div>{icon(k, 18)}<span>{lbl}</span><b>{escape(v)}</b></div>" for k, lbl, v in details)
 
+    observed = bool(observed_fields(wx))
+    now_src = (f"Now: {metar_src(wx, short=False)}{obs_note}" if observed
+               else f"Now: {src('open_meteo_model')}")
+    source_line = (f"Source · {now_src} · Hourly and 3-day: {src('open_meteo_model', 'Open-Meteo model forecast')}")
+    note_html = (
+        "<b>Disclaimer</b><span>"
+        + ("Current conditions are from the latest METAR report (about every 30 min); "
+           "values it doesn't report come from the Open-Meteo model. " if observed
+           else "Current conditions are Open-Meteo model values, not observations. ")
+        + "Hourly and 3-day figures are Open-Meteo model forecasts, not official IMD forecasts, "
+          "and actual conditions may differ. For official forecasts and warnings, see "
+          "<a href='https://mausam.imd.gov.in/' target='_blank' rel='noopener'>IMD</a>.</span>"
+    )
+
     st.html(sky_style(phase, cond))
     st.markdown("".join(line.strip() for line in f"""
         <section class="wxc {phase}">
           <div class="wxc-now">
-            <div class="wxc-where">{escape(where)} · {obs} IST</div>
-            <div class="wxc-main">
-              <div class="wxc-temp">{_fmt(wx.get('temperature_2m'))}°</div>
-              <div class="wxc-icon">{icon(main_icon, 64)}</div>
+            <div class="wxc-top">
+              <div class="wxc-head">
+                <div class="wxc-where">{escape(where)} · {obs} IST</div>
+                <div class="wxc-main">
+                  <div class="wxc-temp">{_fmt(wx.get('temperature_2m'))}°</div>
+                  <div class="wxc-icon">{icon(main_icon, 64)}</div>
+                </div>
+                <div class="wxc-cond">{escape(cond)}</div>
+                <div class="wxc-feel">Feels like {_fmt(wx.get('apparent_temperature'))}° · H {_fmt(wx.get('temperature_2m_max'))}° L {_fmt(wx.get('temperature_2m_min'))}°</div>
+              </div>
+              <div class="wxc-note">{note_html}</div>
             </div>
-            <div class="wxc-cond">{escape(cond)}</div>
-            <div class="wxc-feel">Feels like {_fmt(wx.get('apparent_temperature'))}° · H {_fmt(wx.get('temperature_2m_max'))}° L {_fmt(wx.get('temperature_2m_min'))}°</div>
             <div class="wxc-details">{details_html}</div>
           </div>
           <div class="wxc-side">
@@ -184,8 +204,6 @@ def render_weather_card():
             <div class="wxc-hours">{hours_html}</div>
             <div class="wxc-label">3-day outlook</div>
             <div class="wxc-days">{days_html}</div>
+            <div class="wxc-source">{source_line}</div>
           </div>
         </section>""".splitlines()), unsafe_allow_html=True)
-    st.markdown(
-        f"<div class='sky-kpi-source'>Now: {escape(wx.get('source', 'Open-Meteo'))} · "
-        "Hourly and 3-day: Open-Meteo model forecast</div>", unsafe_allow_html=True)

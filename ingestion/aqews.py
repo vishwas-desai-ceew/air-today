@@ -10,6 +10,8 @@ for free, and fail loudly instead of hallucinating.
 Writes:
   AQEWS_AQI_forecast.csv          daily AQI (PM2.5/PM10 sub-indices, overall, category)
   AQEWS_PM25_forecast.csv         2-hourly PM2.5 concentration
+  AQEWS_PM10_forecast.csv         2-hourly PM10 concentration
+  aqews_bulletin.json             full text of the day's bulletin (title + numbered sections)
   ventilation_index_forecast.csv  date, mixing_depth, ventilation_index
   AQI_forecast_category.csv       date, category   (from the IMD/IITM bulletin text)
 
@@ -28,16 +30,18 @@ from bs4 import BeautifulSoup
 PARENT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PARENT_DIR))
 from config.settings import (
-    AQEWS_10DAY_URL, AQEWS_AQI_CSV, AQEWS_CATEGORY_CSV, AQEWS_HOME_URL,
-    AQEWS_PM25_CSV, HTTP_HEADERS, VENTILATION_CSV,
+    AQEWS_10DAY_URL, AQEWS_AQI_CSV, AQEWS_BULLETIN_JSON, AQEWS_CATEGORY_CSV, AQEWS_HOME_URL,
+    AQEWS_PM10_CSV, AQEWS_PM25_CSV, HTTP_HEADERS, IST, VENTILATION_CSV,
 )
 from config.logging_config import get_logger
 from ingestion.cpcb_common import AQI_BINS, AQI_LABELS
+from ingestion.json_store import write_json_atomic
 
 logger = get_logger(__name__)
 
 # Chart.js dataset variables on 10_days_forecast.php
-CHART_VARS = {"pm25_conc": "datastack9", "aqi_pm25": "datastack17", "aqi_pm10": "datastack18"}
+CHART_VARS = {"pm25_conc": "datastack9", "pm10_conc": "datastack10",
+              "aqi_pm25": "datastack17", "aqi_pm10": "datastack18"}
 
 DATE_RE = r"(\d{1,2})\s*\.\s*(\d{1,2})\s*\.\s*((?:\d\s*){3}\d)"
 CATEGORY_WORDS = r"(?:Good|Satisfactory|Moderate|Poor|Very Poor|Severe)"
@@ -104,16 +108,41 @@ def save_charts(charts: dict):
         df_pm25 = pd.DataFrame({"datetime": pd.to_datetime(l25), "AQI_PM25": v25})
         df_pm10 = pd.DataFrame({"datetime": pd.to_datetime(l10), "AQI_PM10": v10})
         save_aqi_to_csv(df_pm25, df_pm10)
-    if "pm25_conc" in charts:
-        labels, values = charts["pm25_conc"]
-        df = pd.DataFrame({"time": pd.to_datetime(labels), "PM2.5": pd.to_numeric(values, errors="coerce").round(2)})
-        df.to_csv(AQEWS_PM25_CSV, index=False)
+    for key, col, path in (("pm25_conc", "PM2.5", AQEWS_PM25_CSV), ("pm10_conc", "PM10", AQEWS_PM10_CSV)):
+        if key in charts:
+            labels, values = charts[key]
+            df = pd.DataFrame({"time": pd.to_datetime(labels), col: pd.to_numeric(values, errors="coerce").round(2)})
+            df.to_csv(path, index=False)
 
 
 # ----------------------------------------------------------- bulletin text --
 def bulletin_text(html: str) -> str:
     text = BeautifulSoup(html, "html.parser").get_text(" ", strip=True)
     return re.sub(r"\s+", " ", text)
+
+
+def extract_bulletin(html: str) -> dict:
+    """The day's bulletin as shown on the AQEWS home page: English title and
+    its paragraphs (numbered sections 1-5 and the closing links). The Hindi
+    title line is dropped; the body on the page is English only."""
+    soup = BeautifulSoup(html, "html.parser")
+    box = soup.select_one("div.scrollbar.marq")
+    if box is None:
+        raise ValueError("AQEWS bulletin block (div.scrollbar.marq) not found")
+    paras = [re.sub(r"\s+", " ", p.get_text(" ", strip=True)) for p in box.find_all("p")]
+    paras = [p for p in paras if p]
+    title = next((p for p in paras if "Bulletin for Delhi" in p), None)
+    body = [p for p in paras if p != title and not re.search(r"[\u0900-\u097F]", p)]
+    if not body:
+        raise ValueError("AQEWS bulletin block is empty")
+    m = re.search(DATE_RE, title or "")
+    return {
+        "title": title or "Air Quality and Weather Bulletin for Delhi",
+        "date": _to_date(*m.groups()).isoformat() if m else None,
+        "paragraphs": body,
+        "source_url": AQEWS_HOME_URL,
+        "fetched_at": datetime.now(IST).isoformat(timespec="minutes"),
+    }
 
 
 def parse_bulletin(text: str) -> dict:
@@ -176,7 +205,12 @@ def run() -> dict:
         logger.error("AQEWS 10-day charts failed: %s", e)
         result["charts_error"] = str(e)
     try:
-        parsed = parse_bulletin(bulletin_text(_fetch(AQEWS_HOME_URL)))
+        home = _fetch(AQEWS_HOME_URL)
+        try:
+            write_json_atomic(AQEWS_BULLETIN_JSON, extract_bulletin(home), indent=2, ensure_ascii=False)
+        except Exception as e:
+            logger.warning("AQEWS bulletin text not saved: %s", e)
+        parsed = parse_bulletin(bulletin_text(home))
         save_bulletin(parsed)
         result["bulletin_days"] = len(parsed["category"])
         result["outlook"] = parsed["outlook"]

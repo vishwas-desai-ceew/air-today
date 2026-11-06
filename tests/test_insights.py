@@ -25,11 +25,15 @@ def test_missing_fire_feed_is_not_reported_as_zero():
 
 
 def test_headline():
-    assert _headline(FACTS) == "Poor today → Very Poor tomorrow. Weak wind and low ventilation will hold pollution in."
+    assert _headline(FACTS) == "Poor on 28 Oct → Very Poor on 29 Oct. Weak wind and low ventilation will hold pollution in."
     good = {**FACTS, "wind_ms": 3.5, "ventilation_index": 9000}
-    assert _headline(good) == "Poor today → Very Poor tomorrow. Conditions favour dispersion."
+    assert _headline(good) == "Poor on 28 Oct → Very Poor on 29 Oct. Conditions favour dispersion."
 
 
 def test_bulletin_not_out_yet():
     facts = {**FACTS, "aqi": {**FACTS["aqi"], "value": None, "category": None, "prev_value": None}}
     assert _by_icon(facts)["aqi"]["value"] == "—"
+
+
+def test_forecast_note_shows_aqews_not_model():
+    assert _by_icon(FACTS)["forecast"]["note"] == "AQEWS"

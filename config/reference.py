@@ -19,6 +19,13 @@ SOURCES = {
     "iitm_aqews": ("IITM AQEWS, Air Quality and Weather Bulletin for Delhi",
                    "https://ews.tropmet.res.in/"),
     "open_meteo": ("Open-Meteo forecast API", "https://open-meteo.com/en/docs"),
+    # Card-level source links (Overview hero, KPI cards, Key insights).
+    "cpcb": ("CPCB", "https://cpcb.gov.in/"),
+    "aqews": ("IITM AQEWS", "https://ews.tropmet.res.in/"),
+    "metar": ("METAR, Safdarjung (VIDD) via NOAA aviationweather.gov",
+              "https://aviationweather.gov/data/metar/?ids=VIDD"),
+    "open_meteo_model": ("Open-Meteo model", "https://open-meteo.com/"),
+    "nasa_fires": ("NASA FIRMS active fires (VIIRS)", "https://firms.modaps.eosdis.nasa.gov/"),
 }
 
 # (category, low, high, colour) — CPCB Table 3.2. Colours are the app's AQI palette.
@@ -39,6 +46,16 @@ PM25_BANDS = [
     ("Poor", 91, 120, "#f78c00"),
     ("Very Poor", 121, 250, "#fc4d02"),
     ("Severe", 251, None, "#e91902"),
+]
+
+# PM10 24-hr breakpoints, µg/m³ — CPCB National AQI (2014). Severe is 431+ (open-ended).
+PM10_BANDS = [
+    ("Good", 0, 50, "#2d662a"),
+    ("Satisfactory", 51, 100, "#03a303"),
+    ("Moderate", 101, 250, "#e0b400"),
+    ("Poor", 251, 350, "#f78c00"),
+    ("Very Poor", 351, 430, "#fc4d02"),
+    ("Severe", 431, None, "#e91902"),
 ]
 
 # CPCB Table 3.12, as worded in the source.

@@ -24,6 +24,8 @@ MISSING_FORECAST_DAYS = DATA_DIR / "missing_forecast_days.txt"
 METEO_HOURLY_CSV = DATA_DIR / "meteo_api_hourly.csv"
 AQEWS_AQI_CSV = DATA_DIR / "AQEWS_AQI_forecast.csv"
 AQEWS_PM25_CSV = DATA_DIR / "AQEWS_PM25_forecast.csv"
+AQEWS_PM10_CSV = DATA_DIR / "AQEWS_PM10_forecast.csv"
+AQEWS_BULLETIN_JSON = DATA_DIR / "aqews_bulletin.json"  # full text of the day's AQEWS bulletin
 AQEWS_CATEGORY_CSV = DATA_DIR / "AQI_forecast_category.csv"
 VENTILATION_CSV = DATA_DIR / "ventilation_index_forecast.csv"
 FIRE_CSV = DATA_DIR / "fire_pbhr.csv"  # legacy: Suomi-NPP/VIIRS only, both states, up to Nov 2025
@@ -51,10 +53,22 @@ OPEN_METEO_FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
 HTTP_HEADERS = {"User-Agent": "CEEW-AirToday/1.0 (+https://www.ceew.in)"}
 
 
-def effective_today(now=None):
-    """The date whose CPCB bulletin is "today's": the calendar date after the
-    cutoff, the previous day before it."""
+def has_cpcb_bulletin(day, csv_path=None) -> bool:
+    """True when data/delhi_aqi_cpcb.csv already holds an AQI value for `day`."""
+    import csv
+    try:
+        with open(csv_path or CPCB_AQI_CSV, newline="") as f:
+            return any(r.get("date") == day.isoformat() and (r.get("aqi") or "").strip()
+                       for r in csv.DictReader(f))
+    except OSError:
+        return False
+
+
+def effective_today(now=None, csv_path=None):
+    """The date whose CPCB bulletin is "today's": the calendar date once its
+    bulletin has been fetched (CPCB now publishes around 16:00 IST) or after
+    the cutoff, the previous day before that."""
     now = now or datetime.now(IST)
-    if now.time() >= EFFECTIVE_DATE_CUTOFF:
+    if now.time() >= EFFECTIVE_DATE_CUTOFF or has_cpcb_bulletin(now.date(), csv_path):
         return now.date()
     return (now - timedelta(days=1)).date()

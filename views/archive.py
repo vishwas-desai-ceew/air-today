@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import date, datetime, timedelta
 from pathlib import Path
-from config.settings import EFFECTIVE_DATE_CUTOFF
+from config.settings import effective_today
 from ingestion.json_store import read_json
 from views.calendar_grid import month_calendar, month_picker
 from views.components import danger_card, render_forecast_availability
@@ -16,13 +16,8 @@ MISSING_DAYS = DATA_DIR / "missing_forecast_days.txt"
 
 
 def get_effective_date_utc():
-    cutoff = EFFECTIVE_DATE_CUTOFF
-    now = datetime.now()
-    effective_date = (
-        (now - timedelta(days=2)).date()
-        if now.time() < cutoff
-        else (now - timedelta(days=1)).date()
-    )
+    """The latest archived day: the day before the effective "today"."""
+    effective_date = effective_today() - timedelta(days=1)
     return effective_date.strftime("%Y-%m-%d")
 
 
