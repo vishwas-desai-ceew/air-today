@@ -2563,17 +2563,30 @@ iframe:hover {
 }
 
 .hero-logout {
-  padding: 0.25rem 0.65rem;
+  padding: 0.3rem 0.8rem;
   border-radius: 999px;
-  background: #ffffff;
-  color: var(--sky-700) !important;
-  font-size: 0.74rem;
+  background: #d92d20;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  color: #ffffff !important;
+  font-size: 0.76rem;
   font-weight: 700;
   text-decoration: none !important;
 }
 
 .hero-logout:hover {
-  background: var(--sky-100);
+  background: #b42318;
+}
+
+/* Log out on the access-denied screen */
+.st-key-logout_button_1 button {
+  border-color: #d92d20 !important;
+  background: #d92d20 !important;
+  color: #ffffff !important;
+}
+
+.st-key-logout_button_1 button:hover {
+  border-color: #b42318 !important;
+  background: #b42318 !important;
 }
 
 /* Key insights button inside the hero */
@@ -3187,3 +3200,181 @@ iframe:hover {
 [data-testid="stColumn"]:has([class*="st-key-int-card-"]) > [data-testid="stVerticalBlock"] { height: 100%; }
 [class*="st-key-int-card-"] { flex: 1 1 auto; }
 [class*="st-key-int-card-"] > div:last-child { margin-top: auto; }
+
+
+/* ----- Per-card sources (Overview hero, KPI cards, Key insights) ----- */
+.hero-source {
+  margin-top: 0.35rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+.hero-source a { color: #ffffff !important; text-decoration: underline; text-underline-offset: 2px; }
+
+.card-source {
+  margin-top: 0.45rem;
+  color: var(--text-secondary);
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+.card-source a { color: var(--sky-700) !important; text-decoration: underline; text-underline-offset: 2px; }
+.sky-kpi { display: flex; flex-direction: column; }
+.sky-kpi .card-source { margin-top: auto; padding-top: 0.45rem; }
+.sky-kpi .sky-kpi-note { align-self: flex-start; }
+
+/* The three hero cards: equal columns, and one fixed height on desktop.
+   (height:100% can't work here - each card sits in a different stack of
+   auto-height Streamlit wrappers, so each grew to its own content.) */
+.st-key-sky-hero [data-testid="stElementContainer"]:has(.hero-title) { margin-bottom: 1.25rem !important; }
+@media (min-width: 1024px) {
+  .hero-box,
+  .st-key-hero-insights { height: 11rem !important; min-height: 0 !important; flex: 0 0 auto !important; overflow: hidden; }
+}
+/* Narrower screens: text wraps more, so let each card grow rather than clip */
+@media (max-width: 1023px) {
+  .hero-box,
+  .st-key-hero-insights { min-height: 11rem; }
+}
+
+/* ----- Overview weather card: source + disclaimer ----- */
+.wxc-source { margin-top: 0.7rem; font-size: 0.72rem; opacity: 0.9; line-height: 1.4; }
+.wxc-source a { color: #ffffff !important; text-decoration: underline; text-underline-offset: 2px; }
+/* Disclaimer sits beside the current temperature; wraps below it when the column is narrow */
+.wxc-top { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.8rem 1.2rem; margin-bottom: 0.8rem; }
+.wxc-head { flex: 0 0 auto; }
+.wxc-head .wxc-feel { margin-bottom: 0; }
+.wxc-note {
+  flex: 1 1 14rem; min-width: 0;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 0.6rem 0.8rem; border-radius: 12px; background: rgba(255,255,255,0.12);
+  font-size: 0.72rem; line-height: 1.45; opacity: 0.92;
+}
+.wxc-note b { display: block; margin-bottom: 0.2rem; font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.wxc-note a { color: #ffffff !important; text-decoration: underline; text-underline-offset: 2px; }
+
+
+/* ----- Daily update: archived text button (navy) + spacing ----- */
+.st-key-archived-text-open,
+.st-key-archived-text-inline { margin-top: 1.1rem; }
+.st-key-open_archived_text button {
+  border-color: var(--sky-900) !important;
+  background: var(--sky-900) !important;
+  color: #ffffff !important;
+}
+.st-key-open_archived_text button:hover {
+  border-color: #072c59 !important;
+  background: #072c59 !important;
+}
+.aqi-card-topline .aqi-period { font-size: 0.9rem; letter-spacing: 0.02em; text-transform: none; color: #10254a; }
+
+/* ----- Daily update: latest AQI (blue, half width) + 4 archived days (grey) ----- */
+.aqi-days {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.9rem;
+  margin-bottom: var(--space-3);
+}
+.aqi-days-past { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
+.aqi-day {
+  display: flex; flex-direction: column; min-width: 0;
+  padding: 0.85rem 1rem; border-radius: 16px; color: #10254a;
+}
+.aqi-day-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.aqi-day-date { font-size: 0.86rem; font-weight: 750; }
+.aqi-day-tag {
+  padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.64rem; font-weight: 750;
+  letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap;
+}
+.aqi-day-main { display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem 0.75rem; margin-top: 0.6rem; }
+.aqi-day .aqi-value { margin-top: 0; }
+.aqi-day .aqi-category { margin-top: 0; }
+.aqi-day-change { margin-top: 0.6rem; font-size: 0.74rem; font-weight: 700; }
+.aqi-day-change.improved { color: #137a4a; }
+.aqi-day-change.deteriorated { color: #b42318; }
+.aqi-day-change.neutral, .aqi-day-change.muted { color: #667994; }
+.aqi-day .card-source { margin-top: auto; padding-top: 0.55rem; }
+
+/* Latest: blue tint, bigger number, extra facts */
+.aqi-day--latest {
+  padding: 1.15rem 1.3rem;
+  border: 1px solid #b9d6f5;
+  background: linear-gradient(140deg, #e3f0ff 0%, #f3f8ff 60%, #ffffff 100%);
+  box-shadow: 0 10px 24px rgba(11, 107, 203, 0.12);
+}
+.aqi-day--latest .aqi-day-date { font-size: 1rem; }
+.aqi-day--latest .aqi-day-tag { background: var(--sky-900); color: #fff; }
+.aqi-day--latest .aqi-value { font-size: clamp(3rem, 6vw, 4.4rem); }
+.aqi-day--latest .aqi-category { font-size: 0.95rem; padding: 0.3rem 0.7rem; }
+.aqi-day-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.9rem; }
+.aqi-day-facts > div { padding: 0.55rem 0.7rem; border-radius: 12px; background: rgba(255, 255, 255, 0.75); border: 1px solid #d6e6f8; }
+.aqi-day-facts span { display: block; color: #526784; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.aqi-day-facts b { display: block; margin-top: 0.15rem; font-size: 0.84rem; line-height: 1.35; }
+.aqi-day--latest .aqi-day-change { padding-top: 0.6rem; border-top: 1px solid #d6e6f8; }
+
+/* Archived: grey, quieter */
+.aqi-day--archived {
+  border: 1px solid #dde2e8;
+  background: linear-gradient(160deg, #f3f5f7 0%, #eceff3 100%);
+  color: #3b4656;
+}
+.aqi-day--archived .aqi-day-tag { background: #dfe3e8; color: #5b6676; }
+.aqi-day--archived .aqi-value { font-size: clamp(1.8rem, 3vw, 2.3rem); color: #3b4656; }
+.aqi-day--archived .aqi-category { font-size: 0.74rem; padding: 0.18rem 0.5rem; filter: saturate(0.75); }
+.aqi-day--archived .card-source a { color: #5b6676 !important; }
+.aqi-day-none { margin-top: 0.8rem; color: #8592a3; font-size: 0.85rem; font-weight: 650; }
+
+@media (max-width: 768px) {
+  .aqi-days { grid-template-columns: 1fr; }
+  .aqi-day-facts { grid-template-columns: 1fr; }
+}
+.aqi-day--latest .aqi-day-change { margin-top: auto; }
+.aqi-day--latest .card-source { margin-top: 0; }
+.aqi-day-date { white-space: nowrap; }
+.aqi-day-top { flex-wrap: wrap; row-gap: 0.3rem; }
+
+
+/* ----- AQEWS forecast: calendar-page tiles (views/render_aqi_fc.py) ----- */
+.fc-cals {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(68px, 1fr)); gap: 8px;
+  margin: 0.2rem 0 0.9rem;
+}
+.fc-cal {
+  position: relative; overflow: hidden; text-align: center; border-radius: 10px;
+  background: #ffffff; border: 1px solid #d8e2f0; box-shadow: 0 3px 8px rgba(13,36,64,0.08);
+}
+.fc-cal-head {
+  padding: 0.22rem 0.3rem; text-align: center;
+  background: var(--sky-900); color: #fff;
+  font-size: 0.62rem; font-weight: 750; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap;
+}
+.fc-cal-body { padding: 0.25rem 0.3rem 0.45rem; }
+.fc-cal-day { color: #10254a; font-size: 1.15rem; font-weight: 750; line-height: 1.1; }
+.fc-cal-aqi { margin-top: 0.15rem; color: var(--c); font-size: 1.4rem; font-weight: 800; line-height: 1.05; }
+.fc-cal-cat { color: var(--c); font-size: 0.66rem; font-weight: 750; line-height: 1.2; }
+.fc-cal-head i { font-style: normal; }
+@media (max-width: 768px) {
+  .fc-cals { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+  .fc-cal-head i { display: none; }
+  .fc-cal-head span { display: block; line-height: 1.25; }
+}
+/* The global mobile overflow rule clips multi-line text in the forecast chart card */
+@media (max-width: 768px) {
+  .st-key-fc-chart-card [data-testid="stElementContainer"]:has(.chart-sub),
+  .st-key-fc-chart-card [data-testid="stElementContainer"]:has(.band-legend),
+  .st-key-fc-chart-card [data-testid="stElementContainer"]:has(.chart-source) { overflow: visible !important; height: auto !important; }
+  .st-key-fc-chart-card .band-legend { margin-bottom: 0.6rem; }
+}
+
+
+/* ----- AQEWS bulletin dialog (views/aqews_bulletin.py) ----- */
+.st-key-aqews-bulletin-open { margin: 0 0 0.6rem; }
+.st-key-open_aqews_bulletin button {
+  border-color: var(--sky-900) !important; background: var(--sky-900) !important; color: #fff !important;
+}
+.st-key-open_aqews_bulletin button:hover { border-color: #072c59 !important; background: #072c59 !important; }
+.aqb-title { margin: -0.4rem 0 0.8rem; color: var(--text-secondary); font-size: 0.9rem; font-weight: 650; }
+.aqb-sec { display: grid; grid-template-columns: 1.8rem 1fr; gap: 0.6rem; margin-bottom: 0.85rem; }
+.aqb-num {
+  display: grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%;
+  background: var(--sky-100); color: var(--sky-900); font-size: 0.8rem; font-weight: 800;
+}
+.aqb .aqb-sec p, .aqb p.aqb-foot { margin: 0 !important; color: var(--text-primary); font-size: 0.88rem !important; line-height: 1.6; }
+.aqb p.aqb-foot { margin: 0 0 0.6rem 2.4rem !important; color: var(--text-secondary); }

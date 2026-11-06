@@ -4,7 +4,7 @@ import pandas as pd
 import streamlit as st 
 from pathlib import Path
 from datetime import date, datetime, timedelta
-from config.settings import EFFECTIVE_DATE_CUTOFF
+from config.settings import effective_today
 from config.formatting import ordinal
 from ingestion.json_store import read_json
 
@@ -34,35 +34,6 @@ def get_last_two_days(csv_path=AQI_CSV_FILE):
     # One implementation, shared with the daily-summary builder.
     from ingestion.get_aqi_summary import get_last_two_days as _shared
     return _shared(csv_path)
-
-
-def render_aqi_card(period, date, new_df, difference=None):
-    style = STYLES.get(new_df["category"], DEF)
-    if difference is not None:
-        status_class = "improved" if difference < 0 else "deteriorated" if difference > 0 else "neutral"
-        symbol = "▼" if difference < 0 else "▲" if difference > 0 else "•"
-        status = {"improved": "Improved", "deteriorated": "Deteriorated", "neutral": "No change"}[status_class]
-        comparison = f"<div class='aqi-comparison {status_class}'>{symbol} {abs(difference)} points · {status} from yesterday</div>"
-    else:
-        comparison = "<div class='aqi-comparison muted'>Reference bulletin</div>"
-
-    st.markdown(
-        f"""
-        <article class='aqi-card'>
-            <div class='aqi-card-topline'>
-                <span class='aqi-period'>{period}</span>
-                <span class='aqi-card-date'>{date}</span>
-            </div>
-            <div class='aqi-value'>{int(new_df["aqi"])}<span class='aqi-label'>AQI</span></div>
-            <span class='aqi-category' style='background-color:{style['bg']}; color:{style['color']};'>
-                {new_df["category"]}
-            </span>
-            {comparison}
-        </article>
-        """,
-        unsafe_allow_html=True
-    )
-
 
 
 def load_summary_json(json_file=ARCHIVE_TEMP):
@@ -164,12 +135,7 @@ def get_insights():
 
 
 def get_aqi_error_html():
-    cutoff = EFFECTIVE_DATE_CUTOFF
-    now = datetime.now()
-    if now.time() < cutoff:
-        display_date = (now - timedelta(days=1)).date()
-    else:
-        display_date = now.date()
+    display_date = effective_today()
     today_str = format_date_key(display_date)
     error_message = f"""
     <section class="aqi-error-card">
@@ -182,6 +148,91 @@ def get_aqi_error_html():
     </section>"""
     return error_message
     
+
+def _change_html(row, prev):
+    """'▲ 13 vs 5 Nov' coloured by direction, or '' when the previous day is missing."""
+    if prev is None:
+        return "<div class='aqi-day-change muted'>No bulletin for the day before</div>"
+    diff = int(row["aqi"]) - int(prev["aqi"])
+    cls = "deteriorated" if diff > 0 else "improved" if diff < 0 else "neutral"
+    word = {"deteriorated": "worse", "improved": "better", "neutral": "no change"}[cls]
+    symbol = {"deteriorated": "▲", "improved": "▼", "neutral": "•"}[cls]
+    return (f"<div class='aqi-day-change {cls}'>{symbol} {abs(diff)} points vs "
+            f"{prev['date'].day} {prev['date']:%b} · {word}</div>")
+
+
+def render_aqi_days(latest_date, n_days=5):
+    """The latest CPCB bulletin as a large blue card (half the width) and the
+    previous n_days-1 days as smaller grey archived cards beside it."""
+    from html import escape
+    from views import data
+    from views.widgets import cpcb_src
+
+    hist = data.cpcb_history()
+    hist = hist[hist["aqi"].notna() & (hist["date"] <= latest_date)]
+    by_date = {r["date"]: r for r in hist.to_dict("records")}
+    days = [latest_date - timedelta(days=i) for i in range(n_days)]
+
+    def chip(row):
+        style = STYLES.get(row["category"], DEF)
+        return (f"<span class='aqi-category' style='background-color:{style['bg']};color:{style['color']}'>"
+                f"{escape(str(row['category']))}</span>")
+
+    def prev_of(day):
+        return by_date.get(day - timedelta(days=1))
+
+    latest = by_date[latest_date]
+    impact = STYLES.get(latest["category"], DEF).get("impact", "").strip()
+    pollutant = escape(str(latest.get("pollutant") or "—"))
+    latest_html = f"""
+        <article class='aqi-day aqi-day--latest'>
+            <div class='aqi-day-top'>
+                <span class='aqi-day-date'>{latest_date.day} {latest_date:%B %Y}</span>
+                <span class='aqi-day-tag'>Latest bulletin</span>
+            </div>
+            <div class='aqi-day-main'>
+                <div class='aqi-value'>{int(latest["aqi"])}<span class='aqi-label'>AQI</span></div>
+                {chip(latest)}
+            </div>
+            <div class='aqi-day-facts'>
+                <div><span>Health impact</span><b>{escape(impact) or "—"}</b></div>
+                <div><span>Prominent pollutant</span><b>{pollutant}</b></div>
+            </div>
+            {_change_html(latest, prev_of(latest_date))}
+            <div class='card-source'>Source: {cpcb_src(latest)}</div>
+        </article>"""
+
+    past_html = ""
+    for day in days[1:]:
+        row = by_date.get(day)
+        if row is None:
+            past_html += f"""
+                <article class='aqi-day aqi-day--archived aqi-day--missing'>
+                    <div class='aqi-day-top'><span class='aqi-day-date'>{day.day} {day:%b %Y}</span></div>
+                    <div class='aqi-day-none'>No bulletin</div>
+                </article>"""
+            continue
+        past_html += f"""
+            <article class='aqi-day aqi-day--archived'>
+                <div class='aqi-day-top'>
+                    <span class='aqi-day-date'>{day.day} {day:%b %Y}</span>
+                    <span class='aqi-day-tag'>Archived</span>
+                </div>
+                <div class='aqi-day-main'>
+                    <div class='aqi-value'>{int(row["aqi"])}<span class='aqi-label'>AQI</span></div>
+                    {chip(row)}
+                </div>
+                {_change_html(row, prev_of(day))}
+                <div class='card-source'>Source: {cpcb_src(row)}</div>
+            </article>"""
+
+    st.markdown(
+        f"<div class='aqi-overview-label'>Delhi AQI, last {n_days} days <span>24-hour average · CPCB</span></div>"
+        f"<div class='aqi-days'>{latest_html}<div class='aqi-days-past'>{past_html}</div></div>"
+        .replace("\n", ""),
+        unsafe_allow_html=True,
+    )
+
 
 def render_aqi_delhi(compact=False, show_insights=True):
     df = get_last_two_days()
@@ -197,33 +248,13 @@ def render_aqi_delhi(compact=False, show_insights=True):
         
 
 
-    # Handle available rows safely
     df1 = df.iloc[0]
-    df2 = df.iloc[1] if len(df) > 1 else None
-
-   
     if pd.isna(df1['aqi']):
         st.error(f"No AQI bulletin found for {df1['date'].strftime('%d %B %Y')}. Please check back later.")
         render_fallback_view()
         return df
 
-    # --- Compute AQI difference ---
-    diff = 0
-    if df2 is not None and not pd.isna(df2['aqi']):
-        diff = int(df1['aqi']) - int(df2['aqi'])  # positive = worse
-    st.markdown("<div class='aqi-overview-label'>Delhi AQI comparison <span>24-hour average · CPCB</span></div>", unsafe_allow_html=True)
-    today_col, yesterday_col = st.columns(2, gap="medium")
-
-    with today_col:
-        date1 = df1['date'].strftime("%d %B %Y")
-        render_aqi_card(period="Today", date=date1, new_df=df1, difference=diff if df2 is not None and not pd.isna(df2['aqi']) else None)
-
-    with yesterday_col:
-        if df2 is not None and not pd.isna(df2['aqi']):
-            date2 = df2['date'].strftime("%d %B %Y")
-            render_aqi_card(period="Yesterday", date=date2, new_df=df2)
-        else:
-            st.info("Yesterday's AQI bulletin is not available yet.")
+    render_aqi_days(df1["date"])
 
     if show_insights:
         st.markdown(get_insights(), unsafe_allow_html=True)

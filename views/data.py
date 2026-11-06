@@ -34,6 +34,14 @@ def cpcb_history() -> pd.DataFrame:
     return df.sort_values("date")
 
 
+def cpcb_bulletin_url(row) -> str:
+    """Link to the CPCB PDF a cpcb_history() row was read from: the NCR
+    bulletin, or the national one when that was the fallback used."""
+    from ingestion.cpcb_common import build_cpcb_urls
+    ncr, national = build_cpcb_urls(row["date"].strftime("%Y_%m_%d"))
+    return national if "national" in str(row.get("source") or "").lower() else ncr
+
+
 def aqi_today_and_yesterday():
     """(today_row, yesterday_row) as dicts, either may be None."""
     df = cpcb_history()

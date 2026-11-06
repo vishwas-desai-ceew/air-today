@@ -1,4 +1,8 @@
-"""AQEWS 10-day AQI forecast: severity tiles + bar chart over CPCB AQI bands."""
+"""AQEWS 10-day AQI forecast: calendar tiles + time series over the CPCB AQI bands.
+
+Strictly AQEWS: no CPCB bulletin values or AQEWS text-bulletin categories here
+(they disagreed with the numeric forecast and read as conflicting).
+"""
 from datetime import datetime
 from html import escape
 from pathlib import Path
@@ -8,7 +12,6 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from config.reference import AQI_BANDS, AQI_HEALTH, band_for
-from views import data
 from views.charts import PLOT_CONFIG, add_bands, base_layout, source_line
 
 PARENT_DIR = Path(__file__).resolve().parent.parent
@@ -16,6 +19,8 @@ DATA_DIR = PARENT_DIR / "data"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 AQEWS_PORTAL = "https://ews.tropmet.res.in/"
+# Category colours as text on a white tile: Moderate's yellow is too pale to read, so darken it
+TEXT_ON_WHITE = {"Moderate": "#9a7b00"}
 SEVERITY_RANK = {name: i for i, (name, *_rest) in enumerate(AQI_BANDS)}
 
 
@@ -58,54 +63,57 @@ def get_error_message():
     return error_flag, df_aqi
 
 
-def aqi_chart(df, height=400):
-    """Daily AQI bars coloured by CPCB category, over the CPCB bands."""
+def aqi_chart(df, height=400, compact=False):
+    """Daily AQEWS AQI as a time series over the CPCB category bands (like the
+    PM2.5 chart): one point per day, coloured by its category."""
     cats = [band_for(v, AQI_BANDS) for v in df["AQI_overall"]]
     y_max = max(450, float(df["AQI_overall"].max()) + 50)
+    pollutant = df.get("prominent_pollutant", pd.Series([""] * len(df))).fillna("")
     fig = go.Figure()
     add_bands(fig, AQI_BANDS, y_max)
-    fig.add_bar(
-        x=df["date"], y=df["AQI_overall"], name="AQI (overall)",
-        marker=dict(color=[c for _, c in cats], line=dict(width=0), cornerradius=6),
-        text=[f"<b>{v:.0f}</b>" for v in df["AQI_overall"]], textposition="outside",
-        textfont=dict(size=13, color="#0d2440"), cliponaxis=False,
-        customdata=list(zip([n for n, _ in cats], df.get("prominent_pollutant", pd.Series([""] * len(df))).fillna(""))),
+    fig.add_scatter(
+        x=df["date"], y=df["AQI_overall"], name="AQEWS AQI forecast", mode="lines+markers+text",
+        line=dict(color="rgba(13,36,64,0.55)", width=2.2, shape="spline", smoothing=0.6),
+        marker=dict(size=9 if compact else 14, color=[c for _, c in cats], line=dict(width=2, color="#ffffff")),
+        text=[f"<b>{v:.0f}</b>" for v in df["AQI_overall"]], textposition="top center",
+        textfont=dict(size=9 if compact else 12, color="#0d2440"), cliponaxis=False,
+        customdata=list(zip([n for n, _ in cats], pollutant)),
         hovertemplate="AQI <b>%{y:.0f}</b> · %{customdata[0]}<br>Prominent: %{customdata[1]}<extra></extra>",
     )
     base_layout(fig, height=height, y_title="AQI", legend=False)
-    fig.update_layout(margin=dict(r=86))
+    fig.update_layout(margin=dict(l=40, r=78) if compact else dict(r=86))
     fig.update_yaxes(range=[0, y_max])
-    fig.update_xaxes(tickformat="%a<br>%d %b", dtick=86400000)
+    if compact:
+        fig.update_xaxes(tickformat="%d<br>%b", dtick=2 * 86400000, tickangle=0)
+    else:
+        fig.update_xaxes(tickformat="%a<br>%d %b", dtick=86400000)
     return fig
 
 
-def _tiles_html(df, bulletin):
+def _tiles_html(df):
+    """Calendar-page tiles: neutral page, with only the AQI value and category
+    in the category colour."""
     tiles = []
     for _, r in df.iterrows():
         cat, colour = band_for(r["AQI_overall"], AQI_BANDS)
-        b = bulletin.get(r["date"].date())
-        cls = "severe" if "Severe" in (cat, b) else "alert" if SEVERITY_RANK.get(cat, 0) >= SEVERITY_RANK["Very Poor"] else ""
-        b_html = (f"<div class='fc-tile-bulletin'>Bulletin: {escape(str(b))}</div>"
-                  if b and str(b) != cat else "")
+        ink = TEXT_ON_WHITE.get(cat, colour)
         tiles.append(
-            f"<div class='fc-tile {cls}' style='--c:{colour}'>"
-            f"<div class='fc-tile-day'>{r['date']:%a}</div><div class='fc-tile-date'>{r['date']:%d %b}</div>"
-            f"<div class='fc-tile-aqi'>{r['AQI_overall']:.0f}</div><div class='fc-tile-cat'>{escape(cat or '')}</div>"
-            f"{b_html}</div>"
+            f"<div class='fc-cal' style='--c:{ink}'>"
+            f"<div class='fc-cal-head'><span>{r['date']:%a}</span><i> · </i><span>{r['date'].day} {r['date']:%b}</span></div>"
+            f"<div class='fc-cal-body'><div class='fc-cal-aqi'>{r['AQI_overall']:.0f}</div>"
+            f"<div class='fc-cal-cat'>{escape(cat or '')}</div></div></div>"
         )
-    return "<div class='fc-tiles'>" + "".join(tiles) + "</div>"
+    return "<div class='fc-cals'>" + "".join(tiles) + "</div>"
 
 
-def _summary_html(df, bulletin=None):
+def _summary_html(df):
     cats = [band_for(v, AQI_BANDS)[0] for v in df["AQI_overall"]]
     bad = sum(SEVERITY_RANK.get(c, 0) >= SEVERITY_RANK["Very Poor"] for c in cats)
     severe = sum(c == "Severe" for c in cats)
     peak = df.loc[df["AQI_overall"].idxmax()]
     peak_cat, peak_colour = band_for(peak["AQI_overall"], AQI_BANDS)
     n = len(df)
-    b_severe = sorted(d for d, c in (bulletin or {}).items()
-                      if str(c) == "Severe" and d in set(df["date"].dt.date))
-    level = "severe" if severe or b_severe else "alert" if bad else "ok"
+    level = "severe" if severe else "alert" if bad else "ok"
     headline = (f"{severe} of {n} days forecast <b>Severe</b>" if severe
                 else f"{bad} of {n} days forecast <b>Very Poor or worse</b>" if bad
                 else f"No day forecast worse than {escape(max(cats, key=lambda c: SEVERITY_RANK.get(c, 0)))}")
@@ -113,10 +121,7 @@ def _summary_html(df, bulletin=None):
         f"<div class='fc-summary {level}'>"
         f"<div class='fc-summary-main'>{headline}</div>"
         f"<div class='fc-summary-peak'>Peak <b style='color:{peak_colour}'>{peak['AQI_overall']:.0f}</b> "
-        f"({escape(peak_cat)}) on {peak['date']:%a %d %b}</div>"
-        + (f"<div class='fc-summary-peak'>AQEWS text bulletin forecasts <b style='color:#e91902'>Severe</b> on "
-           f"{', '.join(d.strftime('%a %d %b') for d in b_severe)}</div>" if b_severe else "")
-        + f"<div class='fc-summary-health'>CPCB: {escape(AQI_HEALTH.get(peak_cat, ''))}</div></div>"
+        f"({escape(peak_cat)}) on {peak['date']:%a %d %b}</div></div>"
     )
 
 
@@ -134,25 +139,20 @@ def render_aqi_fc(isMobile=False, compact=False):
         st.markdown(get_aqi_error_msg(), unsafe_allow_html=True)
         return
     df = df_aqi.dropna(subset=["AQI_overall"]).sort_values("date")
-    bf = data.bulletin_forecast()
-    bulletin = ({r["date"]: r["category"] for _, r in bf.iterrows() if pd.notna(r.get("category"))}
-                if not bf.empty and "category" in bf.columns else {})
 
-    st.markdown(_summary_html(df, bulletin), unsafe_allow_html=True)
-    st.markdown(_tiles_html(df, bulletin), unsafe_allow_html=True)
+    st.markdown(_summary_html(df), unsafe_allow_html=True)
+    st.markdown(_tiles_html(df), unsafe_allow_html=True)
     with st.container(border=True, key="fc-chart-card"):
         st.markdown(
-            f"<div class='chart-title'>Daily AQI, {df['date'].min():%d %b} – {df['date'].max():%d %b %Y}</div>"
-            "<div class='chart-sub'>Bars are coloured by CPCB AQI category; shading marks the category bands.</div>",
+            f"<div class='chart-title'>Daily AQI forecast, {df['date'].min():%d %b} – {df['date'].max():%d %b %Y}</div>"
+            "<div class='chart-sub'>AQEWS forecast AQI; points are coloured by category and the shading "
+            "marks the AQI category bands.</div>",
             unsafe_allow_html=True,
         )
-        st.plotly_chart(aqi_chart(df, height=320 if compact else 400), key="aqi_forecast_chart",
+        st.plotly_chart(aqi_chart(df, height=320 if compact else 400, compact=compact), key="aqi_forecast_chart",
                         width="stretch", config=PLOT_CONFIG)
         st.markdown(band_legend_html(AQI_BANDS), unsafe_allow_html=True)
-        source_line("iitm_aqews", "cpcb_aqi", note="forecast AQI from AQEWS; bands from CPCB Table 3.2")
-    if bulletin:
-        st.caption("“Bulletin” on a tile is the category in the AQEWS text bulletin where it differs from the "
-                   "numeric model forecast.")
+        source_line("iitm_aqews", "cpcb_aqi", note="forecast AQI from AQEWS; category bands from CPCB Table 3.2")
     with st.expander("What the AQI categories mean (CPCB)", icon=":material/health_and_safety:"):
         st.markdown(
             "<table class='band-table'><tr><th>Category</th><th>AQI</th><th>Possible health impact</th></tr>"

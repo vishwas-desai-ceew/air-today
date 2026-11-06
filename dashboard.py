@@ -13,7 +13,8 @@ from views.render_aqi_pdf import render_aqi_pdf
 from views.fires import render_fires_page
 from views.render_google_doc import render_google_doc
 from views.render_aqi_fc import render_aqi_fc, get_error_message
-from views.render_pm25_fc import render_pm25_fc
+from views.render_pm25_fc import render_pm10_fc, render_pm25_fc
+from views.aqews_bulletin import render_bulletin_button
 from views.components import hr, outage_banner, section_header
 from views.home import render_home_overview
 from views.glossary import render_glossary
@@ -85,7 +86,7 @@ if AUTH_CONFIGURED:
         st.stop()
     if not is_allowed_user(st.user):
         st.error(f"Access is restricted to verified @{ALLOWED_EMAIL_DOMAIN} Google Workspace accounts.")
-        st.button("Log out", on_click=st.logout, key="logout_button_1", type="secondary")
+        st.button("Log out", on_click=st.logout, key="logout_button_1", type="primary", icon=":material/logout:")
         st.stop()
 
 # Device detection from the User-Agent header. Replaces the st_javascript
@@ -113,7 +114,7 @@ def page_today():
     aqi_rows = render_aqi_delhi(compact=is_mobile, show_insights=False)
     with st.container(key="insights-inline"):
         st.markdown("<div class='aqi-panel-title'>Key insights</div>", unsafe_allow_html=True)
-        render_insights_panel()
+        render_insights_panel(full_text="dialog")
     render_health_advisory(aqi_rows)
     if error_flag:
         outage_banner(compact=is_mobile)
@@ -126,7 +127,8 @@ def page_forecast():
         'Open the AQEWS portal ↗</a>',
         unsafe_allow_html=True,
     )
-    fc_options = ["AQI", "PM2.5"]
+    render_bulletin_button()
+    fc_options = ["AQI", "PM2.5", "PM10"]
     selection = st.segmented_control(
             "**Variable**",
             options=fc_options,
@@ -136,6 +138,8 @@ def page_forecast():
         )
     if selection == "PM2.5":
         render_pm25_fc(compact=is_mobile)
+    elif selection == "PM10":
+        render_pm10_fc(compact=is_mobile)
     else:
         render_aqi_fc(compact=is_mobile)
 

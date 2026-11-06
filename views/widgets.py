@@ -5,6 +5,7 @@ from html import escape
 
 import streamlit as st
 
+from config.reference import SOURCES
 from config.settings import IST, effective_today
 from views import data
 
@@ -45,6 +46,50 @@ WEATHER_CODES = [
     ({71, 73, 75, 77, 85, 86}, "Snow"), ({95, 96, 99}, "Thunderstorm"),
 ]
 COMPASS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+
+
+def src(key, label=None, url=None):
+    """<a> to a source in config.reference.SOURCES (label/url override, e.g. the day's CPCB PDF)."""
+    name, href = SOURCES.get(key, (key, None))
+    href = url or href
+    text = escape(label or name)
+    return f'<a href="{escape(href)}" target="_blank" rel="noopener">{text}</a>' if href else text
+
+
+def source_html(*links, cls="card-source"):
+    links = [l for l in links if l]
+    return f'<div class="{cls}">Source: {" · ".join(links)}</div>' if links else ""
+
+
+def cpcb_src(row):
+    return src("cpcb", "CPCB bulletin", data.cpcb_bulletin_url(row)) if row else src("cpcb", "CPCB", "https://cpcb.gov.in/")
+
+
+def metar_src(wx, short=True):
+    """Link to the METAR report of the station the observation came from
+    (Safdarjung VIDD, or IGI VIDP as fallback)."""
+    station = wx.get("station") or "Safdarjung (VIDD)"
+    icao = station.split("(")[-1].rstrip(")") if "(" in station else "VIDD"
+    label = f"METAR, {station.split(' (')[0] if short else station}"
+    return src("metar", label, f"https://aviationweather.gov/data/metar/?ids={icao}")
+
+
+# What a METAR report can supply (ingestion/weather.py fetch_metar), for cached
+# readings saved before observed_fields was recorded.
+METAR_FIELDS = ["relative_humidity_2m", "surface_pressure", "temperature_2m", "visibility",
+                "wind_direction_10m", "wind_speed_10m"]
+
+
+def observed_fields(wx):
+    """Fields that came from METAR rather than the Open-Meteo model."""
+    if "observed_fields" in wx:
+        return wx["observed_fields"] or []
+    return METAR_FIELDS if wx.get("observed_at") else []
+
+
+def wx_src(wx, field):
+    """METAR for a field the latest observation reported, else the Open-Meteo model."""
+    return metar_src(wx) if field in observed_fields(wx) else src("open_meteo_model")
 
 
 def _html(markup):
@@ -143,7 +188,8 @@ def _hero_aqi_html():
             <div class="hero-box hero-aqi hero-aqi--pending">
                 <div class="hero-aqi-value">—</div>
                 <div><div class="hero-box-eyebrow">AQI · CPCB</div><div class="hero-aqi-cat">Awaiting bulletin</div>
-                <div class="hero-aqi-meta">Published around 4 PM IST</div></div>
+                <div class="hero-aqi-meta">Published around 4 PM IST</div>
+                """ + source_html(cpcb_src(None), cls="hero-source") + """</div>
             </div>""")
     category = aqi_row["category"]
     delta = ""
@@ -160,6 +206,7 @@ def _hero_aqi_html():
                 <div class="hero-aqi-cat">{escape(category)}</div>
                 <div class="hero-aqi-meta">CPCB 24-h avg · {escape(str(aqi_row.get("pollutant") or ""))}</div>
                 {delta}
+                {source_html(cpcb_src(aqi_row), cls="hero-source")}
             </div>
         </div>""")
 
@@ -178,6 +225,7 @@ def _hero_insights():
             st.markdown(_html(
                 f'<div class="hero-box-eyebrow">Key insights · {_d(datetime.fromisoformat(facts["date"]))}</div>'
                 f'<div class="hero-ins-title">{title}</div><div class="hero-aqi-meta">{escape(line)}</div>'
+                + source_html(src("cpcb", "CPCB"), src("aqews", "AQEWS"), src("open_meteo_model", "Open-Meteo"), src("nasa_fires", "NASA FIRMS"), cls="hero-source")
             ), unsafe_allow_html=True)
         else:
             st.markdown(_html('<div class="hero-box-eyebrow">Key insights</div>'
@@ -206,6 +254,7 @@ def _hero_weather():
                 <div class="hero-wx-temp">{_fmt(wx.get("temperature_2m"))}°<small>C</small></div>
                 <div class="hero-wx-desc">{escape(desc)}</div>
                 <div class="hero-wx-range">Forecast H {_fmt(wx.get("temperature_2m_max"))}° · L {_fmt(wx.get("temperature_2m_min"))}°</div>
+                {source_html(wx_src(wx, "temperature_2m"), src("open_meteo_model", "Open-Meteo") if observed_fields(wx) else "", cls="hero-source")}
             </div>
         </div>"""), unsafe_allow_html=True)
 
@@ -220,7 +269,7 @@ def render_hero():
             f'<div class="sky-hero-clouds" aria-hidden="true"></div>{_top_row()}'
             f'<h1 class="hero-title">Air Today</h1>'
         ), unsafe_allow_html=True)
-        aqi_col, ins_col, wx_col = st.columns([1.3, 1, 1], gap="medium", vertical_alignment="center")
+        aqi_col, ins_col, wx_col = st.columns(3, gap="medium", vertical_alignment="top")
         with aqi_col:
             st.markdown(_hero_aqi_html(), unsafe_allow_html=True)
         with ins_col:
@@ -239,47 +288,54 @@ def insight_items(facts):
     """facts (data/insights_today.json) -> compact rows: icon, label, value, chip, note, tone."""
     items = []
     aqi, fc = facts["aqi"], facts["forecast"]
+    cpcb_link = cpcb_src({"date": datetime.fromisoformat(facts["date"]), "source": ""})
     if aqi["value"] is not None:
         diff = aqi["value"] - aqi["prev_value"] if aqi["prev_value"] is not None else None
         note = "" if diff is None else f'{"▲" if diff > 0 else "▼" if diff < 0 else "•"} {abs(diff)} vs {_short_date(aqi["prev_date"])}'
         items.append(dict(icon="aqi", label=f'AQI · {_short_date(facts["date"])}', value=aqi["value"], unit="",
-                          chip=aqi["category"], note=" · ".join(x for x in (note, aqi["pollutant"]) if x),
+                          chip=aqi["category"], note=" · ".join(x for x in (note, aqi["pollutant"]) if x), source=cpcb_link,
                           tone="bad" if diff and diff > 0 else "good" if diff and diff < 0 else None))
     else:
         items.append(dict(icon="aqi", label=f'AQI · {_short_date(facts["date"])}', value="—", unit="",
-                          chip=None, note="CPCB bulletin not out yet", tone=None))
+                          chip=None, note="CPCB bulletin not out yet", source=cpcb_src(None), tone=None))
     items.append(dict(icon="forecast", label=f'Forecast · {_short_date(facts["forecast_date"])}',
                       value=fc["aqi"] if fc["aqi"] is not None else "—", unit="", chip=fc["category"],
-                      note=fc["source"] or "AQEWS unavailable", tone="bad" if not fc["source"] else None))
+                      note=(fc["source"] or "AQEWS unavailable").replace("AQEWS model", "AQEWS"),
+                      source=src("aqews", "AQEWS"), tone="bad" if not fc["source"] else None))
     wind = facts["wind_ms"]
     items.append(dict(icon="wind", label="Avg wind", value=_fmt(wind, "{:.1f}"), unit="m/s", chip=None,
-                      note="needs > 2.8 to disperse", tone=None if wind is None else ("good" if wind > 2.8 else "bad")))
+                      note="needs > 2.8 m/s to disperse",
+                      source=src("open_meteo_model", "Open-Meteo forecast"), tone=None if wind is None else ("good" if wind > 2.8 else "bad")))
     vi = facts["ventilation_index"]
     items.append(dict(icon="vent", label="Ventilation index", value=_fmt(vi, "{:,.0f}"), unit="m²/s", chip=None,
-                      note="needs > 6,000", tone=None if vi is None else ("good" if vi > 6000 else "bad")))
+                      note="needs > 6,000 m²/s", source=src("aqews", "AQEWS"), tone=None if vi is None else ("good" if vi > 6000 else "bad")))
     tmin = facts["min_temp_c"]
     items.append(dict(icon="temp", label="Min temperature", value=_fmt(tmin, "{:.1f}"), unit="°C", chip=None,
-                      note="< 10 °C raises biomass burning", tone=None if tmin is None else ("bad" if tmin < 10 else None)))
+                      note="< 10 °C raises biomass burning",
+                      source=src("open_meteo_model", "Open-Meteo forecast"), tone=None if tmin is None else ("bad" if tmin < 10 else None)))
     rain = facts["rain_mm"]
     items.append(dict(icon="rain", label="Rain (avg)", value=_fmt(rain, "{:.1f}"), unit="mm/h", chip=None,
-                      note="washout likely" if (rain or 0) >= 0.1 else "dry",
+                      note="washout likely (≥ 0.1 mm/h)" if (rain or 0) >= 0.1 else "dry (< 0.1 mm/h)",
+                      source=src("open_meteo_model", "Open-Meteo forecast"),
                       tone="good" if (rain or 0) >= 0.1 else None))
     fires = facts["fires"]
     items.append(dict(icon="fire", label=f'Fires PB+HR · {_short_date(facts["fire_date"])}',
                       value="—" if fires is None else fires["total"], unit="", chip=None,
                       note="feed not updated" if fires is None else f'PB {fires["punjab"]} · HR {fires["haryana"]}',
-                      tone=None))
+                      source=src("nasa_fires", "NASA FIRMS"), tone=None))
     return items
 
 
 def _headline(facts):
-    """One-line takeaway, e.g. 'Poor today → Very Poor tomorrow. Weak wind, low ventilation.'"""
+    """One-line takeaway, e.g. 'Poor on 6 Nov → Very Poor on 7 Nov. Weak wind will hold pollution in.'"""
     parts = []
     today_cat, fc_cat = facts["aqi"]["category"], facts["forecast"]["category"]
+    day = _short_date(facts["date"]).lstrip("0")
+    fc_day = _short_date(facts.get("forecast_date")).lstrip("0")
     if today_cat and fc_cat:
-        parts.append(f"{today_cat} today → {fc_cat} tomorrow.")
+        parts.append(f"{today_cat} on {day} → {fc_cat} on {fc_day}.")
     elif today_cat:
-        parts.append(f"{today_cat} today.")
+        parts.append(f"{today_cat} on {day}.")
     traps = []
     if facts["wind_ms"] is not None and facts["wind_ms"] <= 2.8:
         traps.append("weak wind")
@@ -292,7 +348,17 @@ def _headline(facts):
     return " ".join(parts)
 
 
-def render_insights_panel():
+@st.dialog("Key insights (in text, as archived)", width="large")
+def archived_text_dialog(sentences):
+    # st.code for its built-in copy icon (top right); CSS restyles it as prose
+    with st.container(key="archived-text"):
+        st.code("\n".join(f"• {s}" for s in sentences), language=None, wrap_lines=True)
+
+
+def render_insights_panel(full_text="expander"):
+    """full_text: "dialog" opens the archived text in its own dialog (Daily
+    update page); "expander" keeps it inline, for when this panel is itself
+    shown in a dialog (Streamlit can't open a dialog from inside one)."""
     facts = data.insights_today()
     if not facts:
         st.info("Today's update hasn't been generated yet.")
@@ -305,7 +371,7 @@ def render_insights_panel():
             f'<div class="ins-row {it["tone"] or ""}"><div class="ins-icon">{icon(it["icon"], 18)}</div>'
             f'<div class="ins-body"><div class="ins-label">{escape(it["label"])}</div>'
             f'<div class="ins-value">{it["value"]}<small>{it["unit"]}</small>{chip}</div>'
-            f'<div class="ins-note">{escape(it["note"])}</div></div></div>'
+            f'<div class="ins-note">{escape(it["note"])}</div>{source_html(it.get("source"))}</div></div>'
         )
     st.markdown(_html(
         f'<div class="ins-headline">{escape(_headline(facts))}</div>'
@@ -314,11 +380,18 @@ def render_insights_panel():
         f'<span class="ins-dot bad"></span>works against it</div>'
     ), unsafe_allow_html=True)
     sentences = data.daily_update_text()
-    if sentences:
-        with st.expander("Full text (as archived)", icon=":material/notes:"):
-            # st.code for its built-in copy icon (top right); CSS restyles it as prose
-            with st.container(key="archived-text"):
-                st.code("\n".join(f"• {s}" for s in sentences), language=None, wrap_lines=True)
+    if not sentences:
+        return
+    label = "Key insights (in text, as archived)"
+    if full_text == "dialog":
+        with st.container(key="archived-text-open"):
+            if st.button(label, key="open_archived_text", icon=":material/notes:", type="primary"):
+                archived_text_dialog(sentences)
+    else:
+        with st.container(key="archived-text-inline"):
+            with st.expander(label, icon=":material/notes:"):
+                with st.container(key="archived-text"):
+                    st.code("\n".join(f"• {s}" for s in sentences), language=None, wrap_lines=True)
 
 
 @st.dialog("Key insights", width="large")
@@ -327,7 +400,7 @@ def insights_dialog():
 
 
 # -------------------------------------------------------------- KPI cards --
-def kpi_card(icon_name, label, value, unit="", note="", tone=None, accent=None, extra=""):
+def kpi_card(icon_name, label, value, unit="", note="", tone=None, accent=None, extra="", source=""):
     """A weather-widget style card. tone: "good" | "bad" | None colours the note chip."""
     note_html = f'<span class="sky-kpi-note {tone or ""}">{note}</span>' if note else ""
     style = f' style="--accent:{accent}"' if accent else ""
@@ -336,6 +409,7 @@ def kpi_card(icon_name, label, value, unit="", note="", tone=None, accent=None, 
             <div class="sky-kpi-head">{icon(icon_name)}<span>{label}</span></div>
             <div class="sky-kpi-value">{value}<small>{unit}</small>{extra}</div>
             {note_html}
+            {source_html(source) if source else ""}
         </article>"""
 
 
@@ -368,15 +442,17 @@ def render_kpi_grid():
         note = "" if diff is None else f'{"▲" if diff > 0 else "▼" if diff < 0 else "•"} {abs(diff)} vs {_d(prev_row["date"])}'
         tone = None if not diff else ("bad" if diff > 0 else "good")
         cards.append(kpi_card("aqi", f"AQI · {_d(aqi_row['date'])}", int(aqi_row["aqi"]), "", note, tone,
-                              AQI_COLOURS.get(aqi_row["category"])))
+                              AQI_COLOURS.get(aqi_row["category"]), source=cpcb_src(aqi_row)))
     else:
-        cards.append(kpi_card("aqi", f"AQI · {_d(today)}", "—", "", "Bulletin pending"))
+        cards.append(kpi_card("aqi", f"AQI · {_d(today)}", "—", "", "Bulletin pending", source=cpcb_src(None)))
 
     if fc["aqi"] is not None or fc["category"]:
         cards.append(kpi_card("forecast", f"Forecast · {_d(tomorrow)}", fc["aqi"] if fc["aqi"] is not None else "—", "",
-                              escape(str(fc["category"] or "")), None, AQI_COLOURS.get(str(fc["category"]))))
+                              escape(str(fc["category"] or "")), None, AQI_COLOURS.get(str(fc["category"])),
+                              source=src("aqews", "AQEWS")))
     else:
-        cards.append(kpi_card("forecast", f"Forecast · {_d(tomorrow)}", "—", "", "AQEWS forecast unavailable", "bad"))
+        cards.append(kpi_card("forecast", f"Forecast · {_d(tomorrow)}", "—", "", "AQEWS forecast unavailable", "bad",
+                              source=src("aqews", "AQEWS")))
 
     wind = wx.get("wind_speed_10m")
     wind_dir = wx.get("wind_direction_10m")
@@ -386,42 +462,47 @@ def render_kpi_grid():
         "wind", f"Wind {compass(wind_dir)}{at_label}".strip(), _fmt(wind, "{:.1f}"), " m/s",
         "" if wind is None else ("Favourable for dispersion" if wind >= 2.8 else "Weak dispersion"),
         None if wind is None else ("good" if wind >= 2.8 else "bad"), extra=arrow,
+        source=wx_src(wx, "wind_speed_10m"),
     ))
 
     vi = fc["ventilation_index"]
     cards.append(kpi_card(
         "vent", f"Ventilation index · {_d(tomorrow)}", _fmt(vi, "{:,.0f}"), " m²/s",
-        "" if vi is None else ("Favourable (> 6,000)" if vi > 6000 else "Unfavourable (≤ 6,000)"),
-        None if vi is None else ("good" if vi > 6000 else "bad"),
+        "" if vi is None else ("Favourable (> 6,000 m²/s)" if vi > 6000 else "Unfavourable (≤ 6,000 m²/s)"),
+        None if vi is None else ("good" if vi > 6000 else "bad"), source=src("aqews", "AQEWS"),
     ))
 
     blh = wx.get("boundary_layer_height")
     cards.append(kpi_card("layers", f"Mixing height{at_label}", _fmt(blh), " m",
-                          "" if blh is None else ("Shallow – pollutants trapped" if blh < 500 else "Deep mixing"),
-                          None if blh is None else ("bad" if blh < 500 else "good")))
+                          "" if blh is None else ("Shallow (< 500 m) – pollutants trapped" if blh < 500 else "Deep mixing (≥ 500 m)"),
+                          None if blh is None else ("bad" if blh < 500 else "good"),
+                          source=src("open_meteo_model")))
 
     cards.append(kpi_card("temp", f"Temperature{at_label}", _fmt(wx.get("temperature_2m"), "{:.1f}"), " °C",
-                          f'Feels {_fmt(wx.get("apparent_temperature"))}° · fcst min {_fmt(wx.get("temperature_2m_min"))}°'))
+                          f'Feels {_fmt(wx.get("apparent_temperature"))}° · fcst min {_fmt(wx.get("temperature_2m_min"))}°',
+                          source=wx_src(wx, "temperature_2m")))
     cards.append(kpi_card("humidity", f"Humidity{at_label}", _fmt(wx.get("relative_humidity_2m")), " %",
-                          f'Cloud {_fmt(wx.get("cloud_cover"))}%'))
+                          f'Cloud {_fmt(wx.get("cloud_cover"))}%', source=wx_src(wx, "relative_humidity_2m")))
     vis = wx.get("visibility")
     vis_note = wx.get("condition") or ("Haze / smog likely" if vis is not None and vis < 2000 else "Clear")
     cards.append(kpi_card("eye", f"Visibility{at_label}", _fmt(None if vis is None else vis / 1000, "{:.1f}"), " km",
                           "" if vis is None else escape(vis_note),
-                          None if vis is None else ("bad" if vis < 2000 else None)))
+                          None if vis is None else ("bad" if vis < 2000 else None), source=wx_src(wx, "visibility")))
     cards.append(kpi_card("rain", "Rain · last hour", _fmt(wx.get("precipitation"), "{:.1f}"), " mm",
-                          "Rain helps wash out PM" if (wx.get("precipitation") or 0) > 0 else "Dry"))
+                          "Rain helps wash out PM" if (wx.get("precipitation") or 0) > 0 else "Dry",
+                          source=src("open_meteo_model")))
     fire_day = _d(today - timedelta(days=1))
     if fires is None:
-        cards.append(kpi_card("fire", f"Fires PB + HR · {fire_day}", "—", "", "Fire feed not updated"))
+        cards.append(kpi_card("fire", f"Fires PB + HR · {fire_day}", "—", "", "Fire feed not updated",
+                              source=src("nasa_fires", "NASA FIRMS")))
     else:
         cards.append(kpi_card("fire", f"Fires PB + HR · {fire_day}", sum(fires.values()), "",
-                              f'Punjab {fires.get("Punjab", 0)} · Haryana {fires.get("Haryana", 0)}'))
+                              f'Punjab {fires.get("Punjab", 0)} · Haryana {fires.get("Haryana", 0)} · VIIRS',
+                              source=src("nasa_fires", "NASA FIRMS")))
 
     st.markdown(_html(f'<div class="sky-kpi-grid">{"".join(cards)}</div>'), unsafe_allow_html=True)
     if wx:
         st.markdown(
-            f'<div class="sky-kpi-source">AQI: CPCB daily bulletin · Forecast and ventilation index: IITM AQEWS · '
-            f'Weather: {escape(wx.get("source", "Open-Meteo"))}{" at " + at + " IST" if at else ""} · refreshes every 5 min</div>',
+            f'<div class="sky-kpi-source">Weather cards{" observed at " + at + " IST" if at else ""} · refresh every 5 min</div>',
             unsafe_allow_html=True,
         )

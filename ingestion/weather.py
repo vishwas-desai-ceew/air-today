@@ -161,6 +161,8 @@ def fetch_live() -> dict:
     try:
         obs = fetch_metar()
         current.update(obs)
+        # Which fields are observed (METAR) rather than modelled, for per-card sources
+        current["observed_fields"] = sorted(k for k in obs if k not in ("observed_at", "station", "condition"))
         current["source"] = f"Observed at {obs['station']} (METAR) · gaps from Open-Meteo"
     except Exception as e:
         logger.warning("METAR unavailable, using Open-Meteo only: %s", e)

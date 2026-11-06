@@ -186,7 +186,7 @@ def build_daily_update(df):
         return None if v is None or pd.isna(v) else round(float(v), digits)
 
     if aqi_forecast is not None and aqi_forecast_cat is not None:
-        fc_source = "AQEWS model"
+        fc_source = "AQEWS"
     elif aqi_cat_fallback is not None:
         fc_source = "AQEWS bulletin"
     else:
