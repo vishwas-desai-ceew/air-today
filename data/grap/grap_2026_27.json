@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "season": "2026-27",
+  "region": "Delhi-NCR",
+  "updated_at": "2026-11-08T16:23:58+05:30",
+  "source": {
+    "name": "CAQM, GRAP orders",
+    "url": "https://caqm.nic.in/landingpage/pages/grap/grap-orders"
+  },
+  "stage_at_start": 0,
+  "orders": [
+    {
+      "id": "caqm-21668",
+      "date": "2026-10-21",
+      "action": "invoke",
+      "stages": [
+        1
+      ],
+      "headline": "Stage I invoked",
+      "title": "Order dated 21.10.2026 - Implementation of actions under Stage-I (Poor Air Quality, AQI: 201-300) of extant schedule of GRAP in Delhi-NCR",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/320b067c-7942-4be6-a708-cf04f5321392.pdf",
+      "caqm_document_id": 21668,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-25453",
+      "date": "2026-10-30",
+      "action": "other",
+      "stages": [],
+      "headline": "Implementation of precautionary measures for prevention and control of air pollution in De",
+      "title": "Order dated 30.10.2026- Implementation of precautionary measures for prevention and control of air pollution in Delhi-NCR during 05th to 20th November, 2026",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/22e7a559-e78f-49b0-b3f6-3f4e93cfa80f.pdf",
+      "caqm_document_id": 25453,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-25831",
+      "date": "2026-11-02",
+      "action": "invoke",
+      "stages": [
+        2
+      ],
+      "headline": "Stage II invoked",
+      "title": "Order dated 02.11. 2026 - Implementation of actions under Stage-II ('Very Poor' Air Quality, AQI: 301-400) of extant schedule of GRAP in Delhi-NCR",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/011a2816-839f-43e5-99df-e5a4019b6bb2.pdf",
+      "caqm_document_id": 25831,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-27974",
+      "date": "2026-11-06",
+      "action": "invoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III invoked",
+      "title": "Invocation of actions under Stage-III ('Severe' Air Quality, AQI: 401-450) of extant schedule of GRAP in Delhi-NCR",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/ec558594-4012-4304-8308-9800770792c2.pdf",
+      "caqm_document_id": 27974,
+      "source": "caqm"
+    }
+  ]
+}

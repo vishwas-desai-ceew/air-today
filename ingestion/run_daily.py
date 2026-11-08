@@ -65,6 +65,11 @@ def _fires():
     return get_fire_pbhr.run()
 
 
+def _grap():
+    from ingestion import grap_orders
+    return grap_orders.run()
+
+
 def _summary():
     from ingestion import get_aqi_summary
     return get_aqi_summary.run()
@@ -78,6 +83,7 @@ STEPS = {
     "imd": ("IMD AQ bulletin", _imd),
     "imd_summary": ("IMD bulletin summary (Gemini)", _imd_summary),
     "fires": ("Punjab/Haryana fires", _fires),
+    "grap": ("CAQM GRAP orders", _grap),
     "summary": ("Daily update", _summary),
 }
 

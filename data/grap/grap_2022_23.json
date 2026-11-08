@@ -1,0 +1,256 @@
+{
+  "schema_version": 2,
+  "season": "2022-23",
+  "region": "Delhi-NCR",
+  "updated_at": "2026-11-08T16:23:58+05:30",
+  "source": {
+    "name": "CAQM, GRAP orders",
+    "url": "https://caqm.nic.in/landingpage/pages/grap/grap-orders"
+  },
+  "stage_at_start": 0,
+  "orders": [
+    {
+      "id": "caqm-5618",
+      "date": "2022-10-05",
+      "action": "invoke",
+      "stages": [
+        1
+      ],
+      "headline": "Stage I invoked",
+      "title": "Order dated 05.10.2022 for Implementation actions under Stage-I of GRAP for poor category of air quality in Delhi",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/9f4094e7-a122-48f7-8817-154fa20916f7.pdf",
+      "caqm_document_id": 5618,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5617",
+      "date": "2022-10-19",
+      "action": "invoke",
+      "stages": [
+        2
+      ],
+      "headline": "Stage II invoked",
+      "title": "Order dated 19.10.2022 for Implementation of actions under Stage-II of GRAP for very poor category of air quality in Delhi",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/095c6cc6-2b24-40d8-ab7f-9eff4dc5757e.pdf",
+      "caqm_document_id": 5617,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5616",
+      "date": "2022-10-29",
+      "action": "invoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III invoked",
+      "title": "Order dated 29.10.2022 for implementation of actions under Stage-III of GRAP for Severe category of AQI in Delhi",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/GRAP%20Order%20for%20Implementation%20%20of%20Actions%20Stage-IIId9e334e4-33d6-4cb5-a3c5-53cd5ea82548.pdf",
+      "caqm_document_id": 5616,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5615",
+      "date": "2022-11-03",
+      "action": "invoke",
+      "stages": [
+        4
+      ],
+      "headline": "Stage IV invoked",
+      "title": "Order dated 03.11.2022 for Implementation of actions under Stage-IV of GRAP for Severe plus category of AQI in Delhi",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/dc5f10a3-5a47-45fc-868d-e06c9b93681a.pdf",
+      "caqm_document_id": 5615,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5614",
+      "date": "2022-11-06",
+      "action": "revoke",
+      "stages": [
+        4
+      ],
+      "headline": "Stage IV revoked",
+      "title": "Order dated 06.11.2022 for Revocation of actions under Stage-IV of GRAP in the entire NCR with immediate effect",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/23182cb4-a480-4116-a708-49dc967b66c2.pdf",
+      "caqm_document_id": 5614,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5613",
+      "date": "2022-11-09",
+      "action": "other",
+      "stages": [],
+      "headline": "For Construction and Demolition activities in NCR and adjoining areas- Stopping of polishi",
+      "title": "Order dated 09.11.2022 for Construction and Demolition activities in NCR and adjoining areas- Stopping of polishing, varnishing and painting activities under Stage-III of GRAP",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/794431d1-e69c-4f1c-a17f-1b137ead109d.pdf",
+      "caqm_document_id": 5613,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5612",
+      "date": "2022-11-14",
+      "action": "revoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III revoked",
+      "title": "Order dated 14.11.2022 for Revocation of actions under Stage-III of GRAP in the entire NCR with immediate effect",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/GRAP%20Order%20dated%201411202298595aa5-b5b9-4482-b881-ab993763136a.pdf",
+      "caqm_document_id": 5612,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5610",
+      "date": "2022-12-04",
+      "action": "invoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III invoked",
+      "title": "Order dated 04.12.2022 for Implementation of actions under Stage-III of GRAP for Severe category of AQI in Delhi",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/9461a18f-3f34-4925-8098-4ca7816cb473.pdf",
+      "caqm_document_id": 5610,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5611",
+      "date": "2022-12-04",
+      "action": "other",
+      "stages": [],
+      "headline": "Corrigendum to the Stage III order",
+      "title": "Order dated 04.12.2022 for Implementation of actions under Stage-III of GRAP for Severe category of AQI in Delhi- Corrigendum",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/Corrigendum-Stage%20III%20of%20GRAP%20invocation%20Order%20dated2b1fffe1-e50f-46f3-a1b0-627349de95ef.pdf",
+      "caqm_document_id": 5611,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5609",
+      "date": "2022-12-07",
+      "action": "revoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III revoked",
+      "title": "Order dated 07.12.2022 for Revocation of actions under Stage-III of GRAP",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/GRAP%20071222073a6d2e-aca2-4e26-b66f-f39a0fa70da7.pdf",
+      "caqm_document_id": 5609,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5608",
+      "date": "2022-12-30",
+      "action": "invoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III invoked",
+      "title": "Order dated 30.12.2022 for implementation of actions under Stage-III of GRAP for Severe category of AQI in Delhi",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/Stage-III%20of%20GRAP%20for%20Severe%20category%20of%20AQI%20in%20Delhifdf9e567-569e-4a3e-a70f-26c62b826a4a.pdf",
+      "caqm_document_id": 5608,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5607",
+      "date": "2022-12-31",
+      "action": "invoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III invoked",
+      "title": "Revised Order dated 31.12.2022 for implementation of actions under Stage-III of GRAP for Severe category of AQI in Delhi",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/Revised%20GRAP%20Order8398bc4d-de13-4a68-9a39-bdb16e0b6e18.pdf",
+      "caqm_document_id": 5607,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5606",
+      "date": "2023-01-04",
+      "action": "revoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III revoked",
+      "title": "Order dated 04.01.2023 for Revocation of actions under Stage-III of GRAP",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/Revocation%20Order%20dt%2004012023%20GRAP67cb2aa7-faf7-49d9-a119-8eff98c56937.pdf",
+      "caqm_document_id": 5606,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5605",
+      "date": "2023-01-06",
+      "action": "invoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III invoked",
+      "title": "Order dated 06.01.2023 for implementation of actions under stage-III of GRAP",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/f666e326-af31-4fb3-8510-eeded773184e.pdf",
+      "caqm_document_id": 5605,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5604",
+      "date": "2023-01-15",
+      "action": "revoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III revoked",
+      "title": "Order dt 15.01.2023 for Revocation of actions under Stage-III of GRAP",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/GRAP%20order%20dated%2015012023af1765fc-88ce-4f6c-88a8-bc9c5c069e18.pdf",
+      "caqm_document_id": 5604,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5603",
+      "date": "2023-02-01",
+      "action": "revoke",
+      "stages": [
+        2
+      ],
+      "headline": "Stage II revoked",
+      "title": "Order dated 01.02.2023 for Revocation of actions under Stage-II of GRAP",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/GRAP%20Order72ac97c0-51af-412d-b771-97d7f0f306ac.pdf",
+      "caqm_document_id": 5603,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5602",
+      "date": "2023-02-16",
+      "action": "invoke",
+      "stages": [
+        2
+      ],
+      "headline": "Stage II invoked",
+      "title": "Order dated 16.02.2023 for implementation of actions under stage-II of GRAP",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/65b29933-eaca-4d4c-8532-914957583a85.pdf",
+      "caqm_document_id": 5602,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5601",
+      "date": "2023-03-01",
+      "action": "revoke",
+      "stages": [
+        2
+      ],
+      "headline": "Stage II revoked",
+      "title": "Order dated 01.03.2023 for Revocation of actions under Stage-II of GRAP",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/98ebc300-fd42-411b-b355-5f7f9dbff0c5.pdf",
+      "caqm_document_id": 5601,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5525",
+      "date": "2023-03-09",
+      "action": "revoke",
+      "stages": [
+        1
+      ],
+      "headline": "Stage I revoked",
+      "title": "Order dated 09.03.2023 for Revocation of actions under Stage-I of GRAP",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/152e191d-e9dd-489a-92c9-465d4849bf60.pdf",
+      "caqm_document_id": 5525,
+      "source": "caqm"
+    }
+  ]
+}

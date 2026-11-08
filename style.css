@@ -3569,9 +3569,11 @@ div[role="dialog"]:has(.st-key-signals-dashboard) { width: min(1400px, 95vw) !im
   flex-wrap: wrap;
   gap: 4px;
   padding: 4px;
+  max-width: 100%;
   background: #ffffff;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  /* 24px reads as a pill on one row and still holds the first/last chips when the row wraps */
+  border-radius: 24px;
   box-shadow: 0 4px 14px rgba(10, 61, 122, 0.08);
 }
 button[data-variant="segmented_control"] {
@@ -3601,6 +3603,97 @@ button[data-variant="segmented_control"]:focus-visible {
 }
 @media (max-width: 640px) {
   [data-testid="stButtonGroup"] [role="radiogroup"]:has(> button[data-variant="segmented_control"]) {
-    border-radius: 16px;
+    border-radius: 18px;
   }
+}
+
+/* ----- GRAP page (views/grap.py). Stage colours are our own, see config.reference.GRAP_STAGES ----- */
+.gs-stage { border-color: var(--c, var(--sky-900)); background: color-mix(in srgb, var(--c, #8cc8ff) 18%, #ffffff); }
+.gs-stage span { color: color-mix(in srgb, var(--c, #0a3d7a) 70%, #000000); }
+.cal-side-title .sky-icon { vertical-align: -3px; margin-right: 6px; color: var(--brand); }
+.st-key-grap-timeline { background: #ffffff; border-radius: 14px !important; }
+.grap-tl-sub { font-size: var(--font-caption); color: var(--text-secondary); margin-top: -4px; }
+.grap-status { background: var(--surface-alt); border-radius: var(--radius); padding: 8px 12px; }
+.grap-status-head { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
+.grap-status-head .sky-icon { color: var(--brand); }
+.grap-status-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.grap-chip { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 750; }
+.grap-chip--out { background: #fff; border: 2px solid var(--c); color: color-mix(in srgb, var(--c) 75%, #000); }
+.grap-none { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; }
+
+.grap-tl { margin-top: 24px; }
+.grap-tl-row { display: grid; grid-template-columns: 74px 1fr 64px; align-items: center; gap: 10px; margin-bottom: 6px; }
+.grap-tl-name { font-size: 0.78rem; font-weight: 700; color: var(--text-primary); text-align: right; }
+.grap-tl-track { position: relative; height: 18px; border-radius: 6px;
+  background: repeating-linear-gradient(90deg, var(--sky-50) 0 6px, #ffffff 6px 8px); border: 1px solid var(--border); }
+.grap-tl-bar { position: absolute; top: 2px; bottom: 2px; border-radius: 4px; min-width: 3px; }
+.grap-tl-days { font-size: 0.72rem; color: var(--text-secondary); }
+.grap-tl-days b { color: var(--text-primary); font-size: 0.85rem; }
+.grap-tl-axis .grap-tl-track { background: none; border: 0; height: 30px; }
+.grap-tl-ticks > span:not([class]) { position: absolute; top: 12px; font-size: 0.7rem; font-weight: 700;
+  color: var(--text-secondary); padding-left: 3px; border-left: 1px solid var(--border); line-height: 1.4; }
+.grap-tl-mark { position: absolute; top: 0; width: 0; height: 0; transform: translateX(-50%);
+  border-left: 5px solid transparent; border-right: 5px solid transparent; }
+.grap-tl-mark--invoke { border-bottom: 8px solid var(--danger); }
+.grap-tl-mark--revoke { border-top: 8px solid var(--success); }
+.grap-tl-mark--other { border-bottom: 8px solid #8aa0bb; }
+.grap-tl-body { position: relative; }
+.grap-tl-today { position: absolute; top: 0; bottom: 14px; left: calc(84px + (100% - 158px) * var(--p));
+  border-left: 2px dashed var(--sky-900); pointer-events: none; }
+.grap-tl-today em { position: absolute; bottom: -2px; left: 4px; font-style: normal; font-size: 0.66rem;
+  font-weight: 800; color: var(--sky-900); background: #fff; padding: 0 3px; }
+
+.grap-legend { background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3); margin: var(--space-3) 0; font-size: var(--font-caption);
+  color: var(--text-secondary); display: flex; flex-direction: column; gap: 6px; }
+.grap-leg-row { display: grid; grid-template-columns: 14px 70px 1fr; align-items: center; gap: 8px; }
+.grap-leg-row i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+.grap-leg-row b { color: var(--text-primary); }
+.grap-leg-note { display: flex; align-items: center; gap: 8px; line-height: 1.35; }
+.grap-leg-note i { flex: 0 0 22px; height: 16px; border-radius: 4px; display: inline-block; }
+.grap-leg-strip { background: linear-gradient(90deg, #F2B705 0 33%, #E8710A 33% 66%, #C62828 66%) bottom / 100% 4px no-repeat,
+  color-mix(in srgb, #C62828 24%, #fff); }
+.grap-leg-ring { background: #fff; box-shadow: inset 0 0 0 2px #0a3d7a; }
+.grap-disclaimer { display: flex; gap: 6px; align-items: flex-start; margin-top: 4px; padding-top: 6px;
+  border-top: 1px solid var(--border); font-style: italic; }
+.grap-disclaimer .sky-icon { flex: 0 0 auto; color: #b7791f; margin-top: 1px; }
+
+.grap-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px;
+  font-size: 0.85rem; font-weight: 750; }
+.grap-badge--out { background: #fff; border: 2px solid var(--c); color: color-mix(in srgb, var(--c) 75%, #000); }
+.grap-badge--other { background: var(--surface-alt); color: var(--sky-900); }
+.grap-title { font-size: 0.9rem; color: var(--text-primary); line-height: 1.45; margin: 4px 0 8px; }
+.grap-notes-title { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin: 8px 0 2px; }
+.grap-pdf { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-weight: 650;
+  color: var(--brand) !important; text-decoration: none; }
+.grap-nopdf { margin-top: 8px; font-size: var(--font-caption); color: var(--text-secondary); font-style: italic; }
+.grap-after { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 4px 0 12px; }
+.grap-after > span:first-child { font-size: var(--font-caption); color: var(--text-secondary); margin-right: 4px; }
+@media (max-width: 640px) {
+  .grap-tl-row { grid-template-columns: 56px 1fr 44px; gap: 6px; }
+  .grap-tl-days { font-size: 0.66rem; }
+  .grap-tl-today { left: calc(62px + (100% - 112px) * var(--p)); }
+}
+/* the mobile overflow-x:auto on markdown blocks clipped the GRAP timeline, status and legend */
+.element-container:has(.grap-tl),
+.element-container:has(.grap-status),
+.element-container:has(.grap-tl-sub),
+.element-container:has(.grap-legend),
+.element-container:has(.grap-after) { overflow: visible !important; }
+.grap-tl-today em { bottom: auto; top: -17px; left: -18px; }
+
+/* GRAP page: navy action buttons (AQI and GRAP stages dialog, CAQM orders link) */
+.st-key-grap_scale button,
+.st-key-grap-caqm-link a {
+  border-color: var(--sky-900) !important;
+  background: var(--sky-900) !important;
+  color: #ffffff !important;
+}
+.st-key-grap_scale button:hover,
+.st-key-grap-caqm-link a:hover {
+  border-color: #072c59 !important;
+  background: #072c59 !important;
+  color: #ffffff !important;
 }

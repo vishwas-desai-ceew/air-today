@@ -15,7 +15,7 @@ import streamlit as st
 
 from config.reference import AQI_BANDS, band_for
 from views.charts import PLOT_CONFIG, add_bands, base_layout, source_line
-from views.grap import _tone, grap_dialog, load_seasons
+from views.grap import grap_dialog, orders_by_day
 from views.render_aqi_fc import band_legend_html
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
@@ -134,12 +134,12 @@ def season_chart(s, orders):
                 customdata=s[["band"]].assign(p=s["pollutant"].fillna("")).values,
                 hovertemplate="%{x|%a %d %b %Y}<br>AQI <b>%{y:.0f}</b> · %{customdata[0]}"
                               "<br>%{customdata[1]}<extra></extra>")
-    tone_colour = {"invoked": "#c22a1e", "revoked": "#1e8e5a", "other": "#46607f"}
+    tone_colour = {"invoke": "#c22a1e", "revoke": "#1e8e5a", "other": "#46607f"}
     for day, day_orders in sorted(orders.items()):
-        stage = day_orders[0].get("stage", "")
-        tone = _tone(stage)
+        o = next((x for x in day_orders if x["action"] != "other"), day_orders[0])
+        tone = o["action"]
         fig.add_vline(x=pd.Timestamp(day), line=dict(color=tone_colour[tone], width=1.4, dash="dot"))
-        short = stage.split("(")[0].split(";")[0].strip()
+        short = o["headline"]
         fig.add_annotation(x=pd.Timestamp(day), y=y_max, yanchor="top", text=escape(short[:26]), textangle=-90,
                            showarrow=False, font=dict(size=10, color=tone_colour[tone]), xshift=-7,
                            bgcolor="rgba(255,255,255,0.75)")
@@ -213,7 +213,7 @@ def render_recent_trends():
     st.markdown(_stats_html(s, season, in_progress), unsafe_allow_html=True)
     st.markdown(_category_strip(s), unsafe_allow_html=True)
 
-    grap = load_seasons().get(season, {})
+    grap = orders_by_day(season)
     with st.container(border=True, key="trend-season-card"):
         st.markdown(
             f"<div class='chart-title'>Daily AQI, winter {escape(season)}{' (in progress)' if in_progress else ''}</div>"

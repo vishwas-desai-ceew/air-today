@@ -1,0 +1,169 @@
+{
+  "schema_version": 2,
+  "season": "2023-24",
+  "region": "Delhi-NCR",
+  "updated_at": "2026-11-08T16:23:58+05:30",
+  "source": {
+    "name": "CAQM, GRAP orders",
+    "url": "https://caqm.nic.in/landingpage/pages/grap/grap-orders"
+  },
+  "stage_at_start": 0,
+  "orders": [
+    {
+      "id": "caqm-5600",
+      "date": "2023-10-06",
+      "action": "invoke",
+      "stages": [
+        1
+      ],
+      "headline": "Stage I invoked",
+      "title": "Order dated 06.10.2023 - Implementation of Actions under Stage-I (Poor Air Quality) of revised GRAP in Delhi-NCR - steps to be taken",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/GRAP%20Order%20dt%200610202300b7b221-8a05-4692-8ee8-570693aea959.pdf",
+      "caqm_document_id": 5600,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5599",
+      "date": "2023-10-21",
+      "action": "invoke",
+      "stages": [
+        2
+      ],
+      "headline": "Stage II invoked",
+      "title": "Order dated 21.10.2023 - Implementation of Actions under Stage-II (Very Poor Air Quality) of revised GRAP in Delhi-NCR- steps to be taken",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/d94a3ccf-0c04-4c32-a0ec-e5cacd9be91a.pdf",
+      "caqm_document_id": 5599,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5598",
+      "date": "2023-11-02",
+      "action": "invoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III invoked",
+      "title": "Order dated 02.11.2023 - Implementation of Actions under Stage-III (Severe Air Quality) of revised GRAP in Delhi-NCR- Steps to be taken",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/GRAP%20III86ed36c7-9c50-44f0-9b3b-6bd2fa7da471.pdf",
+      "caqm_document_id": 5598,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5597",
+      "date": "2023-11-05",
+      "action": "invoke",
+      "stages": [
+        4
+      ],
+      "headline": "Stage IV invoked",
+      "title": "Order dated 05.11.2023 - Implementation of Actions under Stage-IV (Severe Plus Air Quality) of revised GRAP in Delhi-NCR- Steps to be taken",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/GRAP%20Stage641af982-e562-4b53-b4ea-f92eb1d8e3e2.pdf",
+      "caqm_document_id": 5597,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5596",
+      "date": "2023-11-18",
+      "action": "revoke",
+      "stages": [
+        4
+      ],
+      "headline": "Stage IV revoked",
+      "title": "Order dated 18.11.2023 - Revocation of Actions under Stage-IV (Severe Plus Air Quality) of revised Graded Response Action Plan in Delhi-NCR",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/GRAP%20stage%20IV%20revocation%20order460d6860-c8e3-42c9-a2a2-eb189aa58ac0.pdf",
+      "caqm_document_id": 5596,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5595",
+      "date": "2023-11-28",
+      "action": "revoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III revoked",
+      "title": "Order dated 28.11.2023 - Revocation of Actions under stage-Ill (Severe Air Quality) of revised Graded Response Action plan in Delhi-NCR",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/3dcfef62-25a9-41e7-84c5-3506e6ccd7d7.pdf",
+      "caqm_document_id": 5595,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5594",
+      "date": "2023-12-22",
+      "action": "invoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III invoked",
+      "title": "Order dated 22.12.2023 - Implementation of Actions under Stage-III Severe Air Quality of revised GRAP in Delhi-NCR",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/GRAP%20ORDER%20dt%20221220235ee5d11b-a6bb-4a81-874a-9f720ec09324.pdf",
+      "caqm_document_id": 5594,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5593",
+      "date": "2024-01-01",
+      "action": "revoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III revoked",
+      "title": "Order dt 01.01.2024 - Revocation of Actions under Stage-III Severe Air Quality of revised GRAP in Delhi - NCR",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/6b805a5e-c2a9-44b4-9db8-a971acb2b317.pdf",
+      "caqm_document_id": 5593,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5592",
+      "date": "2024-01-14",
+      "action": "invoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III invoked",
+      "title": "Order dated 14.01.2024 - Implementation of Actions under Stage-III (Severe Air Quality) of revised GRAP in Delhi-NCR- Steps to be taken",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/GRAP%20Order40621d8e-81da-4431-8f2c-c0b2ec735348.pdf",
+      "caqm_document_id": 5592,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5591",
+      "date": "2024-01-18",
+      "action": "revoke",
+      "stages": [
+        3
+      ],
+      "headline": "Stage III revoked",
+      "title": "Order dt. 18.01.2024 - Revocation of Actions under Stage-III (Severe Air Quality) of revised GRAP in Delhi-NCR - Steps to be taken",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/GRAP%20Order%20dt%2018012024abc71853-0b22-45b7-ab8a-03a484c61fa1.pdf",
+      "caqm_document_id": 5591,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5590",
+      "date": "2024-02-19",
+      "action": "revoke",
+      "stages": [
+        2
+      ],
+      "headline": "Stage II revoked",
+      "title": "Order dated 19.02.2024 - Revocation of Actions under Stage-II Very Poor Air Quality of GRAP and intensifying actions under Stage-I of revised GRAP in Delhi - NCR",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/GRAP%20Order%20dt%201902202405aae211-bc30-4a93-aba7-4c7cc9bd3fe5.pdf",
+      "caqm_document_id": 5590,
+      "source": "caqm"
+    },
+    {
+      "id": "caqm-5589",
+      "date": "2024-02-27",
+      "action": "revoke",
+      "stages": [
+        1
+      ],
+      "headline": "Stage I revoked",
+      "title": "Order dated 27.02.2024 - Revocation of Actions under stage-I, Poor Air Quality of GRAP",
+      "pdf_url": "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Orders/178b9ab9-2c14-4642-afea-575b799a0655.pdf",
+      "caqm_document_id": 5589,
+      "source": "caqm"
+    }
+  ]
+}

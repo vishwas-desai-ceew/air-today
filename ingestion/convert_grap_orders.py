@@ -1,4 +1,9 @@
-"""Convert a winter's GRAP orders sheet (Excel) into static JSON for the GRAP page.
+"""Convert a winter's GRAP orders sheet (Excel) into the team-archive JSON.
+
+The GRAP page now reads data/grap/ (written from CAQM by ingestion/grap_orders.py).
+This converter's output is an input to that pipeline: merge the sheet's notes
+into a season with
+    python ingestion/grap_orders.py --season 2025-26 --import-legacy data/grap_orders_2025_26.json
 
 GRAP archives are closed once a season ends, so the dashboard reads JSON
 rather than parsing workbooks on every page load (and the app venv doesn't

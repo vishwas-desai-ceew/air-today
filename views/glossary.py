@@ -4,11 +4,13 @@ from html import escape
 
 import streamlit as st
 
-from config.reference import AQI_BANDS, AQI_HEALTH, SOURCES, VENTILATION_INDEX_UNFAVOURABLE
+from config.reference import (AQI_BANDS, AQI_HEALTH, GRAP_COLOURS_DISCLAIMER, GRAP_STAGES as GRAP_STAGE_DEFS,
+                              SOURCES, VENTILATION_INDEX_UNFAVOURABLE)
 from views.charts import source_line
 
-# GRAP stages by AQI, as given in the team's GRAP archive (CAQM orders 2025-26).
+# GRAP stages by AQI, from CAQM's GRAP schedule (SOURCES["caqm_grap_schedule"]).
 GRAP_STAGES = [("Stage I", 201, 300), ("Stage II", 301, 400), ("Stage III", 401, 450), ("Stage IV", 451, 500)]
+_STAGE_COLOUR = {label: colour for _n, label, _r, colour, _t in GRAP_STAGE_DEFS}
 
 # (term, expansion, definition, category, source key or None)
 TERMS = [
@@ -78,7 +80,7 @@ TERMS = [
 CATEGORIES = ["All", "Air quality", "Weather", "Policy", "Institutions", "Data status"]
 
 
-def _scale_html():
+def scale_html():
     """0–500 bar of CPCB categories with the GRAP stages bracketed beneath."""
     pct = lambda v: v / 500 * 100
     bands = "".join(
@@ -87,7 +89,7 @@ def _scale_html():
         for n, lo, hi, c in AQI_BANDS
     )
     stages = "".join(
-        f"<div class='gs-stage' style='left:{pct(lo - 1):.2f}%;width:{pct(hi - lo + 1):.2f}%'>"
+        f"<div class='gs-stage' style='left:{pct(lo - 1):.2f}%;width:{pct(hi - lo + 1):.2f}%;--c:{_STAGE_COLOUR[name]}'>"
         f"<span>{escape(name)}</span></div>" for name, lo, hi in GRAP_STAGES
     )
     ticks = "".join(f"<em style='left:{pct(v):.2f}%'>{v}</em>" for v in (0, 100, 200, 300, 400, 450, 500))
@@ -98,8 +100,9 @@ def _scale_html():
 
 def render_glossary():
     with st.container(border=True, key="glossary-scale"):
-        st.markdown(_scale_html(), unsafe_allow_html=True)
-        source_line("cpcb_aqi", note="GRAP AQI bands as stated in the CAQM orders in the team's GRAP archive")
+        st.markdown(scale_html(), unsafe_allow_html=True)
+        source_line("cpcb_aqi", "caqm_grap_schedule", note="GRAP stage AQI ranges from the CAQM schedule")
+        st.caption(f":material/info: {GRAP_COLOURS_DISCLAIMER}")
 
     q_col, f_col = st.columns([2, 3], gap="medium", vertical_alignment="bottom")
     with q_col:
