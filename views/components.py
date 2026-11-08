@@ -186,146 +186,147 @@ def status_badge(label, ok):
     )
 
 
-import calendar
-from datetime import date, timedelta
+# The dashboard began logging AQEWS forecast availability on this day
+# (first entry in data/archive.json with availability tracking).
+AQEWS_TRACKING_START = date(2025, 9, 16)
 
-import streamlit as st
+AQEWS_SOURCES = [
+    ("AQEWS for Delhi, IITM Pune: About", "https://ews.tropmet.res.in/about.php"),
+    ("Decision Support System v1.0 for air quality management in Delhi (Geoscientific Model Development, 2024)",
+     "https://gmd.copernicus.org/articles/17/2617/2024/"),
+]
 
 
-def render_forecast_availability(missing_dates, year):
+def _aqews_day_status(d, tracked, missing, today):
+    """One of: available, missing, untracked, future."""
+    iso = d.isoformat()
+    if d > today:
+        return "future"
+    if iso in missing:
+        return "missing"
+    if d < AQEWS_TRACKING_START or iso not in tracked:
+        return "untracked"
+    return "available"
+
+
+_AQEWS_STATUS_LABEL = {
+    "available": "AQEWS forecast available",
+    "missing": "AQEWS forecast unavailable",
+    "untracked": "Not tracked (dashboard pipeline did not run)",
+    "future": "Not yet due",
+}
+
+
+def render_forecast_availability(missing_dates, year, tracked_dates=(), today=None):
     """
-    Render a GitHub-style calendar showing missing AQEWS forecasts.
+    Month-by-month view of whether the IITM AQEWS forecast could be fetched on
+    each day of `year`, shown at all times on the Archive page.
 
     Parameters
     ----------
     missing_dates : Iterable[str]
-        Dates in YYYY-MM-DD format.
+        Days (YYYY-MM-DD) on which the AQEWS forecast could not be fetched.
     year : int
+    tracked_dates : Iterable[str]
+        Days (YYYY-MM-DD) on which the dashboard pipeline ran and so checked
+        AQEWS. Days outside this set are shown as "not tracked", not as
+        "available".
+    today : date, optional
+        Defaults to date.today().
     """
+    today = today or date.today()
+    missing = {d for d in missing_dates if d.startswith(f"{year}-")}
+    tracked = {d for d in tracked_dates if d.startswith(f"{year}-")} | missing
 
-    missing = {
-        d for d in missing_dates
-        if d.startswith(f"{year}-")
-    }
-
-    if not missing:
-        st.error(f"AQEWS forecasts were not tracked in {year}.")
+    if year < AQEWS_TRACKING_START.year:
+        st.info(
+            f"AQEWS forecast availability was not tracked in {year}. "
+            f"Tracking began on {AQEWS_TRACKING_START:%-d %B %Y}.",
+            icon=":material/info:",
+        )
         return
-    
 
-    if year == 2025:
-        st.info(f"**Note**: Tracking of AQEWS forecasts beganin September {year}")
-
-    start = date(year, 1, 1)
-    end = date(year, 12, 31)
-    today = date.today()
-
-    # Monday before Jan 1
-    calendar_start = start - timedelta(days=start.weekday())
-
-    # Sunday after Dec 31
-    calendar_end = end + timedelta(days=(6 - end.weekday()))
-
-    total_weeks = ((calendar_end - calendar_start).days + 1) // 7
-
-    months = []
-
-    for week in range(total_weeks):
-        week_start = calendar_start + timedelta(days=week * 7)
-
-        for i in range(7):
-            d = week_start + timedelta(days=i)
-            if d.year == year and d.day == 1:
-                months.append(
-                    f'<span style="grid-column:{week+1}">{d.strftime("%b")}</span>'
-                )
-
-    cells = []
-
-    current = calendar_start
-
-    while current <= calendar_end:
-
-        in_year = current.year == year
-
-        if not in_year:
-            cls = "forecast-cell forecast-cell--empty"
-
-        elif current > today:
-            cls = "forecast-cell forecast-cell--future"
-
-        elif current.strftime("%Y-%m-%d") in missing:
-            cls = "forecast-cell forecast-cell--missing"
-
+    counts = {"available": 0, "missing": 0, "untracked": 0, "future": 0}
+    month_cards = []
+    for month in range(1, 13):
+        n_days = calendar.monthrange(year, month)[1]
+        first = date(year, month, 1)
+        m_counts = {"available": 0, "missing": 0}
+        cells = [
+            "<span class='aqews-day aqews-day--pad'></span>"
+            for _ in range(first.weekday())
+        ]
+        for day in range(1, n_days + 1):
+            d = date(year, month, day)
+            status = _aqews_day_status(d, tracked, missing, today)
+            counts[status] += 1
+            if status in m_counts:
+                m_counts[status] += 1
+            cells.append(
+                f"<span class='aqews-day aqews-day--{status}'>"
+                f"<span class='aqews-tip'><b>{d:%a %-d %b %Y}</b>{_AQEWS_STATUS_LABEL[status]}</span>"
+                f"</span>"
+            )
+        checked = m_counts["available"] + m_counts["missing"]
+        if checked:
+            pct = round(100 * m_counts["available"] / checked)
+            summary = f"{m_counts['available']}/{checked} days"
+            badge_cls = "ok" if pct >= 90 else ("mid" if pct >= 50 else "bad")
+            badge = f"<span class='aqews-badge aqews-badge--{badge_cls}'>{pct}%</span>"
         else:
-            cls = "forecast-cell forecast-cell--normal"
-
-        tooltip = current.strftime("%d %b %Y")
-
-        if in_year:
-            if current > today:
-                tooltip += "&#10;Forecast not yet due"
-
-            elif current.strftime("%Y-%m-%d") in missing:
-                tooltip += "&#10;AQEWS forecast unavailable"
-
-            else:
-                tooltip += "&#10;AQEWS forecast available"
-
-        display_text = ""
-
-        if in_year and current.day == 1:
-            display_text = "1"
-
-        cells.append(
-            f"""<span class="{cls}" title="{tooltip}"> {display_text}</span>"""
+            summary = "Not yet due" if first > today else "Not tracked"
+            badge = ""
+        month_cards.append(
+            f"<div class='aqews-month{' aqews-month--quiet' if not checked else ''}'>"
+            f"<div class='aqews-month-head'><span class='aqews-month-name'>{first:%b}</span>{badge}</div>"
+            f"<div class='aqews-days'>{''.join(cells)}</div>"
+            f"<div class='aqews-month-sum'>{summary}</div>"
+            f"</div>"
         )
 
-        current += timedelta(days=1)
+    checked = counts["available"] + counts["missing"]
+    pct = f"{round(100 * counts['available'] / checked)}%" if checked else "–"
+    legend = "".join(
+        f"<span><i class='aqews-day aqews-day--{k}'></i>{label}</span>"
+        for k, label in [
+            ("available", "Forecast available"),
+            ("missing", "Forecast unavailable"),
+            ("untracked", "Not tracked"),
+            ("future", "Not yet due"),
+        ]
+    )
+    sources = " · ".join(
+        f"<a href='{url}' target='_blank' rel='noopener'>{name}</a>"
+        for name, url in AQEWS_SOURCES
+    )
+    tracking_note = (
+        f"Tracking began on {AQEWS_TRACKING_START:%-d %B %Y}; earlier days show as not tracked. "
+        if year == AQEWS_TRACKING_START.year else ""
+    )
 
     st.markdown(
         f"""
-        <div class="forecast-calendar-wrapper">
-            <div class="forecast-card">
-                <div class="forecast-header">
-                    <div>
-                        <div class="forecast-eyebrow">
-                            AQEWS AVAILABILITY
-                        </div>
-                        <div class="forecast-title">
-                            Forecast gaps in {year}
-                        </div>
-                        <div class="forecast-subtitle">
-                            Hover over a day to view its status.
-                        </div>
-                    </div>
-                </div>
-                <div class="forecast-calendar">
-                    <div class="forecast-months">
-                        {''.join(months)}
-                    </div>
-                    <div class="forecast-body">
-                        <div class="forecast-weekdays">
-                            <span>Mon</span>
-                            <span>Wed</span>
-                            <span>Fri</span>
-                        </div>
-                        <div class="forecast-grid">
-                            {''.join(cells)}
-                        </div>
-                    </div>
-                </div>
-                <div class="forecast-legend">
-                    <span class="forecast-legend-box forecast-cell--normal"></span>
-                    Available
-                    <span class="forecast-legend-box forecast-cell--missing"></span>
-                    Forecast unavailable
-                    <div class="forecast-count">
-                            {len(missing)} days unavailable in {year}
-                    </div>
-                </div>
-            </div>
-        </div>
-        """,
-                unsafe_allow_html=True,
-            )
+<div class="aqews-card">
+  <div class="aqews-head">
+    <div>
+      <div class="aqews-title">Could the dashboard fetch the AQEWS forecast? {year}</div>
+      <div class="aqews-sub">Each square is a day. Hover over one to see its status.</div>
+    </div>
+    <div class="aqews-stats">
+      <div><strong>{pct}</strong><span>of checked days available</span></div>
+      <div><strong>{counts['available']}</strong><span>days available</span></div>
+      <div><strong>{counts['missing']}</strong><span>days unavailable</span></div>
+    </div>
+  </div>
+  <div class="aqews-months">{''.join(month_cards)}</div>
+  <div class="aqews-legend">{legend}</div>
+  <div class="aqews-note">
+    {tracking_note}<strong>Disclaimer:</strong> The Delhi Decision Support System (DSS) is documented
+    as operating in the post-monsoon and winter seasons. Availability may vary with the functioning
+    of AQEWS and Air Today.
+    <div class="aqews-sources">Sources: {sources}</div>
+  </div>
+</div>
+""",
+        unsafe_allow_html=True,
+    )

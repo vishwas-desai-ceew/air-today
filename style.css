@@ -2316,154 +2316,129 @@ iframe:hover {
   box-shadow: 0 0 0 3px rgba(27, 79, 214, 0.2) !important;
 }
 
-.forecast-calendar-wrapper{
-    width:100%;
-    overflow-x:auto;
-    margin-top:18px;
-    border:1px solid #e6ebf2;
-    padding:24px;
+/* ----- AQEWS forecast availability (views/components.py) ----- */
+.aqews-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
 }
-
-.forecast-card{
-    background:#fff;
+.aqews-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
 }
-
-.forecast-calendar{
-    width:max-content;
+.aqews-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
 }
-
-.forecast-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    margin-bottom:20px;
+.aqews-title { font-size: var(--font-h2); font-weight: 700; color: var(--text-primary); margin-top: 2px; }
+.aqews-sub { font-size: var(--font-caption); color: var(--text-secondary); margin-top: 2px; }
+.aqews-stats { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.aqews-stats > div {
+  min-width: 108px;
+  background: var(--surface-alt);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
 }
-
-.forecast-eyebrow{
-    font-size:12px;
-    font-weight:700;
-    letter-spacing:.08em;
-    color:#64748b;
-    text-transform:uppercase;
+.aqews-stats strong { display: block; font-size: 1.4rem; line-height: 1.2; color: var(--sky-900); }
+.aqews-stats span { font-size: 0.72rem; color: var(--text-secondary); }
+.aqews-months {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(132px, 100%), 1fr));
+  gap: var(--space-3);
 }
-
-.forecast-title{
-    font-size:28px;
-    font-weight:700;
-    margin-top:4px;
+.aqews-month {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: var(--space-2);
 }
-
-.forecast-subtitle{
-    font-size:13px;
-    color:#64748b;
-    margin-top:1px;
+.aqews-month--quiet { opacity: 0.6; }
+.aqews-month-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
 }
-
-.forecast-count{
-    background:#fef2f2;
-    color:#dc2626;
-    padding:4px 4px;
-    border-radius:999px;
-    font-weight:600;
+.aqews-month-name { font-weight: 700; font-size: 0.85rem; color: var(--text-primary); }
+.aqews-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
 }
-
-.forecast-months{
-    display:grid;
-    grid-template-columns:repeat(53,16px);
-    column-gap:4px;
-    margin-left:46px;
-    margin-bottom:10px;
-    font-size:10px;
-    font-weight:600;
-    color:#94a3b8;
-    line-height:1;
+.aqews-badge--ok { background: color-mix(in srgb, var(--brand) 14%, var(--surface)); color: var(--brand); }
+.aqews-badge--mid { background: var(--warning-bg); color: var(--warning-text); }
+.aqews-badge--bad { background: color-mix(in srgb, var(--danger) 12%, var(--surface)); color: var(--danger); }
+.aqews-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
 }
-
-.forecast-months span{
-    white-space:nowrap;
+.aqews-day {
+  display: inline-block;
+  aspect-ratio: 1;
+  border-radius: 3px;
+  background: var(--surface-alt);
 }
-
-.forecast-body{
-    display:flex;
-    gap:12px;
+.aqews-day--available { background: var(--brand); }
+.aqews-day--missing { background: #b7791f; }
+.aqews-day--untracked { background: transparent; border: 1px dashed var(--border); }
+.aqews-day--future { background: var(--surface-alt); opacity: 0.5; }
+.aqews-day--pad { background: transparent; }
+.aqews-days .aqews-day { position: relative; cursor: default; }
+.aqews-days .aqews-day:hover { outline: 2px solid var(--text-primary); outline-offset: 1px; }
+.aqews-tip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  width: max-content;
+  max-width: 180px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: var(--text-primary);
+  color: var(--surface);
+  font-size: 0.7rem;
+  line-height: 1.35;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
 }
-
-.forecast-weekdays{
-    display:grid;
-    grid-template-rows:repeat(7,16px);
-    row-gap:4px;
-    width:34px;
-    font-size:12px;
-    color:#94a3b8;
+.aqews-tip b { display: block; font-weight: 700; }
+.aqews-days .aqews-day:hover .aqews-tip { display: block; }
+.aqews-month-sum { font-size: 0.7rem; color: var(--text-secondary); margin-top: 6px; }
+.aqews-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  font-size: var(--font-caption);
+  color: var(--text-secondary);
 }
-
-.forecast-weekdays span:nth-child(1){
-    grid-row:1;
+.aqews-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.aqews-legend .aqews-day { width: 12px; height: 12px; }
+.aqews-note {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+  font-size: var(--font-caption);
+  line-height: 1.5;
+  color: var(--text-secondary);
 }
-
-.forecast-weekdays span:nth-child(2){
-    grid-row:3;
-}
-
-.forecast-weekdays span:nth-child(3){
-    grid-row:5;
-}
-
-.forecast-grid{
-    display:grid;
-    grid-template-columns:repeat(53,16px);
-    grid-template-rows:repeat(7,16px);
-    grid-auto-flow:column;
-    gap:4px;
-}
-
-.forecast-cell{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    width:16px;
-    height:16px;
-    font-size:8px;
-    font-weight:600;
-}
-
-.forecast-cell:hover{
-    transform:scale(1.2);
-}
-
-.forecast-cell--normal{
-    background:#e7f7ee;
-}
-
-.forecast-cell--missing{
-    background:#e53935;
-}
-
-.forecast-cell--empty{
-    background:transparent;
-}
-
-.forecast-cell--future{
-    background:#e8e8e8;
-    opacity:0.45;
-    cursor:default;
-}
-
-.forecast-legend{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-top:18px;
-    font-size:14px;
-    color:#64748b;
-}
-
-.forecast-legend-box{
-    width:16px;
-    height:16px;
-    border-radius:4px;
-    border: 1px solid #0a0d10;
-    display:inline-block;
+.aqews-sources { margin-top: 4px; }
+.aqews-sources a { color: var(--brand); }
+@media (max-width: 640px) {
+  .aqews-card { padding: var(--space-3); }
+  .aqews-months { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); }
+  .aqews-stats > div { flex: 1 1 0; min-width: 0; }
 }
 
 /* ----- Header actions: data health + signed-in user (views/widgets.py) ----- */
@@ -3496,3 +3471,229 @@ div[role="dialog"]:has(.st-key-signals-dashboard) { width: min(1400px, 95vw) !im
 [data-testid="stSidebarNavSeparator"] { padding-top: 0.5rem !important; }
 [data-testid="stSidebarUserContent"] { padding-top: 0.75rem !important; }
 .sidebar-footer { margin-top: 0; padding-top: 0; }
+/* keep AQEWS tooltips inside the dialog at the left/right edges of each month */
+.aqews-days .aqews-day:nth-child(7n+1) .aqews-tip { left: 0; transform: none; }
+.aqews-days .aqews-day:nth-child(7n) .aqews-tip { left: auto; right: 0; transform: none; }
+
+/* ----- Archive side-panel buttons (views/archive.py) ----- */
+[class*="st-key-archive_latest_"] button {
+  border-color: var(--success) !important;
+  background: var(--success) !important;
+  color: #ffffff !important;
+}
+[class*="st-key-archive_latest_"] button:hover {
+  border-color: #17724a !important;
+  background: #17724a !important;
+}
+[class*="st-key-archive_aqews_"] button {
+  border-color: var(--sky-900) !important;
+  background: var(--sky-900) !important;
+  color: #ffffff !important;
+}
+[class*="st-key-archive_aqews_"] button:hover {
+  border-color: #072c59 !important;
+  background: #072c59 !important;
+}
+
+/* ----- Archive side panel: KPI cards + legend card (views/archive.py) ----- */
+.cal-side-title .sky-icon { vertical-align: -3px; margin-right: 6px; color: var(--brand); }
+.arch-kpis {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+.arch-kpi {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 7rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: linear-gradient(170deg, #ffffff 0%, var(--sky-50) 100%);
+  box-shadow: 0 6px 16px rgba(11, 107, 203, 0.07);
+}
+.arch-kpi::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--accent, var(--sky-300));
+}
+.arch-kpi-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  min-height: 2.6em;
+}
+.arch-kpi-head .sky-icon { flex: 0 0 auto; color: var(--accent, var(--sky-500)); }
+.arch-kpi-value {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  font-size: 2.4rem;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.cal-legend--card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+}
+.cal-legend-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.cal-legend-title .sky-icon { color: var(--brand); }
+
+/* ----- Segmented controls (Year / Month / Season / Variable pickers), portal-wide -----
+   A white rounded track with pill segments; the selected one is solid navy. */
+[data-testid="stButtonGroup"] [role="radiogroup"]:has(> button[data-variant="segmented_control"]) {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  max-width: 100%;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  /* 24px reads as a pill on one row and still holds the first/last chips when the row wraps */
+  border-radius: 24px;
+  box-shadow: 0 4px 14px rgba(10, 61, 122, 0.08);
+}
+button[data-variant="segmented_control"] {
+  min-height: 2.1rem !important;
+  padding: 0.3rem 0.95rem !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+button[data-variant="segmented_control"] p { font-size: 0.85rem !important; font-weight: inherit; }
+button[data-variant="segmented_control"]:hover {
+  background: var(--sky-100) !important;
+  color: var(--sky-900) !important;
+}
+button[data-variant="segmented_control"][aria-checked="true"] {
+  background: var(--sky-900) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(10, 61, 122, 0.25) !important;
+}
+button[data-variant="segmented_control"]:focus-visible {
+  outline: 2px solid var(--sky-500) !important;
+  outline-offset: 2px;
+}
+@media (max-width: 640px) {
+  [data-testid="stButtonGroup"] [role="radiogroup"]:has(> button[data-variant="segmented_control"]) {
+    border-radius: 18px;
+  }
+}
+
+/* ----- GRAP page (views/grap.py). Stage colours are our own, see config.reference.GRAP_STAGES ----- */
+.gs-stage { border-color: var(--c, var(--sky-900)); background: color-mix(in srgb, var(--c, #8cc8ff) 18%, #ffffff); }
+.gs-stage span { color: color-mix(in srgb, var(--c, #0a3d7a) 70%, #000000); }
+.cal-side-title .sky-icon { vertical-align: -3px; margin-right: 6px; color: var(--brand); }
+.st-key-grap-timeline { background: #ffffff; border-radius: 14px !important; }
+.grap-tl-sub { font-size: var(--font-caption); color: var(--text-secondary); margin-top: -4px; }
+.grap-status { background: var(--surface-alt); border-radius: var(--radius); padding: 8px 12px; }
+.grap-status-head { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
+.grap-status-head .sky-icon { color: var(--brand); }
+.grap-status-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.grap-chip { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 750; }
+.grap-chip--out { background: #fff; border: 2px solid var(--c); color: color-mix(in srgb, var(--c) 75%, #000); }
+.grap-none { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; }
+
+.grap-tl { margin-top: 24px; }
+.grap-tl-row { display: grid; grid-template-columns: 74px 1fr 64px; align-items: center; gap: 10px; margin-bottom: 6px; }
+.grap-tl-name { font-size: 0.78rem; font-weight: 700; color: var(--text-primary); text-align: right; }
+.grap-tl-track { position: relative; height: 18px; border-radius: 6px;
+  background: repeating-linear-gradient(90deg, var(--sky-50) 0 6px, #ffffff 6px 8px); border: 1px solid var(--border); }
+.grap-tl-bar { position: absolute; top: 2px; bottom: 2px; border-radius: 4px; min-width: 3px; }
+.grap-tl-days { font-size: 0.72rem; color: var(--text-secondary); }
+.grap-tl-days b { color: var(--text-primary); font-size: 0.85rem; }
+.grap-tl-axis .grap-tl-track { background: none; border: 0; height: 30px; }
+.grap-tl-ticks > span:not([class]) { position: absolute; top: 12px; font-size: 0.7rem; font-weight: 700;
+  color: var(--text-secondary); padding-left: 3px; border-left: 1px solid var(--border); line-height: 1.4; }
+.grap-tl-mark { position: absolute; top: 0; width: 0; height: 0; transform: translateX(-50%);
+  border-left: 5px solid transparent; border-right: 5px solid transparent; }
+.grap-tl-mark--invoke { border-bottom: 8px solid var(--danger); }
+.grap-tl-mark--revoke { border-top: 8px solid var(--success); }
+.grap-tl-mark--other { border-bottom: 8px solid #8aa0bb; }
+.grap-tl-body { position: relative; }
+.grap-tl-today { position: absolute; top: 0; bottom: 14px; left: calc(84px + (100% - 158px) * var(--p));
+  border-left: 2px dashed var(--sky-900); pointer-events: none; }
+.grap-tl-today em { position: absolute; bottom: -2px; left: 4px; font-style: normal; font-size: 0.66rem;
+  font-weight: 800; color: var(--sky-900); background: #fff; padding: 0 3px; }
+
+.grap-legend { background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3); margin: var(--space-3) 0; font-size: var(--font-caption);
+  color: var(--text-secondary); display: flex; flex-direction: column; gap: 6px; }
+.grap-leg-row { display: grid; grid-template-columns: 14px 70px 1fr; align-items: center; gap: 8px; }
+.grap-leg-row i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+.grap-leg-row b { color: var(--text-primary); }
+.grap-leg-note { display: flex; align-items: center; gap: 8px; line-height: 1.35; }
+.grap-leg-note i { flex: 0 0 22px; height: 16px; border-radius: 4px; display: inline-block; }
+.grap-leg-strip { background: linear-gradient(90deg, #F2B705 0 33%, #E8710A 33% 66%, #C62828 66%) bottom / 100% 4px no-repeat,
+  color-mix(in srgb, #C62828 24%, #fff); }
+.grap-leg-ring { background: #fff; box-shadow: inset 0 0 0 2px #0a3d7a; }
+.grap-disclaimer { display: flex; gap: 6px; align-items: flex-start; margin-top: 4px; padding-top: 6px;
+  border-top: 1px solid var(--border); font-style: italic; }
+.grap-disclaimer .sky-icon { flex: 0 0 auto; color: #b7791f; margin-top: 1px; }
+
+.grap-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px;
+  font-size: 0.85rem; font-weight: 750; }
+.grap-badge--out { background: #fff; border: 2px solid var(--c); color: color-mix(in srgb, var(--c) 75%, #000); }
+.grap-badge--other { background: var(--surface-alt); color: var(--sky-900); }
+.grap-title { font-size: 0.9rem; color: var(--text-primary); line-height: 1.45; margin: 4px 0 8px; }
+.grap-notes-title { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin: 8px 0 2px; }
+.grap-pdf { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-weight: 650;
+  color: var(--brand) !important; text-decoration: none; }
+.grap-nopdf { margin-top: 8px; font-size: var(--font-caption); color: var(--text-secondary); font-style: italic; }
+.grap-after { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 4px 0 12px; }
+.grap-after > span:first-child { font-size: var(--font-caption); color: var(--text-secondary); margin-right: 4px; }
+@media (max-width: 640px) {
+  .grap-tl-row { grid-template-columns: 56px 1fr 44px; gap: 6px; }
+  .grap-tl-days { font-size: 0.66rem; }
+  .grap-tl-today { left: calc(62px + (100% - 112px) * var(--p)); }
+}
+/* the mobile overflow-x:auto on markdown blocks clipped the GRAP timeline, status and legend */
+.element-container:has(.grap-tl),
+.element-container:has(.grap-status),
+.element-container:has(.grap-tl-sub),
+.element-container:has(.grap-legend),
+.element-container:has(.grap-after) { overflow: visible !important; }
+.grap-tl-today em { bottom: auto; top: -17px; left: -18px; }
+
+/* GRAP page: navy action buttons (AQI and GRAP stages dialog, CAQM orders link) */
+.st-key-grap_scale button,
+.st-key-grap-caqm-link a {
+  border-color: var(--sky-900) !important;
+  background: var(--sky-900) !important;
+  color: #ffffff !important;
+}
+.st-key-grap_scale button:hover,
+.st-key-grap-caqm-link a:hover {
+  border-color: #072c59 !important;
+  background: #072c59 !important;
+  color: #ffffff !important;
+}

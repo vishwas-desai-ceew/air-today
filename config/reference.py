@@ -26,7 +26,27 @@ SOURCES = {
               "https://aviationweather.gov/data/metar/?ids=VIDD"),
     "open_meteo_model": ("Open-Meteo model", "https://open-meteo.com/"),
     "nasa_fires": ("NASA FIRMS active fires (VIIRS)", "https://firms.modaps.eosdis.nasa.gov/"),
+    # GRAP (CAQM). Orders are listed on the GRAP Orders page; the schedule PDF
+    # sets the stage AQI ranges (Stage I 201-300 ... Stage IV >450).
+    "caqm_grap_orders": ("CAQM, GRAP orders", "https://caqm.nic.in/landingpage/pages/grap/grap-orders"),
+    "caqm_grap_schedule": ("CAQM, Revised GRAP for NCR (September 2026)",
+                           "https://caqm.nic.in/FileUploadDomain/WebsiteDocument/GRAP/GRAP%20Schedule/"
+                           "01fcdebf-83e1-4cfe-bc0c-d0b1470a4d4e.pdf"),
 }
+
+# GRAP stages: (stage number, label, CAQM AQI range, colour, text colour on that colour).
+# AQI ranges are CAQM's (GRAP schedule; restated in the 2026-27 stage orders).
+# The colours are Air Today's own choice - CAQM does not assign colours to
+# GRAP stages - and the GRAP page says so wherever they appear.
+GRAP_STAGES = [
+    (1, "Stage I", "Poor, AQI 201-300", "#F2B705", "#3d2c00"),
+    (2, "Stage II", "Very Poor, AQI 301-400", "#E8710A", "#ffffff"),
+    (3, "Stage III", "Severe, AQI 401-450", "#C62828", "#ffffff"),
+    (4, "Stage IV", "Severe+, AQI above 450", "#6A1B4D", "#ffffff"),
+]
+GRAP_COLOURS_DISCLAIMER = (
+    "Stage colours are Air Today's own, chosen for readability. CAQM does not assign official colours to GRAP stages."
+)
 
 # (category, low, high, colour) — CPCB Table 3.2. Colours are the app's AQI palette.
 AQI_BANDS = [

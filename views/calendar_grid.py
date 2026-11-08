@@ -28,17 +28,21 @@ def month_picker(key, months, default=None):
     labels = [date(y, m, 1).strftime("%b %Y") for y, m in months]
     default_label = labels[months.index(default)] if default in months else labels[0]
     picked = st.segmented_control(
-        "**Month**", options=labels, selection_mode="single", default=default_label, key=key,
+        "**:material/date_range: Month**", options=labels, selection_mode="single", default=default_label, key=key,
     )
     if picked not in labels:  # deselected or stale state from another season/year
         picked = default_label
     return months[labels.index(picked)]
 
 
-def month_calendar(key, year, month, active_days, on_select, markers=None, help_text=None, caption=None):
+def month_calendar(key, year, month, active_days, on_select, markers=None, help_text=None, caption=None,
+                   day_css=None):
     """Render one month. active_days: set of dates that are clickable.
-    markers: {date: "warn" | "info"} extra styling. help_text(day) -> tooltip."""
+    markers: {date: "warn" | "info"} extra styling. help_text(day) -> tooltip.
+    day_css: {date: "css declarations"} applied to any day, clickable or not
+    (e.g. the GRAP page colours every day a stage is in force)."""
     markers = markers or {}
+    day_css = day_css or {}
     btn_key = lambda d: f"{key}_{d.isoformat()}"
     with st.container(key=f"calgrid-{key}", border=True):
         st.markdown(
@@ -54,6 +58,9 @@ def month_calendar(key, year, month, active_days, on_select, markers=None, help_
                     rules.append(f".st-key-{btn_key(d)} button{{{MARKER_CSS.get(cls, '')}}}")
             if rules:
                 st.html(f"<style>{''.join(rules)}</style>")
+        css = [f".st-key-{btn_key(d)} button{{{v}}}" for d, v in day_css.items() if (d.year, d.month) == (year, month)]
+        if css:
+            st.html(f"<style>{''.join(css)}</style>")
         for week in calendar.Calendar(firstweekday=0).monthdayscalendar(year, month):
             for col, d in zip(st.columns(7, gap="small"), week):
                 with col:
