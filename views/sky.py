@@ -200,9 +200,9 @@ def render_weather_card():
             <div class="wxc-details">{details_html}</div>
           </div>
           <div class="wxc-side">
-            <div class="wxc-label">Next 24 hours</div>
+            <div class="wxc-label wxc-label-hours">Next 24 hours</div>
             <div class="wxc-hours">{hours_html}</div>
-            <div class="wxc-label">3-day outlook</div>
+            <div class="wxc-label wxc-label-days">3-day outlook</div>
             <div class="wxc-days">{days_html}</div>
             <div class="wxc-source">{source_line}</div>
           </div>

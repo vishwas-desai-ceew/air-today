@@ -2758,10 +2758,15 @@ iframe:hover {
 [data-testid="stSidebarHeader"] {
   height: auto !important;
   align-items: flex-start !important;
+  padding-top: 1.25rem !important;
   padding-bottom: 0.25rem;
 }
 
-[data-testid="stSidebarHeader"] > div:first-child {
+/* On Overview the logo sits in a plain div; on every other page Streamlit
+   wraps it in a "Navigate to home page" button (stLogoLink) instead, so
+   match either wrapper or the panel disappears off the home page. */
+[data-testid="stSidebarHeader"] > div:first-child,
+[data-testid="stSidebarHeader"] > [data-testid="stLogoLink"] {
   display: flex;
   flex: 1 1 auto;
   justify-content: center;
@@ -3433,3 +3438,61 @@ iframe:hover {
 /* widen this dialog (the dashboard needs the room) */
 div[role="dialog"]:has(.st-key-signals-dashboard) { width: min(1400px, 95vw) !important; max-width: 95vw !important; }
 .signals-note { margin: -0.3rem 0 0.6rem; color: var(--text-secondary); font-size: 0.82rem; }
+
+/* ----- Overview weather card: fixed desktop layout -----
+   Wide screens get one fixed grid so every block keeps its place whatever
+   the width: now + details on the left, next 24 hours + 3-day outlook on the
+   right, disclaimer and source across the bottom. Before this the disclaimer
+   wrapped under the temperature at laptop widths, which made the left column
+   taller and left empty space under the right one. Mobile keeps the stacked
+   layout above. */
+@media (min-width: 769px) {
+  .wxc {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+    grid-template-areas:
+      "head    lhours"
+      "head    hours"
+      "details ldays"
+      "details days"
+      "note    note"
+      "source  source";
+    grid-template-rows: auto 1fr auto 1fr auto auto;
+    column-gap: 1.6rem;
+    row-gap: 0.5rem;
+  }
+  .wxc-now, .wxc-top, .wxc-side { display: contents; }
+  .wxc-head { grid-area: head; align-self: start; }
+  .wxc-details { grid-area: details; align-self: stretch; grid-auto-rows: 1fr; margin-top: 0.6rem; }
+  .wxc-label-hours { grid-area: lhours; margin: 0; }
+  .wxc-hours {
+    grid-area: hours; margin: 0; align-items: center;
+    grid-auto-columns: minmax(56px, 1fr);
+  }
+  .wxc-label-days { grid-area: ldays; margin: 0.6rem 0 0; }
+  .wxc-days { grid-area: days; display: flex; flex-direction: column; justify-content: space-evenly; }
+  .wxc-note { grid-area: note; margin-top: 0.6rem; }
+  .wxc-note b { display: inline; margin: 0 0.4rem 0 0; }
+  .wxc-note { display: block; }
+  .wxc-source { grid-area: source; margin-top: 0.2rem; }
+}
+
+/* KPI card date/time of the data point, on its own line under the label */
+.sky-kpi-stamp {
+  align-self: flex-start;
+  margin-top: 0.35rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 6px;
+  background: #e4ebf3;
+  color: #3d5875;
+  font-size: 0.7rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+
+/* Tighter gap between the end of the menu and the IST clock: trims
+   Streamlit's divider padding, the sidebar content's top padding and the
+   footer's own top spacing (together about 60px before, about 20px now). */
+[data-testid="stSidebarNavSeparator"] { padding-top: 0.5rem !important; }
+[data-testid="stSidebarUserContent"] { padding-top: 0.75rem !important; }
+.sidebar-footer { margin-top: 0; padding-top: 0; }

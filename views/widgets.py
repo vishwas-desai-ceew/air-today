@@ -400,13 +400,15 @@ def insights_dialog():
 
 
 # -------------------------------------------------------------- KPI cards --
-def kpi_card(icon_name, label, value, unit="", note="", tone=None, accent=None, extra="", source=""):
-    """A weather-widget style card. tone: "good" | "bad" | None colours the note chip."""
+def kpi_card(icon_name, label, value, unit="", note="", tone=None, accent=None, extra="", source="", stamp=""):
+    """A weather-widget style card. tone: "good" | "bad" | None colours the note chip.
+    stamp: the date/time of the data point, shown on its own line under the label."""
     note_html = f'<span class="sky-kpi-note {tone or ""}">{note}</span>' if note else ""
     style = f' style="--accent:{accent}"' if accent else ""
     return f"""
         <article class="sky-kpi"{style}>
             <div class="sky-kpi-head">{icon(icon_name)}<span>{label}</span></div>
+            {f'<div class="sky-kpi-stamp">{stamp}</div>' if stamp else ""}
             <div class="sky-kpi-value">{value}<small>{unit}</small>{extra}</div>
             {note_html}
             {source_html(source) if source else ""}
@@ -434,71 +436,72 @@ def render_kpi_grid():
     wx = data.current_weather()
     fires = data.fire_counts(today - timedelta(days=1))
     at = _obs_time(wx)
-    at_label = f" · {at}" if at else ""
+    at_stamp = f"{at} IST" if at else ""
 
     cards = []
     if aqi_row:
         diff = int(aqi_row["aqi"]) - int(prev_row["aqi"]) if prev_row else None
         note = "" if diff is None else f'{"▲" if diff > 0 else "▼" if diff < 0 else "•"} {abs(diff)} vs {_d(prev_row["date"])}'
         tone = None if not diff else ("bad" if diff > 0 else "good")
-        cards.append(kpi_card("aqi", f"AQI · {_d(aqi_row['date'])}", int(aqi_row["aqi"]), "", note, tone,
-                              AQI_COLOURS.get(aqi_row["category"]), source=cpcb_src(aqi_row)))
+        cards.append(kpi_card("aqi", "AQI", int(aqi_row["aqi"]), "", note, tone,
+                              AQI_COLOURS.get(aqi_row["category"]), source=cpcb_src(aqi_row), stamp=_d(aqi_row["date"])))
     else:
-        cards.append(kpi_card("aqi", f"AQI · {_d(today)}", "—", "", "Bulletin pending", source=cpcb_src(None)))
+        cards.append(kpi_card("aqi", "AQI", "—", "", "Bulletin pending", source=cpcb_src(None), stamp=_d(today)))
 
     if fc["aqi"] is not None or fc["category"]:
-        cards.append(kpi_card("forecast", f"Forecast · {_d(tomorrow)}", fc["aqi"] if fc["aqi"] is not None else "—", "",
+        cards.append(kpi_card("forecast", "AQI forecast", fc["aqi"] if fc["aqi"] is not None else "—", "",
                               escape(str(fc["category"] or "")), None, AQI_COLOURS.get(str(fc["category"])),
-                              source=src("aqews", "AQEWS")))
+                              source=src("aqews", "AQEWS"), stamp=f"For {_d(tomorrow)}"))
     else:
-        cards.append(kpi_card("forecast", f"Forecast · {_d(tomorrow)}", "—", "", "AQEWS forecast unavailable", "bad",
-                              source=src("aqews", "AQEWS")))
+        cards.append(kpi_card("forecast", "AQI forecast", "—", "", "AQEWS forecast unavailable", "bad",
+                              source=src("aqews", "AQEWS"), stamp=f"For {_d(tomorrow)}"))
 
     wind = wx.get("wind_speed_10m")
     wind_dir = wx.get("wind_direction_10m")
     arrow = (f'<span class="sky-wind-arrow" style="transform:rotate({(wind_dir + 180) % 360}deg)">↑</span>'
              if wind_dir is not None else "")
     cards.append(kpi_card(
-        "wind", f"Wind {compass(wind_dir)}{at_label}".strip(), _fmt(wind, "{:.1f}"), " m/s",
+        "wind", f"Wind {compass(wind_dir)}".strip(), _fmt(wind, "{:.1f}"), " m/s",
         "" if wind is None else ("Favourable for dispersion" if wind >= 2.8 else "Weak dispersion"),
         None if wind is None else ("good" if wind >= 2.8 else "bad"), extra=arrow,
-        source=wx_src(wx, "wind_speed_10m"),
+        source=wx_src(wx, "wind_speed_10m"), stamp=at_stamp,
     ))
 
     vi = fc["ventilation_index"]
     cards.append(kpi_card(
-        "vent", f"Ventilation index · {_d(tomorrow)}", _fmt(vi, "{:,.0f}"), " m²/s",
+        "vent", "Ventilation index", _fmt(vi, "{:,.0f}"), " m²/s",
         "" if vi is None else ("Favourable (> 6,000 m²/s)" if vi > 6000 else "Unfavourable (≤ 6,000 m²/s)"),
         None if vi is None else ("good" if vi > 6000 else "bad"), source=src("aqews", "AQEWS"),
+        stamp=f"For {_d(tomorrow)}",
     ))
 
     blh = wx.get("boundary_layer_height")
-    cards.append(kpi_card("layers", f"Mixing height{at_label}", _fmt(blh), " m",
+    cards.append(kpi_card("layers", "Mixing height", _fmt(blh), " m",
                           "" if blh is None else ("Shallow (< 500 m) – pollutants trapped" if blh < 500 else "Deep mixing (≥ 500 m)"),
                           None if blh is None else ("bad" if blh < 500 else "good"),
-                          source=src("open_meteo_model")))
+                          source=src("open_meteo_model"), stamp=at_stamp))
 
-    cards.append(kpi_card("temp", f"Temperature{at_label}", _fmt(wx.get("temperature_2m"), "{:.1f}"), " °C",
+    cards.append(kpi_card("temp", "Temperature", _fmt(wx.get("temperature_2m"), "{:.1f}"), " °C",
                           f'Feels {_fmt(wx.get("apparent_temperature"))}° · fcst min {_fmt(wx.get("temperature_2m_min"))}°',
-                          source=wx_src(wx, "temperature_2m")))
-    cards.append(kpi_card("humidity", f"Humidity{at_label}", _fmt(wx.get("relative_humidity_2m")), " %",
-                          f'Cloud {_fmt(wx.get("cloud_cover"))}%', source=wx_src(wx, "relative_humidity_2m")))
+                          source=wx_src(wx, "temperature_2m"), stamp=at_stamp))
+    cards.append(kpi_card("humidity", "Humidity", _fmt(wx.get("relative_humidity_2m")), " %",
+                          f'Cloud {_fmt(wx.get("cloud_cover"))}%', source=wx_src(wx, "relative_humidity_2m"), stamp=at_stamp))
     vis = wx.get("visibility")
     vis_note = wx.get("condition") or ("Haze / smog likely" if vis is not None and vis < 2000 else "Clear")
-    cards.append(kpi_card("eye", f"Visibility{at_label}", _fmt(None if vis is None else vis / 1000, "{:.1f}"), " km",
+    cards.append(kpi_card("eye", "Visibility", _fmt(None if vis is None else vis / 1000, "{:.1f}"), " km",
                           "" if vis is None else escape(vis_note),
-                          None if vis is None else ("bad" if vis < 2000 else None), source=wx_src(wx, "visibility")))
-    cards.append(kpi_card("rain", "Rain · last hour", _fmt(wx.get("precipitation"), "{:.1f}"), " mm",
+                          None if vis is None else ("bad" if vis < 2000 else None), source=wx_src(wx, "visibility"), stamp=at_stamp))
+    cards.append(kpi_card("rain", "Rain", _fmt(wx.get("precipitation"), "{:.1f}"), " mm",
                           "Rain helps wash out PM" if (wx.get("precipitation") or 0) > 0 else "Dry",
-                          source=src("open_meteo_model")))
+                          source=src("open_meteo_model"), stamp="Last hour"))
     fire_day = _d(today - timedelta(days=1))
     if fires is None:
-        cards.append(kpi_card("fire", f"Fires PB + HR · {fire_day}", "—", "", "Fire feed not updated",
-                              source=src("nasa_fires", "NASA FIRMS")))
+        cards.append(kpi_card("fire", "Fires PB + HR", "—", "", "Fire feed not updated",
+                              source=src("nasa_fires", "NASA FIRMS"), stamp=fire_day))
     else:
-        cards.append(kpi_card("fire", f"Fires PB + HR · {fire_day}", sum(fires.values()), "",
+        cards.append(kpi_card("fire", "Fires PB + HR", sum(fires.values()), "",
                               f'Punjab {fires.get("Punjab", 0)} · Haryana {fires.get("Haryana", 0)} · VIIRS',
-                              source=src("nasa_fires", "NASA FIRMS")))
+                              source=src("nasa_fires", "NASA FIRMS"), stamp=fire_day))
 
     st.markdown(_html(f'<div class="sky-kpi-grid">{"".join(cards)}</div>'), unsafe_allow_html=True)
     if wx:
