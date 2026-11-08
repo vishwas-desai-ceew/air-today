@@ -28,7 +28,7 @@ def month_picker(key, months, default=None):
     labels = [date(y, m, 1).strftime("%b %Y") for y, m in months]
     default_label = labels[months.index(default)] if default in months else labels[0]
     picked = st.segmented_control(
-        "**Month**", options=labels, selection_mode="single", default=default_label, key=key,
+        "**:material/date_range: Month**", options=labels, selection_mode="single", default=default_label, key=key,
     )
     if picked not in labels:  # deselected or stale state from another season/year
         picked = default_label
