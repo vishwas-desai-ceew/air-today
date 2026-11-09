@@ -22,8 +22,8 @@ SOURCES = {
     # Card-level source links (Overview hero, KPI cards, Key insights).
     "cpcb": ("CPCB", "https://cpcb.gov.in/"),
     "aqews": ("IITM AQEWS", "https://ews.tropmet.res.in/"),
-    "metar": ("METAR, Safdarjung (VIDD) via NOAA aviationweather.gov",
-              "https://aviationweather.gov/data/metar/?ids=VIDD"),
+    "metar": ("METAR, Indira Gandhi International Airport (VIDP) via NOAA aviationweather.gov",
+              "https://aviationweather.gov/data/metar/?ids=VIDP"),
     "open_meteo_model": ("Open-Meteo model", "https://open-meteo.com/"),
     "nasa_fires": ("NASA FIRMS active fires (VIIRS)", "https://firms.modaps.eosdis.nasa.gov/"),
     # GRAP (CAQM). Orders are listed on the GRAP Orders page; the schedule PDF
