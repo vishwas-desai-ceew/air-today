@@ -5,18 +5,15 @@ Strictly AQEWS: no CPCB bulletin values or AQEWS text-bulletin categories here
 """
 from datetime import datetime
 from html import escape
-from pathlib import Path
 
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
 from config.reference import AQI_BANDS, AQI_HEALTH, band_for
+from config.settings import IST
+from views import data
 from views.charts import PLOT_CONFIG, add_bands, base_layout, source_line
-
-PARENT_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = PARENT_DIR / "data"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 AQEWS_PORTAL = "https://ews.tropmet.res.in/"
 # Category colours as text on a white tile: Moderate's yellow is too pale to read, so darken it
@@ -35,9 +32,11 @@ def is_data_flat(df, col, window=6):
 
 
 def is_data_old(df):
-    df["date"] = pd.to_datetime(df["date"], errors='coerce')
-    last_date = df["date"].max().date()
-    return last_date < datetime.today().date()
+    """True when the forecast's last day is before today (IST, not the server clock)."""
+    dates = pd.to_datetime(df["date"], errors="coerce").dropna()
+    if dates.empty:
+        return True
+    return dates.max().date() < datetime.now(IST).date()
 
 
 def get_aqi_error_msg():
@@ -54,12 +53,26 @@ def get_aqi_error_msg():
 
 
 def get_error_message():
-    df_aqi = pd.read_csv(DATA_DIR / "AQEWS_AQI_forecast.csv")
-    df_aqi['date'] = pd.to_datetime(df_aqi['date'])
-    error_flag = False
-    if is_data_flat(df_aqi, "AQI_overall") or is_data_old(df_aqi):
-        error_flag = True
-    return error_flag, df_aqi
+    """(outage?, forecast) for the AQEWS AQI forecast.
+
+    Reads through views.data.aqews_daily (cached; an empty frame when the file
+    is missing or empty), so a missing or unreadable forecast is reported as an
+    outage instead of raising. It used to read the CSV directly from
+    dashboard.py on every page, so a missing file crashed the whole app."""
+    df = data.aqews_daily().copy()
+    if df.empty or not {"date", "AQI_overall"} <= set(df.columns):
+        return True, pd.DataFrame(columns=["date", "AQI_overall"])
+    df["date"] = pd.to_datetime(df["date"], errors="coerce")
+    df = df.dropna(subset=["date"])
+    return bool(df.empty or is_data_flat(df, "AQI_overall") or is_data_old(df)), df
+
+
+def aqews_outage() -> bool:
+    """True when the AQEWS forecast is missing, stale or flat. Never raises."""
+    try:
+        return get_error_message()[0]
+    except Exception:
+        return True
 
 
 def aqi_chart(df, height=400, compact=False):

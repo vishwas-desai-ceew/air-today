@@ -11,7 +11,7 @@ from views.delhi_weather import render_aqi_delhi, render_health_advisory
 from views.render_aqi_pdf import render_aqi_pdf
 from views.fires import render_fires_page
 from views.render_google_doc import render_google_doc
-from views.render_aqi_fc import render_aqi_categories_button, render_aqi_fc, get_error_message
+from views.render_aqi_fc import aqews_outage, render_aqi_categories_button, render_aqi_fc
 from views.render_pm25_fc import render_pm10_fc, render_pm25_fc
 from views.aqews_bulletin import render_bulletin_button
 from views.components import hr, outage_banner, section_header
@@ -26,11 +26,24 @@ st.set_page_config(
         page_title="CEEW Air Today",
         page_icon="assets/icon.png",
         layout="wide",
+        # The only items in the app menu: .streamlit/config.toml sets
+        # client.toolbarMode = "minimal", which hides Rerun, Settings (theme),
+        # Print, Record and Deploy for every user.
         menu_items={
-        'Get Help': 'mailto:john@example.com',
-        'Report a bug': "mailto:john@example.com",
-        'About': "# Winter Updates \n Made with ❤️ in India"
-        }
+            "Get Help": "mailto:vishwas.desai@ceew.in?subject=Air%20Today%3A%20help",
+            "Report a bug": "mailto:vishwas.desai@ceew.in?subject=Air%20Today%3A%20bug%20report",
+            "About": (
+                "### CEEW Air Today\n"
+                "Delhi's winter air quality in one place: the official CPCB AQI, the IITM AQEWS forecast, "
+                "weather, farm fires in Punjab and Haryana, and CAQM's GRAP orders, brought together in a "
+                "daily update.\n\n"
+                "**Data:** CPCB, IITM AQEWS, IMD, Open-Meteo, NOAA (METAR), NASA (VIIRS/MODIS) and CAQM. "
+                "Every page links the sources it uses; forecasts are model output, not official forecasts "
+                "unless stated.\n\n"
+                "An internal dashboard of the Council on Energy, Environment and Water (CEEW), for CEEW staff.\n\n"
+                "**Questions or issues:** vishwas.desai@ceew.in"
+            ),
+        },
     )
 
 css_path = Path("style.css")
@@ -95,7 +108,6 @@ user_agent = st.context.headers.get("User-Agent", "")
 st.session_state.is_mobile = any(k in user_agent for k in ("Mobi", "Android", "iPhone"))
 is_mobile = st.session_state.is_mobile
 
-error_flag, _ = get_error_message()
 
 
 # ---------- Pages ---------- #
@@ -105,7 +117,9 @@ error_flag, _ = get_error_message()
 
 def page_overview():
     render_hero()
-    render_home_overview(error_flag, is_mobile=is_mobile)
+    # The AQEWS outage check runs only on the pages that show the banner, and
+    # never raises (a missing forecast file used to crash every page)
+    render_home_overview(aqews_outage(), is_mobile=is_mobile)
 
 
 def page_today():
@@ -115,7 +129,7 @@ def page_today():
         st.markdown("<div class='aqi-panel-title'>Key insights</div>", unsafe_allow_html=True)
         render_insights_panel(full_text="dialog")
     render_health_advisory(aqi_rows)
-    if error_flag:
+    if aqews_outage():
         outage_banner(compact=is_mobile)
 
 

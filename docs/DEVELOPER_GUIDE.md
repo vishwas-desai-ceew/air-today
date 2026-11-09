@@ -36,10 +36,11 @@ live, at page view:  METAR + Open-Meteo (5 min cache) · news RSS (30 min) · pu
   - sets up the page and injects `style.css`;
   - runs the sign-in gate;
   - detects phones from the User-Agent;
-  - checks the AQEWS forecast for an outage (`views/render_aqi_fc.get_error_message`);
   - registers the 13 pages with `st.navigation`;
   - renders the sidebar (IST clock, CEEW footer).
 - **Caching:** `views/data.py` wraps every file read in `st.cache_data`. TTLs are 5–10 minutes for files, 5 minutes for live weather and 30 minutes for news.
+- **App menu:** `client.toolbarMode = "minimal"` in `.streamlit/config.toml` limits the ⋮ menu to the items in `st.set_page_config`: Get help, Report a bug (both email vishwas.desai@ceew.in) and About. Rerun, theme settings, Print, Record and Deploy are hidden for everyone.
+- **AQEWS outage check:** `views/render_aqi_fc.aqews_outage()` runs only on Overview, Daily update and AQEWS Forecast. It reads through the cached `data.aqews_daily()` and never raises: a missing, empty, stale (by IST date) or flat forecast is reported as an outage.
 - **Styling:** one stylesheet, `style.css`, for every page. Components are mostly HTML strings rendered with `st.markdown(..., unsafe_allow_html=True)`. CSS targets Streamlit containers through their `key=` (Streamlit adds the class `st-key-<key>`).
 
 ### Sign-in
@@ -49,7 +50,6 @@ live, at page view:  METAR + Open-Meteo (5 min cache) · news RSS (30 min) · pu
 - **Rule:** `config/access.py` `is_allowed_user`. The email must end `@ceew.in`, `email_verified` must not be false, and the `hd` claim, if present, must be `ceew.in`.
 - **Host:** the sign-in cookie is tied to one hostname. `dashboard.py` sends users to the host in `redirect_uri` (`origin_mismatch`), so `localhost` and `127.0.0.1` don't fight each other.
 - **Secrets keys** (see `.streamlit/secrets.toml.example`):
-  - `GEMINI_API_KEY`
   - `[auth]`: `redirect_uri`, `cookie_secret`, `client_id`, `client_secret`, `server_metadata_url`
   - `[auth.client_kwargs]`: `hd`, `prompt`
 
@@ -154,9 +154,7 @@ Each entry lists what the page shows, the files it reads, the sources it credits
     2. Take the daily mean of each sub-index.
     3. Take the maximum across PM2.5 and PM10.
   - This is our aggregation, not a published AQEWS daily figure.
-- **Review:**
-  - `get_error_message` runs on **every page** and reads `AQEWS_AQI_forecast.csv` without error handling. If the file is missing, every page crashes.
-  - It compares dates with the server's clock (`datetime.today()`), not IST.
+- **Outage handling:** a missing, stale or flat forecast shows the "AQI forecast temporarily unavailable" card here and the outage banner on Overview and Daily update; no page crashes. Because the reader is cached for 10 minutes, a restored file shows up within that time.
 
 ### 3.4 Pollutants and AQI (`/pollutants`, `page_pm25`)
 
@@ -293,7 +291,7 @@ Each entry lists what the page shows, the files it reads, the sources it credits
 
 ## 4. The daily pipeline
 
-`ingestion/run_daily.py` runs the steps below, in order. A failure in one step doesn't stop the others. Each result goes to `data/pipeline_status.json`, and the exit code is 1 if any step failed. A missing optional package marks the step as skipped (`ok: null`), not failed.
+`ingestion/run_daily.py` runs the seven steps below, in order. A failure in one step doesn't stop the others. Each result goes to `data/pipeline_status.json`, and the exit code is 1 if any step failed. A missing optional package marks the step as skipped (`ok: null`), not failed.
 
 | # | Step | Code | Writes |
 |---|---|---|---|
@@ -301,10 +299,9 @@ Each entry lists what the page shows, the files it reads, the sources it credits
 | 2 | `aqews` | `aqews.run()` | `AQEWS_{AQI,PM25,PM10}_forecast.csv`, `ventilation_index_forecast.csv`, `AQI_forecast_category.csv`, `aqews_bulletin.json`, `aqews_bulletin_days.csv`, `aqews_source_apportionment.json` |
 | 3 | `cpcb` | `cpcb.run()` | `delhi_aqi_cpcb.csv` |
 | 4 | `imd` | `download_imd_bulletin.download_pdf()` | `imd_bulletin_today.pdf` |
-| 5 | `imd_summary` | `get_gemini_summary.get_gemini_summary()` | `gemini_summary.json` (not used; see §8) |
-| 6 | `fires` | `get_fire_pbhr.run()` | `fires_punjab.csv`, `fires_haryana.csv` |
-| 7 | `grap` | `grap_orders.run()` | `grap/grap_<season>.json` |
-| 8 | `summary` | `get_aqi_summary.run()` | `archive_temp.json`, `archive.json`, `insights_today.json`, appends to `missing_forecast_days.txt` |
+| 5 | `fires` | `get_fire_pbhr.run()` | `fires_punjab.csv`, `fires_haryana.csv` |
+| 6 | `grap` | `grap_orders.run()` | `grap/grap_<season>.json` |
+| 7 | `summary` | `get_aqi_summary.run()` | `archive_temp.json`, `archive.json`, `insights_today.json`, appends to `missing_forecast_days.txt` |
 
 **Schedule:** suggested crontab (IST): full runs at 16:20 and 18:10, plus `--only imd fires` at 02:30. See the docstring.
 
@@ -359,7 +356,7 @@ All files are in `data/`, which is **not in git**. The server's copy is the only
 | `archive.json`, `archive_temp.json`, `insights_today.json`, `missing_forecast_days.txt` | summary | Archive, Daily update, Overview |
 | `pipeline_status.json` | run_daily | Health pill |
 | `signalsfunc_pm25_sample_data.csv` | **placed by hand** | Pollutants (hourly PM) |
-| `gemini_summary.json` | imd_summary | nothing |
+| `gemini_summary.json` | removed step (Nov 2026) | nothing; safe to delete |
 | `sectors.csv`, `farm_fires.csv`, `fire_pbhr.csv` | legacy | nothing on a live page |
 
 ---
@@ -429,17 +426,17 @@ Grouped by priority. File references point to where to start.
 
 10. **AQEWS fix awaits deployment:** until the `aqews-landing-page` branch is merged and the server is updated, the live server serves ventilation index, mixing depth and categories from 6 Nov 2026.
 11. **Fires on the server:** confirm `signalsfunc` is installed there. Without it the fires step is skipped and the fires KPI goes stale.
-12. **Every page depends on `AQEWS_AQI_forecast.csv`** (`views/render_aqi_fc.get_error_message`, called in `dashboard.py`): a missing file crashes the app. It also uses the server clock rather than IST.
+12. ~~Every page depended on `AQEWS_AQI_forecast.csv`~~ **Fixed (10 Nov 2026):** the outage check is fail-safe, uses IST, and runs only on the three pages that show it.
 13. **CPCB 16:20 run marks the step failed** when the bulletin is late. The health pill then shows "failed" until 18:10, which looks like an outage.
 14. **Archive crashes** without `missing_forecast_days.txt` (`views/archive.load_missing_days`).
 15. **Health pill coverage:** it tracks CPCB, AQEWS, weather, IMD and fires (Punjab file only). It doesn't track GRAP, the daily summary or the news feeds.
 16. **`data/` is not in git:** back up the server's copy, especially `archive.json`, which can't be regenerated.
-17. **Timezone:** `views/grap.py` (`date.today()`) and `render_aqi_fc.is_data_old` (`datetime.today()`) use the server clock. Fine on an IST server; wrong elsewhere.
+17. **Timezone:** `views/grap.py` (`date.today()`) uses the server clock. Fine on an IST server; wrong elsewhere.
 
 ### Cost and clean-up
 
-18. **Gemini summary is unused:** the `imd_summary` step calls Gemini 2.5 Flash on every run (needs `GEMINI_API_KEY`), but nothing reads `gemini_summary.json`. Either show it on the IMD bulletin page, with a clear "AI-generated summary" label and review, or remove the step.
-19. **Placeholder help links:** `dashboard.py` `menu_items` point "Get Help" and "Report a bug" to `mailto:john@example.com`.
+18. ~~Gemini summary was unused~~ **Removed (10 Nov 2026):** the step, `ingestion/get_gemini_summary.py`, the `google-genai` dependency and `GEMINI_API_KEY`. The dashboard uses no LLM. An old `data/gemini_summary.json` can be deleted.
+19. ~~Placeholder help links~~ **Fixed (10 Nov 2026):** the menu emails vishwas.desai@ceew.in and has a real About text.
 20. **Earthmetry demo host** on the Fires page (`views/fires.py` `EXTERNAL_DASHBOARD`).
 21. **Dead code:**
     - `views/render_insights.py`, and `views/farm_fires.py` (reachable only from it)

@@ -8,12 +8,12 @@
 # openmeteo-requests, requests-cache, retry-requests (ingestion/weather.py uses
 # plain requests), google-generativeai (AQEWS parsing is regex now) and
 # streamlit-javascript (device detection uses the User-Agent header).
+# Nov 2026: dropped google-genai with the unused Gemini IMD-bulletin summary step.
 
 Authlib==1.6.5          # required by st.login()/st.logout(); not imported directly by app code
 httpx==0.28.1           # required by st.login() on Streamlit's Starlette server
 beautifulsoup4==4.13.5
 certifi==2025.8.3       # ingestion/get_hist_aqi.py (one-off historical backfill)
-google-genai==1.41.0    # ingestion/get_gemini_summary.py (IMD bulletin summary)
 numpy==2.3.0
 pandas==2.3.0
 pdfplumber==0.11.7

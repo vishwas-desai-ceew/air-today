@@ -1,6 +1,6 @@
 # Air Today: data sources and pipeline
 
-Checked 26–27 October 2026. **[LIVE]** = called or fetched and a response seen; **[DOC]** = provider documentation or search results only. Open and verify every link before anything here goes into a CEEW output.
+Checked 26–27 October 2026. Updated 10 November 2026: the Gemini IMD summary step was removed (its output was never shown); see [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) for the current pipeline. **[LIVE]** = called or fetched and a response seen; **[DOC]** = provider documentation or search results only. Open and verify every link before anything here goes into a CEEW output.
 
 ## 1. What the dashboard uses now
 
@@ -11,7 +11,6 @@ Checked 26–27 October 2026. **[LIVE]** = called or fetched and a response seen
 | Ventilation index, mixing depth, AQ category | AQEWS / IMD bulletin text | Regex (was Gemini) | `ingestion/aqews.py` |
 | Weather forecast and current conditions | Open-Meteo | JSON API, no key | `ingestion/weather.py` |
 | IMD AQ bulletin PDF | nwp.imd.gov.in | Download | `ingestion/download_imd_bulletin.py` |
-| IMD bulletin summary | Gemini 2.5 Flash on the IMD PDF | API key | `ingestion/get_gemini_summary.py` |
 | Punjab/Haryana fire counts | NASA VIIRS via private `signalsfunc` | Python package | `ingestion/get_fire_pbhr.py` |
 | Station pollutants, fire map | Earthmetry Superset dashboards | iframe | `views/pm25_hourly.py`, `views/render_farm_firesh_dash.py` |
 

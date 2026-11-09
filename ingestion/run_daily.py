@@ -53,12 +53,6 @@ def _imd():
     return {"file": str(download_imd_bulletin.OUTPUT_FILE)}
 
 
-def _imd_summary():
-    from ingestion import get_gemini_summary
-    get_gemini_summary.get_gemini_summary()
-    return {"file": str(get_gemini_summary.GEMINI_JSON)}
-
-
 def _fires():
     # Depends on the private `signalsfunc` package; skipped where it isn't installed.
     from ingestion import get_fire_pbhr
@@ -81,7 +75,6 @@ STEPS = {
     "aqews": ("AQEWS forecast", _aqews),
     "cpcb": ("CPCB AQI bulletin", _cpcb),
     "imd": ("IMD AQ bulletin", _imd),
-    "imd_summary": ("IMD bulletin summary (Gemini)", _imd_summary),
     "fires": ("Punjab/Haryana fires", _fires),
     "grap": ("CAQM GRAP orders", _grap),
     "summary": ("Daily update", _summary),
@@ -90,6 +83,8 @@ STEPS = {
 
 def run(only=None) -> dict:
     status = read_json(PIPELINE_STATUS_JSON)
+    # Drop entries for steps that no longer exist (e.g. the removed Gemini summary)
+    status = {k: v for k, v in status.items() if k in STEPS}
     for key, (label, fn) in STEPS.items():
         if only and key not in only:
             continue
