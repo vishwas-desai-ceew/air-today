@@ -3,6 +3,13 @@ port = 8501
 enableCORS = true
 
 
+[client]
+# Viewer menu only: just the Get Help / Report a bug / About items from
+# st.set_page_config. Hides Rerun, Settings (light/dark theme), Print, Record a
+# screencast, Clear cache and the Deploy button.
+toolbarMode = "minimal"
+
+
 [theme]
 base="light"
 primaryColor="#0B6BCB"

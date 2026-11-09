@@ -11,7 +11,7 @@ import pandas as pd
 import streamlit as st
 
 from config.settings import (
-    AQEWS_AQI_CSV, AQEWS_CATEGORY_CSV, ARCHIVE_TEMP, CPCB_AQI_CSV, FIRE_HEADLINE_INSTRUMENT, FIRE_STATE_CSVS, IMD_BULLETIN_PDF, INSIGHTS_JSON,
+    AQEWS_AQI_CSV, AQEWS_CATEGORY_CSV, AQEWS_SOURCES_JSON, ARCHIVE_TEMP, CPCB_AQI_CSV, FIRE_HEADLINE_INSTRUMENT, FIRE_STATE_CSVS, IMD_BULLETIN_PDF, INSIGHTS_JSON,
     IST, METEO_HOURLY_CSV, PIPELINE_STATUS_JSON, SIGNALS_HOURLY_CSV, VENTILATION_CSV, effective_today,
 )
 from ingestion.json_store import read_json
@@ -216,3 +216,10 @@ def aqi_news() -> list[dict]:
     Shared by the header dropdown and the Recent trends page."""
     from ingestion.news import fetch_aqi_news
     return fetch_aqi_news(limit=15)
+
+
+@st.cache_data(ttl=600)
+def aqews_sources() -> dict:
+    """AQEWS DSS source apportionment of Delhi's daily-mean PM2.5, saved by
+    ingestion/aqews.py: date, local/non-local split and per-source shares."""
+    return read_json(AQEWS_SOURCES_JSON) or {}

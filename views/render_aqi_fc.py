@@ -5,23 +5,19 @@ Strictly AQEWS: no CPCB bulletin values or AQEWS text-bulletin categories here
 """
 from datetime import datetime
 from html import escape
-from pathlib import Path
 
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
 from config.reference import AQI_BANDS, AQI_HEALTH, band_for
+from config.settings import IST
+from views import data
 from views.charts import PLOT_CONFIG, add_bands, base_layout, source_line
-
-PARENT_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = PARENT_DIR / "data"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 AQEWS_PORTAL = "https://ews.tropmet.res.in/"
 # Category colours as text on a white tile: Moderate's yellow is too pale to read, so darken it
 TEXT_ON_WHITE = {"Moderate": "#9a7b00"}
-SEVERITY_RANK = {name: i for i, (name, *_rest) in enumerate(AQI_BANDS)}
 
 
 def is_data_flat(df, col, window=6):
@@ -36,9 +32,11 @@ def is_data_flat(df, col, window=6):
 
 
 def is_data_old(df):
-    df["date"] = pd.to_datetime(df["date"], errors='coerce')
-    last_date = df["date"].max().date()
-    return last_date < datetime.today().date()
+    """True when the forecast's last day is before today (IST, not the server clock)."""
+    dates = pd.to_datetime(df["date"], errors="coerce").dropna()
+    if dates.empty:
+        return True
+    return dates.max().date() < datetime.now(IST).date()
 
 
 def get_aqi_error_msg():
@@ -55,12 +53,26 @@ def get_aqi_error_msg():
 
 
 def get_error_message():
-    df_aqi = pd.read_csv(DATA_DIR / "AQEWS_AQI_forecast.csv")
-    df_aqi['date'] = pd.to_datetime(df_aqi['date'])
-    error_flag = False
-    if is_data_flat(df_aqi, "AQI_overall") or is_data_old(df_aqi):
-        error_flag = True
-    return error_flag, df_aqi
+    """(outage?, forecast) for the AQEWS AQI forecast.
+
+    Reads through views.data.aqews_daily (cached; an empty frame when the file
+    is missing or empty), so a missing or unreadable forecast is reported as an
+    outage instead of raising. It used to read the CSV directly from
+    dashboard.py on every page, so a missing file crashed the whole app."""
+    df = data.aqews_daily().copy()
+    if df.empty or not {"date", "AQI_overall"} <= set(df.columns):
+        return True, pd.DataFrame(columns=["date", "AQI_overall"])
+    df["date"] = pd.to_datetime(df["date"], errors="coerce")
+    df = df.dropna(subset=["date"])
+    return bool(df.empty or is_data_flat(df, "AQI_overall") or is_data_old(df)), df
+
+
+def aqews_outage() -> bool:
+    """True when the AQEWS forecast is missing, stale or flat. Never raises."""
+    try:
+        return get_error_message()[0]
+    except Exception:
+        return True
 
 
 def aqi_chart(df, height=400, compact=False):
@@ -106,25 +118,6 @@ def _tiles_html(df):
     return "<div class='fc-cals'>" + "".join(tiles) + "</div>"
 
 
-def _summary_html(df):
-    cats = [band_for(v, AQI_BANDS)[0] for v in df["AQI_overall"]]
-    bad = sum(SEVERITY_RANK.get(c, 0) >= SEVERITY_RANK["Very Poor"] for c in cats)
-    severe = sum(c == "Severe" for c in cats)
-    peak = df.loc[df["AQI_overall"].idxmax()]
-    peak_cat, peak_colour = band_for(peak["AQI_overall"], AQI_BANDS)
-    n = len(df)
-    level = "severe" if severe else "alert" if bad else "ok"
-    headline = (f"{severe} of {n} days forecast <b>Severe</b>" if severe
-                else f"{bad} of {n} days forecast <b>Very Poor or worse</b>" if bad
-                else f"No day forecast worse than {escape(max(cats, key=lambda c: SEVERITY_RANK.get(c, 0)))}")
-    return (
-        f"<div class='fc-summary {level}'>"
-        f"<div class='fc-summary-main'>{headline}</div>"
-        f"<div class='fc-summary-peak'>Peak <b style='color:{peak_colour}'>{peak['AQI_overall']:.0f}</b> "
-        f"({escape(peak_cat)}) on {peak['date']:%a %d %b}</div></div>"
-    )
-
-
 def band_legend_html(bands, unit=""):
     return "<div class='band-legend'>" + "".join(
         f"<span><i style='background:{c}'></i>{escape(n)} <small>{lo}–{hi}{unit}</small></span>" if hi is not None
@@ -140,25 +133,33 @@ def render_aqi_fc(isMobile=False, compact=False):
         return
     df = df_aqi.dropna(subset=["AQI_overall"]).sort_values("date")
 
-    st.markdown(_summary_html(df), unsafe_allow_html=True)
-    st.markdown(_tiles_html(df), unsafe_allow_html=True)
     with st.container(border=True, key="fc-chart-card"):
+        # Day cards sit inside the chart card, between the title and the plot
         st.markdown(
             f"<div class='chart-title'>Daily AQI forecast, {df['date'].min():%d %b} – {df['date'].max():%d %b %Y}</div>"
             "<div class='chart-sub'>AQEWS forecast AQI; points are coloured by category and the shading "
-            "marks the AQI category bands.</div>",
+            "marks the AQI category bands.</div>" + _tiles_html(df),
             unsafe_allow_html=True,
         )
         st.plotly_chart(aqi_chart(df, height=320 if compact else 400, compact=compact), key="aqi_forecast_chart",
                         width="stretch", config=PLOT_CONFIG)
         st.markdown(band_legend_html(AQI_BANDS), unsafe_allow_html=True)
         source_line("iitm_aqews", "cpcb_aqi", note="forecast AQI from AQEWS; category bands from CPCB Table 3.2")
-    with st.expander("What the AQI categories mean (CPCB)", icon=":material/health_and_safety:"):
-        st.markdown(
-            "<table class='band-table'><tr><th>Category</th><th>AQI</th><th>Possible health impact</th></tr>"
-            + "".join(f"<tr><td><i style='background:{c}'></i>{escape(n)}</td><td>{lo}–{hi}</td>"
-                      f"<td>{escape(AQI_HEALTH[n])}</td></tr>" for n, lo, hi, c in AQI_BANDS)
-            + "</table>",
-            unsafe_allow_html=True,
-        )
-        source_line("cpcb_aqi", note="Table 3.12")
+
+
+@st.dialog("What the AQI categories mean (CPCB)", width="large")
+def aqi_categories_dialog():
+    st.markdown(
+        "<table class='band-table'><tr><th>Category</th><th>AQI</th><th>Possible health impact</th></tr>"
+        + "".join(f"<tr><td><i style='background:{c}'></i>{escape(n)}</td><td>{lo}–{hi}</td>"
+                  f"<td>{escape(AQI_HEALTH[n])}</td></tr>" for n, lo, hi, c in AQI_BANDS)
+        + "</table>",
+        unsafe_allow_html=True,
+    )
+    source_line("cpcb_aqi", note="Table 3.12")
+
+
+def render_aqi_categories_button():
+    """Opens the CPCB category table; sits beside the AQEWS bulletin button."""
+    if st.button("What the AQI categories mean", key="open_aqi_categories", icon=":material/health_and_safety:"):
+        aqi_categories_dialog()

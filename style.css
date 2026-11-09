@@ -1882,6 +1882,24 @@ h6 {
   color: #ffffff;
 }
 
+/* Health advisory (Daily update): MoHFW / NCDC advisory by CPCB category */
+.health-advisory-card .ha-label {
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #8a5a17; margin-bottom: 0.15rem;
+}
+.health-advisory-card p { margin: 0 !important; color: #3f3426; font-size: 0.92rem; line-height: 1.45; }
+.ha-effects { display: flex; gap: 0.7rem; align-items: flex-start; margin: 0.5rem 0 0.7rem; }
+.ha-effects .aqi-category-chip { flex: none; margin-top: 0.1rem; }
+.ha-advice { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+.ha-advice > div, .ha-steps {
+  padding: 0.6rem 0.75rem; border: 1px solid rgba(226, 188, 129, 0.5); border-radius: 10px; background: rgba(255, 255, 255, 0.6);
+}
+.ha-advice p { font-weight: 650; }
+.ha-advice small { display: block; margin-top: 0.25rem; font-size: 0.74rem; color: #7a6a55; }
+.ha-steps { margin-top: 0.6rem; }
+.ha-steps ul { display: flex !important; flex-direction: column; gap: 0.3rem; margin: 0.2rem 0 0 !important; padding-left: 1.1rem !important; list-style: disc !important; }
+.ha-steps li { padding: 0 !important; border: 0 !important; background: none !important; font-size: 0.88rem; color: #3f3426; }
+.health-advisory-card .side-source { border-top-color: rgba(226, 188, 129, 0.6); }
+@media (max-width: 640px) { .ha-advice { grid-template-columns: 1fr; } }
 .aqi-category-chip-rec {
   display: inline-block;
   margin-right: 0.25rem;
@@ -3534,6 +3552,17 @@ iframe:hover {
   border-color: var(--sky-900) !important; background: var(--sky-900) !important; color: #fff !important;
 }
 .st-key-open_aqews_bulletin button:hover { border-color: #072c59 !important; background: #072c59 !important; }
+/* AQEWS Forecast: bulletin + AQI categories buttons side by side */
+.st-key-fc-actions { margin: 0 0 0.6rem; flex-wrap: wrap; justify-content: flex-start !important; }
+.st-key-fc-actions > * { flex: 0 0 auto !important; width: auto !important; }
+.st-key-fc-actions .st-key-aqews-bulletin-open { margin: 0; width: auto !important; }
+.st-key-open_aqi_categories button {
+  border: 1px solid var(--sky-900) !important; background: #ffffff !important; color: var(--sky-900) !important;
+}
+.st-key-open_aqi_categories button p, .st-key-open_aqi_categories button [data-testid="stIconMaterial"] { color: var(--sky-900) !important; }
+.st-key-open_aqi_categories button:hover { background: var(--sky-50, #eef5fd) !important; }
+/* day cards inside the Daily AQI forecast card */
+.st-key-fc-chart-card .fc-cals { margin: 0.7rem 0 0.2rem; }
 .aqb-title { margin: -0.4rem 0 0.8rem; color: var(--text-secondary); font-size: 0.9rem; font-weight: 650; }
 .aqb-sec { display: grid; grid-template-columns: 1.8rem 1fr; gap: 0.6rem; margin-bottom: 0.85rem; }
 .aqb-num {
@@ -3542,6 +3571,18 @@ iframe:hover {
 }
 .aqb .aqb-sec p, .aqb p.aqb-foot { margin: 0 !important; color: var(--text-primary); font-size: 0.88rem !important; line-height: 1.6; }
 .aqb p.aqb-foot { margin: 0 0 0.6rem 2.4rem !important; color: var(--text-secondary); }
+/* Bulletin day cards (AQEWS home page since Nov 2026) */
+.aqb-days { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.6rem; margin-bottom: 0.8rem; }
+.aqb-day { border: 1px solid var(--border); border-radius: 12px; padding: 0.6rem 0.75rem; background: var(--surface); }
+.aqb-day-h { display: flex; justify-content: space-between; align-items: center; gap: 0.4rem; }
+.aqb-day-h b { color: var(--text-primary); font-size: 0.92rem; }
+.aqb-cat { padding: 0.08rem 0.5rem; border-radius: 999px; background: var(--c); color: #fff; font-size: 0.7rem; font-weight: 750; white-space: nowrap; }
+.aqb-sky { color: var(--text-secondary); font-size: 0.8rem; margin: 0.2rem 0 0.4rem; }
+.aqb-day dl { margin: 0; display: grid; gap: 0.2rem; }
+.aqb-day dl > div { display: flex; justify-content: space-between; gap: 0.5rem; font-size: 0.8rem; }
+.aqb-day dt { color: var(--text-secondary); }
+.aqb-day dd { margin: 0; color: var(--text-primary); font-weight: 650; text-align: right; }
+.aqb-bad { display: block; margin-top: 0.4rem; font-style: normal; font-size: 0.74rem; font-weight: 700; color: #c22a1e; }
 
 /* ----- Pollutants and AQI page (views/pollutants.py): weather-page strips ----- */
 .pol-period {
@@ -3567,6 +3608,11 @@ iframe:hover {
 .st-key-pol-strip-pm, .st-key-pol-strip-aqi { margin-bottom: 0.9rem; }
 
 /* Chart side panels (Pollutants and AQI, Weather forecast): short points + linked source */
+.sa-split { display: flex; gap: 1.2rem; margin: 0.2rem 0 0.1rem; }
+.sa-split div { display: flex; flex-direction: column; }
+.sa-split b { font-size: 2rem; font-weight: 800; line-height: 1.05; }
+.sa-split span { font-size: 0.72rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+.st-key-pol-strip-sources { margin-bottom: 0.9rem; }
 .pol-period { margin: 0.1rem 0 0.45rem; color: var(--text-secondary); font-size: 0.78rem; font-weight: 600; }
 .side-points { list-style: none; margin: 0.5rem 0 0 !important; padding: 0 !important; display: flex; flex-direction: column; gap: 0.35rem; }
 .side-points li {

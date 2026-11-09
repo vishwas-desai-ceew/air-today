@@ -168,5 +168,7 @@ def render_aqi_tracker(compact=False):
 
 
 def render_pollutants_page(compact=False):
+    from views.source_apportionment import render_source_strip
     render_pm_tracker(compact)
     render_aqi_tracker(compact)
+    render_source_strip(compact)
