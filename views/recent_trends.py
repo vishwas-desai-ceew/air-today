@@ -1,11 +1,15 @@
-"""Recent trends: a winter-season explorer built from the CPCB daily AQI
-record, with GRAP orders overlaid where the season's archive exists, a
-winter-on-winter comparison, and the team's written notes for the season.
+"""Recent trends: a one-screen winter-season explorer built from the CPCB
+daily AQI record - season counts, a daily AQI time series with GRAP orders,
+a same-date comparison across winters, and recent Delhi air-quality headlines.
+The team's season notes and the GRAP orders open on demand.
+
+AQI is never averaged here: an AQI is a daily index, not a quantity, so the
+page reports days, streaks and single-day values instead of mean AQI.
 
 Data: data/delhi_aqi_01Oct24_28Feb25.csv (2024-25) and data/delhi_aqi_cpcb.csv
 (Sep 2025 onwards), both CPCB daily bulletin AQI for Delhi.
 """
-from datetime import date
+from datetime import date, datetime
 from html import escape
 from pathlib import Path
 
@@ -14,9 +18,12 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from config.reference import AQI_BANDS, band_for
+from config.settings import IST
 from views.charts import PLOT_CONFIG, add_bands, base_layout, source_line
 from views.grap import grap_dialog, orders_by_day
+from views import data
 from views.render_aqi_fc import band_legend_html
+from views.widgets import NEWS_NOTE, news_items_html
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 AQI_FILES = ["delhi_aqi_01Oct24_28Feb25.csv", "delhi_aqi_cpcb.csv"]
@@ -94,106 +101,181 @@ def load_aqi_history():
 
 
 # --------------------------------------------------------------- pieces --
-def _stats_html(s, season, in_progress):
+def _longest_run(s, threshold=300):
+    """Longest run of consecutive days with AQI above `threshold`:
+    (days, first date, last date), or (0, None, None)."""
+    hit = s[s["aqi"] > threshold]["date"].sort_values()
+    if hit.empty:
+        return 0, None, None
+    run_id = (hit.diff() != pd.Timedelta(days=1)).cumsum()
+    runs = hit.groupby(run_id)
+    best = runs.size().idxmax()
+    days = runs.get_group(best)
+    return len(days), days.iloc[0], days.iloc[-1]
+
+
+def _stats_html(s, in_progress):
     worst = s.loc[s["aqi"].idxmax()]
     worst_cat, worst_col = band_for(worst["aqi"], AQI_BANDS)
     vp = int((s["aqi"] > 300).sum())
     sev = int((s["aqi"] > 400).sum())
     good = int((s["aqi"] <= 100).sum())
+    run, r0, r1 = _longest_run(s)
+    run_note = (f"{r0:%d %b} – {r1:%d %b}" if run > 1 else f"{r0:%d %b}") if run else "none this winter"
     cards = [
         ("Days recorded", f"{len(s)}", "so far" if in_progress else "1 Oct – 28/29 Feb", None),
-        ("Mean AQI", f"{s['aqi'].mean():.0f}", band_for(s["aqi"].mean(), AQI_BANDS)[0], band_for(s["aqi"].mean(), AQI_BANDS)[1]),
         ("Worst day", f"{worst['aqi']:.0f}", f"{worst['date']:%d %b %Y} · {worst_cat}", worst_col),
+        ("Longest Very Poor+ spell", f"{run} d", run_note, "#fc4d02" if run else None),
         ("Very Poor or worse", f"{vp}", f"days ({vp / len(s):.0%})", "#fc4d02"),
-        ("Severe", f"{sev}", "days with AQI above 400", "#e91902"),
-        ("Good or Satisfactory", f"{good}", "days with AQI 100 or below", "#03a303"),
+        ("Severe", f"{sev}", "days, AQI above 400", "#e91902"),
+        ("Good or Satisfactory", f"{good}", "days, AQI 100 or below", "#03a303"),
     ]
-    return "<div class='lrn-stats'>" + "".join(
+    tiles = "".join(
         f"<div class='lrn-stat'{f' style=\"--c:{c}\"' if c else ''}><span>{escape(k)}</span><b>{escape(v)}</b>"
         f"<small>{escape(n or '')}</small></div>" for k, v, n, c in cards
-    ) + "</div>"
-
-
-def _category_strip(s):
-    counts = s["band"].value_counts()
-    total = len(s)
-    segs = "".join(
-        f"<div style='flex:{counts.get(n, 0)};background:{c}' title='{escape(n)}: {counts.get(n, 0)} days'>"
-        f"{counts.get(n, 0) if counts.get(n, 0) / total > 0.06 else ''}</div>"
-        for n, _lo, _hi, c in AQI_BANDS if counts.get(n, 0)
     )
-    return f"<div class='lrn-strip-label'>Days in each CPCB category</div><div class='lrn-strip'>{segs}</div>"
+    return f"<div class='lrn-stats lrn-stats--tight'>{tiles}</div>"
 
 
-def season_chart(s, orders):
-    y_max = max(450, float(s["aqi"].max()) + 60)
+def season_chart(s, orders, height=232):
+    """Daily AQI as a time series: a line, with each day's marker in its CPCB
+    colour, over the category bands. GRAP orders are dotted lines whose
+    markers along the top carry the order on hover."""
+    y_max = max(450, float(s["aqi"].max()) + 40)
+    # The winter itself (1 Oct to end Feb), or up to the latest day while it runs;
+    # GRAP orders outside that window (spring and summer) are left off
+    start = pd.Timestamp(year=int(s["date"].min().year if s["date"].min().month >= 10
+                                  else s["date"].min().year - 1), month=10, day=1)
+    end = min(start + pd.DateOffset(months=5) - pd.Timedelta(days=1), s["date"].max() + pd.Timedelta(days=2))
+    orders = {d: o for d, o in orders.items() if start <= pd.Timestamp(d) <= end}
     fig = go.Figure()
     add_bands(fig, AQI_BANDS, y_max)
-    fig.add_bar(x=s["date"], y=s["aqi"], name="Daily AQI",
-                marker=dict(color=[band_for(v, AQI_BANDS)[1] for v in s["aqi"]], line=dict(width=0)),
-                customdata=s[["band"]].assign(p=s["pollutant"].fillna("")).values,
-                hovertemplate="%{x|%a %d %b %Y}<br>AQI <b>%{y:.0f}</b> · %{customdata[0]}"
-                              "<br>%{customdata[1]}<extra></extra>")
+    fig.add_scatter(x=s["date"], y=s["aqi"], name="Daily AQI", mode="lines+markers",
+                    line=dict(color="#0a3d7a", width=1.6),
+                    marker=dict(size=6, color=[band_for(v, AQI_BANDS)[1] for v in s["aqi"]],
+                                line=dict(width=0.6, color="#ffffff")),
+                    customdata=s[["band"]].assign(p=s["pollutant"].fillna("")).values,
+                    hovertemplate="%{x|%a %d %b %Y}<br>AQI <b>%{y:.0f}</b> · %{customdata[0]}"
+                                  "<br>%{customdata[1]}<extra></extra>")
     tone_colour = {"invoke": "#c22a1e", "revoke": "#1e8e5a", "other": "#46607f"}
+    xs, texts, colours = [], [], []
     for day, day_orders in sorted(orders.items()):
         o = next((x for x in day_orders if x["action"] != "other"), day_orders[0])
-        tone = o["action"]
-        fig.add_vline(x=pd.Timestamp(day), line=dict(color=tone_colour[tone], width=1.4, dash="dot"))
-        short = o["headline"]
-        fig.add_annotation(x=pd.Timestamp(day), y=y_max, yanchor="top", text=escape(short[:26]), textangle=-90,
-                           showarrow=False, font=dict(size=10, color=tone_colour[tone]), xshift=-7,
-                           bgcolor="rgba(255,255,255,0.75)")
-    base_layout(fig, height=420, y_title="AQI", legend=False)
-    fig.update_layout(margin=dict(r=86), bargap=0.08, hovermode="closest")
+        colour = tone_colour[o["action"]]
+        fig.add_vline(x=pd.Timestamp(day), line=dict(color=colour, width=1.2, dash="dot"))
+        xs.append(pd.Timestamp(day))
+        texts.append(escape(o["headline"]))
+        colours.append(colour)
+    if xs:
+        fig.add_scatter(x=xs, y=[y_max * 0.97] * len(xs), mode="markers", name="GRAP order",
+                        marker=dict(symbol="triangle-down", size=9, color=colours),
+                        customdata=texts, hovertemplate="%{x|%d %b}: %{customdata}<extra>GRAP</extra>")
+    base_layout(fig, height=height, y_title="AQI", legend=False)
+    fig.update_layout(margin=dict(l=48, r=86, t=8, b=28), hovermode="closest")
     fig.update_yaxes(range=[0, y_max])
-    fig.update_xaxes(tickformat="%d %b", dtick="M1", ticklabelmode="period")
+    rng = [start - pd.Timedelta(hours=12), end + pd.Timedelta(hours=12)]
+    if (end - start).days < 75:     # early in a season: weekly dates, not one "Oct" label
+        fig.update_xaxes(tickformat="%d %b", dtick=7 * 86400000, tick0=start, range=rng)
+    else:
+        fig.update_xaxes(tickformat="%b", dtick="M1", ticklabelmode="period", range=rng)
     return fig
 
 
-def compare_chart(df, seasons):
+def compare_chart(df, seasons, height=420):
+    """Daily AQI (not averaged) for each winter, aligned by date in the season."""
     fig = go.Figure()
     add_bands(fig, AQI_BANDS, 500, alpha=0.08)
     for i, season in enumerate(seasons):
         s = df[df["season"] == season].sort_values("season_day")
-        roll = s.set_index("season_day")["aqi"].rolling(7, min_periods=3, center=True).mean()
-        fig.add_scatter(x=roll.index, y=roll.values, name=f"Winter {season}", mode="lines",
-                        line=dict(color=SEASON_COLOURS[i % len(SEASON_COLOURS)], width=3 if i == 0 else 2),
-                        hovertemplate=f"{season}: %{{y:.0f}}<extra></extra>")
+        fig.add_scatter(x=s["season_day"], y=s["aqi"], name=f"Winter {season}", mode="lines",
+                        line=dict(color=SEASON_COLOURS[i % len(SEASON_COLOURS)], width=2.4 if i == 0 else 1.6),
+                        customdata=s["date"].dt.strftime("%d %b %Y"),
+                        hovertemplate="%{customdata}: AQI %{y:.0f}<extra>" + season + "</extra>")
     ticks = [0, 31, 61, 92, 123]
-    base_layout(fig, height=340, y_title="AQI, 7-day mean")
+    base_layout(fig, height=height, y_title="Daily AQI")
     fig.update_layout(margin=dict(r=86), hovermode="x unified")
     fig.update_xaxes(tickvals=ticks, ticktext=["1 Oct", "1 Nov", "1 Dec", "1 Jan", "1 Feb"], range=[0, 150])
     fig.update_yaxes(range=[0, 500])
     return fig
 
 
-def _heatmap_html(s, season):
-    start_year = int(season[:4])
-    by_date = {d.date(): (a, b) for d, a, b in zip(s["date"], s["aqi"], s["band"])}
-    colour = {n: c for n, _lo, _hi, c in AQI_BANDS}
+def _same_day(df, day):
+    """AQI on the same calendar date in each winter on record, newest first."""
+    by_date = df.set_index("date")
     rows = []
-    for y, m in [(start_year, 10), (start_year, 11), (start_year, 12), (start_year + 1, 1), (start_year + 1, 2)]:
-        cells = []
-        for d in range(1, 32):
-            try:
-                day = date(y, m, d)
-            except ValueError:
-                cells.append("<i class='none'></i>")
-                continue
-            if day in by_date:
-                a, b = by_date[day]
-                cells.append(f"<i style='background:{colour.get(b, '#ccc')}' title='{day:%d %b %Y}: AQI {a:.0f} ({escape(b)})'></i>")
-            else:
-                cells.append(f"<i class='empty' title='{day:%d %b %Y}: no data'></i>")
-        rows.append(f"<div class='lrn-hm-row'><span>{date(y, m, 1):%b}</span>{''.join(cells)}</div>")
-    head = "<div class='lrn-hm-row lrn-hm-head'><span></span>" + "".join(
-        f"<em>{d if d in (1, 5, 10, 15, 20, 25, 30) else ''}</em>" for d in range(1, 32)) + "</div>"
-    return f"<div class='lrn-hm'>{head}{''.join(rows)}</div>"
+    for season in sorted(df["season"].unique(), reverse=True):
+        start = int(season[:4])
+        year = start if day.month >= 10 else start + 1
+        try:
+            d = pd.Timestamp(date(year, day.month, day.day))
+        except ValueError:          # 29 Feb in a non-leap winter
+            continue
+        a = by_date["aqi"].get(d)
+        rows.append((d, None if a is None or pd.isna(a) else float(a)))
+    return rows
+
+
+def _same_day_html(rows, today):
+    if not rows:
+        return "<div class='lrn-mini'>No winter on record covers this date.</div>"
+    ref = rows[0][1]
+    out = []
+    for i, (d, a) in enumerate(rows):
+        if a is None:
+            note = "awaiting today's bulletin" if d.date() == today else "no data"
+            out.append(f"<div class='lrn-sd-row'><span>{d:%Y}</span><em class='na'>{note}</em></div>")
+            continue
+        cat, col = band_for(a, AQI_BANDS)
+        diff = "<small>today</small>" if d.date() == today else ""
+        if i and ref is not None:
+            delta = ref - a
+            diff = (f"<small>{rows[0][0]:%Y} was {abs(delta):.0f} {'higher' if delta > 0 else 'lower'}</small>"
+                    if round(delta) else f"<small>same as {rows[0][0]:%Y}</small>")
+        out.append(
+            f"<div class='lrn-sd-row'><span>{d:%Y}</span>"
+            f"<b style='--c:{col}'>{a:.0f}</b><i style='background:{col}'>{escape(cat)}</i>{diff}</div>"
+        )
+    return "<div class='lrn-sd'>" + "".join(out) + "</div>"
 
 
 def _notes_html(notes):
     return "<ol class='lrn-timeline'>" + "".join(
         f"<li><b>{escape(t)}</b><p>{escape(d)}</p></li>" for t, d in notes) + "</ol>"
+
+
+@st.dialog("Season notes", width="large")
+def notes_dialog(season):
+    st.markdown(f"<div class='chart-sub'>Winter {escape(season)}: key observations and GRAP actions recorded "
+                "by the Clean Air team</div>", unsafe_allow_html=True)
+    st.markdown(_notes_html(RECENT_TRENDS[season]), unsafe_allow_html=True)
+
+
+@st.dialog("Daily AQI", width="large")
+def season_dialog(s, season, orders, in_progress):
+    st.markdown(
+        f"<div class='chart-title'>Winter {escape(season)}{' (in progress)' if in_progress else ''}</div>"
+        "<div class='chart-sub'>One point per day, in its CPCB colour"
+        + (" · ▼ GRAP order: red invoked, green revoked; hover to read it" if orders else "") + "</div>",
+        unsafe_allow_html=True)
+    st.plotly_chart(season_chart(s, orders, height=520), key=f"trend_chart_big_{season}", width="stretch",
+                    config=PLOT_CONFIG)
+    source_line("cpcb_aqi", note="daily bulletin" + ("; GRAP: team archive" if orders else ""))
+
+
+@st.dialog("Compare whole winters", width="large")
+def compare_dialog(df, seasons):
+    picked = st.multiselect("Winters", seasons, default=seasons[:3], key="trend_compare_pick")
+    if not picked:
+        st.info("Pick at least one winter.")
+        return
+    st.plotly_chart(compare_chart(df, sorted(picked, reverse=True)), width="stretch", config=PLOT_CONFIG)
+    source_line("cpcb_aqi", note="daily AQI from the CPCB bulletin, one value per day, not averaged")
+
+
+@st.dialog("Delhi air quality in the news", width="large")
+def news_dialog(items):
+    st.markdown(f"<div class='lrn-news lrn-news--list'>{news_items_html(items)}</div>", unsafe_allow_html=True)
+    st.caption(NEWS_NOTE)
 
 
 # ---------------------------------------------------------------- page --
@@ -203,55 +285,67 @@ def render_recent_trends():
         st.info("No AQI history is available.")
         return
     seasons = sorted(df["season"].unique(), reverse=True)
-    season = st.segmented_control("**Winter season**", options=seasons, selection_mode="single",
-                                  default=seasons[0], key="trend_season")
+
+    # Row 1: season picker, with notes and GRAP orders on demand
+    bar_l, bar_r = st.columns([3, 2], vertical_alignment="center")
+    with bar_l:
+        season = st.segmented_control("Winter season", options=seasons, selection_mode="single",
+                                      default=seasons[0], key="trend_season", label_visibility="collapsed")
     if season not in seasons:
         season = seasons[0]
     s = df[df["season"] == season]
     in_progress = s["date"].max() >= pd.Timestamp.today().normalize() - pd.Timedelta(days=3)
-
-    st.markdown(_stats_html(s, season, in_progress), unsafe_allow_html=True)
-    st.markdown(_category_strip(s), unsafe_allow_html=True)
-
     grap = orders_by_day(season)
-    with st.container(border=True, key="trend-season-card"):
-        st.markdown(
-            f"<div class='chart-title'>Daily AQI, winter {escape(season)}{' (in progress)' if in_progress else ''}</div>"
-            "<div class='chart-sub'>Bars coloured by CPCB category"
-            + (". Dotted lines mark GRAP orders: red invoked, green revoked." if grap else ".") + "</div>",
-            unsafe_allow_html=True,
-        )
-        st.plotly_chart(season_chart(s, grap), key=f"trend_chart_{season}", width="stretch", config=PLOT_CONFIG)
-        st.markdown(band_legend_html(AQI_BANDS), unsafe_allow_html=True)
-        source_line("cpcb_aqi", note="daily AQI from the CPCB bulletin; GRAP dates from the team's GRAP archive"
-                    if grap else "daily AQI from the CPCB bulletin")
+    with bar_r, st.container(horizontal=True, horizontal_alignment="right", key="trend-actions"):
+        if season in RECENT_TRENDS and st.button("Season notes", icon=":material/notes:", key="trend_notes"):
+            notes_dialog(season)
         if grap:
-            st.markdown("<div class='lrn-mini'>Read a GRAP order:</div>", unsafe_allow_html=True)
-            with st.container(horizontal=True, key="trend-grap-chips"):
+            with st.popover(f"GRAP orders ({len(grap)})", icon=":material/gavel:", type="primary",
+                            key="trend_grap_popover"):
+                st.caption("Open an order")
                 for day in sorted(grap):
-                    if st.button(f"{day:%d %b}", key=f"trend_grap_{season}_{day}", type="tertiary",
-                                 icon=":material/gavel:"):
+                    if st.button(f"{day:%d %b %Y}", key=f"trend_grap_{season}_{day}", type="tertiary"):
                         grap_dialog(season, day)
 
-    left, right = st.columns([3, 2], gap="medium")
-    with left, st.container(border=True, key="trend-compare-card"):
-        st.markdown("<div class='chart-title'>Winter on winter</div>"
-                    "<div class='chart-sub'>7-day mean AQI by date in the season, every winter on record</div>",
-                    unsafe_allow_html=True)
-        st.plotly_chart(compare_chart(df, seasons), key="trend_compare", width="stretch", config=PLOT_CONFIG)
-        source_line("cpcb_aqi", note="daily AQI from the CPCB bulletin")
-    with right, st.container(border=True, key="trend-heatmap-card"):
-        st.markdown(f"<div class='chart-title'>Day by day, {escape(season)}</div>"
-                    "<div class='chart-sub'>Each square is one day; hover for the AQI</div>",
-                    unsafe_allow_html=True)
-        st.markdown(_heatmap_html(s, season), unsafe_allow_html=True)
+    # Row 2: season in numbers
+    st.markdown(_stats_html(s, in_progress), unsafe_allow_html=True)
 
-    notes = RECENT_TRENDS.get(season)
-    if notes:
-        with st.container(border=True, key="trend-notes-card"):
-            st.markdown(f"<div class='chart-title'>Season notes, {escape(season)}</div>"
-                        "<div class='chart-sub'>Key observations and GRAP actions recorded by the Clean Air team</div>",
+    # Row 3: daily AQI time series | same date in other winters | headlines
+    left, right, news_col = st.columns([1.9, 1, 1.05], gap="small")
+    with left, st.container(border=True, key="trend-season-card"):
+        # Pinned to the card's top-right corner by CSS, out of the text flow
+        if st.button("", icon=":material/open_in_full:", key="trend_chart_expand", type="tertiary",
+                     help="Open a larger chart"):
+            season_dialog(s, season, grap, in_progress)
+        st.markdown(
+            f"<div class='chart-title'>Daily AQI, winter {escape(season)}{' (in progress)' if in_progress else ''}</div>"
+            "<div class='chart-sub'>One point per day, in its CPCB colour"
+            + (" · ▼ GRAP order: red invoked, green revoked" if grap else "")
+            + "</div>", unsafe_allow_html=True)
+        st.plotly_chart(season_chart(s, grap), key=f"trend_chart_{season}", width="stretch", config=PLOT_CONFIG)
+        source_line("cpcb_aqi", note="daily bulletin" + ("; GRAP: team archive" if grap else ""))
+    with right, st.container(border=True, key="trend-compare-card"):
+        # Always today (IST): today's AQI against the same date in earlier winters
+        today = datetime.now(IST).date()
+        st.markdown("<div class='lrn-card-head'><div class='chart-title'>Same date, other winters</div>"
+                    f"<span class='lrn-date-badge'>{today:%d %b %Y}</span></div>", unsafe_allow_html=True)
+        if today.month in (3, 4, 5, 6, 7, 8, 9):
+            st.markdown("<div class='lrn-mini'>Shown during the winter season, 1 Oct to 28/29 Feb.</div>",
                         unsafe_allow_html=True)
-            st.markdown(_notes_html(notes), unsafe_allow_html=True)
-    elif RECENT_TRENDS:
-        st.caption("Written season notes are available for " + ", ".join(RECENT_TRENDS) + ".")
+        else:
+            st.markdown(_same_day_html(_same_day(df, today), today), unsafe_allow_html=True)
+        if st.button("Compare whole winters", icon=":material/stacked_line_chart:", key="trend_compare_open",
+                     width="stretch", type="primary"):
+            compare_dialog(df, seasons)
+
+    news = data.aqi_news()
+    with news_col, st.container(border=True, key="trend-news-card"):
+        st.markdown("<div class='chart-title'>In the news</div>", unsafe_allow_html=True)
+        if news:
+            st.markdown(f"<div class='lrn-news lrn-news--stack'>{news_items_html(news[:3])}</div>",
+                        unsafe_allow_html=True)
+        else:
+            st.markdown("<div class='lrn-mini'>Headlines are unavailable right now.</div>", unsafe_allow_html=True)
+        if len(news) > 3 and st.button(f"More headlines ({len(news) - 3})", icon=":material/newspaper:",
+                                       key="trend_news_more", width="stretch", type="primary"):
+            news_dialog(news)

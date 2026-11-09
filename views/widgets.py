@@ -152,6 +152,51 @@ def _health_pill():
     )
 
 
+# Each publisher's own small site icon, loaded from its site, to make the source
+# easy to spot. TOI's favicon.ico is fully transparent, so its home-screen icon is used.
+PUBLISHER_ICONS = {
+    "The Hindu": "https://www.thehindu.com/favicon.ico",
+    "Times of India": "https://m.timesofindia.com/touch-icon-iphone-precomposed.png",
+    "NDTV": "https://www.ndtv.com/favicon.ico",
+}
+NEWS_NOTE = ("Headlines picked automatically by keyword from the Delhi news feeds of The Hindu, "
+             "Times of India and NDTV, newest first. Links open the publisher's article; "
+             "they are not reviewed or endorsed by CEEW.")
+
+
+def publisher_badge(name):
+    icon_url = PUBLISHER_ICONS.get(name)
+    img = (f"<img src='{icon_url}' alt='' width='14' height='14' referrerpolicy='no-referrer'>"
+           if icon_url else "")
+    return f"<span class='lrn-pub'>{img}{escape(name)}</span>"
+
+
+def news_items_html(items):
+    return "".join(
+        f"<a class='lrn-news-item' href='{escape(it['link'], quote=True)}' target='_blank' rel='noopener'>"
+        f"<b>{escape(it['title'])}</b><small>{publisher_badge(it['publisher'])}"
+        f"{' · ' + it['published'].strftime('%d %b, %H:%M') if it['published'] else ''}</small></a>"
+        for it in items
+    )
+
+
+def _news_pill(limit=6):
+    """'AQI in the news' dropdown for the header: the latest headlines."""
+    try:
+        items = data.aqi_news()
+    except Exception:
+        items = []
+    if not items:
+        return ""
+    return (
+        '<details class="hero-health hero-news"><summary>AQI in the news'
+        f'<span class="hero-news-count">{len(items)}</span><span class="hero-caret">▾</span></summary>'
+        f'<div class="hero-news-panel">{news_items_html(items[:limit])}'
+        f'<a class="hero-news-more" href="/trends" target="_self">All headlines on Recent trends →</a>'
+        f'<p>{escape(NEWS_NOTE)}</p></div></details>'
+    )
+
+
 def _user_chip():
     """Signed-in user + log out. The log-out link hits Streamlit's /auth/logout
     route directly (what st.logout() does), so it can live inside HTML."""
@@ -173,7 +218,7 @@ def _top_row():
     now = datetime.now(IST)
     return (
         f'<div class="sky-hero-top"><div class="hero-eyebrow"><span></span>New Delhi · {now.strftime("%A, %d %B %Y")}</div>'
-        f'<div class="hero-actions">{_health_pill()}{_user_chip()}</div></div>'
+        f'<div class="hero-actions">{_news_pill()}{_health_pill()}{_user_chip()}</div></div>'
     )
 
 

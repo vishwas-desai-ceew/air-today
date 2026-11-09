@@ -1,3 +1,6 @@
+/* Glossary letter headings: EB Garamond, only the capitals A-Z are downloaded */
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&text=ABCDEFGHIJKLMNOPQRSTUVWXYZ&display=swap');
+
 /* ==========================================================================
    AQ Winter — centralized design tokens
    Replaces the previous ad hoc per-component colours/sizes with a single
@@ -2442,6 +2445,21 @@ iframe:hover {
 }
 
 /* ----- Header actions: data health + signed-in user (views/widgets.py) ----- */
+/* AQI in the news: same pill as data health, with a headline panel */
+.hero-news-count {
+  display: inline-grid; place-items: center; min-width: 1.2rem; height: 1.2rem; padding: 0 0.3rem;
+  border-radius: 999px; background: #ffffff; color: var(--sky-900); font-size: 0.68rem; font-weight: 800;
+}
+.hero-news-panel {
+  position: absolute; top: calc(100% + 0.4rem); right: 0; z-index: 21;
+  width: min(26rem, 90vw); display: flex; flex-direction: column; gap: 6px;
+  padding: 0.7rem; border: 1px solid var(--border); border-radius: 12px; background: #ffffff;
+  box-shadow: 0 14px 30px rgba(10, 61, 122, 0.2);
+}
+.hero-news-panel .lrn-news-item { padding: 0.4rem 0.6rem; }
+.hero-news-more { font-size: 0.78rem; font-weight: 700; color: var(--brand) !important; text-decoration: none !important; padding: 0.1rem 0.2rem; }
+.hero-news-panel p { margin: 0 !important; font-size: 0.68rem !important; line-height: 1.4; color: var(--text-secondary); padding: 0 0.2rem; }
+@media (max-width: 768px) { .hero-news-panel { position: static; width: auto; margin-top: 0.5rem; } }
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -3129,24 +3147,89 @@ iframe:hover {
 .lrn-stat span { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); }
 .lrn-stat b { display: block; font-size: 1.8rem; font-weight: 750; line-height: 1.15; color: var(--c, var(--text-primary)); }
 .lrn-stat small { font-size: 0.78rem; color: var(--text-secondary); }
-.lrn-strip-label { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px; }
-.lrn-strip { display: flex; height: 26px; border-radius: 8px; overflow: hidden; margin-bottom: 1rem; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05); }
-.lrn-strip > div { display: grid; place-items: center; color: #fff; font-size: 0.75rem; font-weight: 700; min-width: 2px; }
 .lrn-mini { font-size: 0.78rem; color: var(--text-secondary); margin-top: 6px; }
-.st-key-trend-grap-chips { gap: 2px !important; flex-wrap: wrap; }
-.st-key-trend-grap-chips button { font-size: 0.82rem !important; }
-[class*="st-key-trend-"][class*="-card"] { background: var(--surface); border-radius: 16px; }
 
-/* Day-by-day heatmap */
-.element-container:has(.lrn-hm) { overflow: visible !important; }
-.lrn-hm { display: flex; flex-direction: column; gap: 4px; padding-top: 8px; }
-.lrn-hm-row i:hover { outline: 2px solid var(--text-primary); }
-.lrn-hm-row { display: grid; grid-template-columns: 30px repeat(31, minmax(0, 1fr)); gap: 2px; align-items: center; }
-.lrn-hm-row span { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); }
-.lrn-hm-row i { height: 34px; border-radius: 3px; display: block; }
-.lrn-hm-row i.empty { background: var(--surface-alt); }
-.lrn-hm-row i.none { background: transparent; }
-.lrn-hm-head em { font-style: normal; font-size: 0.62rem; color: var(--text-secondary); text-align: center; white-space: nowrap; overflow: visible; }
+/* ----- Recent trends: one-screen layout (views/recent_trends.py) ----- */
+[class*="st-key-trend-"][class*="-card"] { background: var(--surface); border-radius: 16px; }
+.lrn-stats--tight { gap: 8px; margin: 0 0 0.4rem; }
+.lrn-stats--tight .lrn-stat { padding: 0.35rem 0.7rem; border-top-width: 3px; box-shadow: none; }
+.lrn-stats--tight .lrn-stat span { font-size: 0.66rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lrn-stats--tight .lrn-stat b { font-size: 1.3rem; line-height: 1.15; }
+.lrn-stats--tight .lrn-stat small { font-size: 0.72rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st-key-trend-actions { gap: 6px !important; }
+[class*="st-key-trend-"][class*="-card"] .chart-sub { margin-bottom: 0.1rem; }
+
+[data-testid="stMainBlockContainer"]:has(.st-key-trend-season-card),
+[data-testid="stMainBlockContainer"]:has([class*="st-key-int-card-"]) { padding-bottom: 1rem !important; }
+
+/* The three row cards end level: each card fills its column */
+@media (min-width: 641px) {
+  [data-testid="stLayoutWrapper"]:has(> [class*="st-key-trend-"][class*="-card"]) { flex: 1; }
+  [class*="st-key-trend-"][class*="-card"] { flex: 1; }
+  .st-key-trend-news-card > div:last-child, .st-key-trend-compare-card > div:last-child { margin-top: auto; }
+}
+[class*="st-key-trend-"][class*="-card"] > * { flex-shrink: 0; }
+
+/* The site-wide mobile rule (.element-container overflow-x: auto) clips the
+   bottom of text blocks by their paragraph margin; text here never needs it */
+@media (max-width: 768px) {
+  .element-container:has(.chart-title, .chart-sub, .lrn-stats, .lrn-sd, .lrn-news, .int-disclaimer, .int-head, .gl-letter, .gl-az) { overflow: visible !important; }
+}
+
+/* Same date, other winters */
+.st-key-trend-compare-card, .st-key-trend-news-card { gap: 0.5rem !important; }
+.lrn-card-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; }
+.lrn-date-badge {
+  display: inline-block; white-space: nowrap; padding: 0.15rem 0.6rem; border-radius: 999px;
+  background: var(--surface-alt); border: 1px solid #cfe2f7; color: var(--sky-900);
+  font-size: 0.8rem; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.lrn-sd { display: flex; flex-direction: column; }
+.lrn-sd-row {
+  display: grid; grid-template-columns: 1fr auto auto; grid-template-rows: auto auto; column-gap: 8px; align-items: center;
+  padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+}
+.lrn-sd-row:last-child { border-bottom: 0; }
+.lrn-sd-row span { font-size: 0.85rem; font-weight: 650; color: var(--text-primary); }
+.lrn-sd-row b { font-size: 1.25rem; font-weight: 750; color: var(--c); text-align: right; }
+.lrn-sd-row i {
+  font-style: normal; font-size: 0.68rem; font-weight: 700; color: #fff; padding: 1px 7px; border-radius: 999px;
+  text-align: center; white-space: nowrap;
+}
+.lrn-sd-row small { grid-column: 1 / -1; font-size: 0.72rem; color: var(--text-secondary); }
+.lrn-sd-row em.na { grid-column: 2 / -1; font-style: normal; font-size: 0.78rem; color: var(--text-secondary); text-align: right; }
+
+/* In the news */
+.lrn-news { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.lrn-news-item {
+  display: flex; flex-direction: column; justify-content: space-between; gap: 4px;
+  padding: 0.5rem 0.7rem; border-radius: 10px; background: var(--surface-alt); border: 1px solid var(--border);
+  text-decoration: none !important; transition: border-color .15s ease;
+}
+.lrn-news-item:hover { border-color: var(--brand); }
+.lrn-news-item b {
+  font-size: 0.85rem; line-height: 1.35; color: var(--text-primary);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.lrn-news-item small { font-size: 0.72rem; color: var(--text-secondary); }
+.lrn-news-item small { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.lrn-pub { display: inline-flex; align-items: center; gap: 5px; font-weight: 700; color: var(--text-primary); }
+.lrn-pub img { width: 14px; height: 14px; border-radius: 3px; flex: none; }
+/* Daily AQI card: expand button beside the title, source line close to the plot */
+.st-key-trend-season-card [data-testid="stElementContainer"]:has(.chart-source) { margin-top: -0.55rem; }
+.st-key-trend-season-card { position: relative; }
+.st-key-trend_chart_expand { position: absolute !important; top: 0.55rem; right: 0.6rem; width: auto !important; z-index: 2; }
+.st-key-trend_chart_expand button { padding: 0.15rem 0.35rem !important; min-height: 0 !important; }
+.lrn-news--list, .lrn-news--stack { grid-template-columns: 1fr; }
+.lrn-news--stack { gap: 6px; }
+/* The site-wide -16px margin under text blocks let titles overlap what follows */
+.st-key-trend-news-card [data-testid="stMarkdownContainer"],
+.st-key-trend-compare-card [data-testid="stMarkdownContainer"] { margin-bottom: 0 !important; }
+.lrn-news--stack .lrn-news-item { padding: 0.4rem 0.6rem; gap: 2px; }
+.lrn-news--list .lrn-news-item b { -webkit-line-clamp: unset; }
+@media (max-width: 900px) { .lrn-news { grid-template-columns: 1fr; } }
+@media (max-width: 1100px) { .lrn-stats--tight { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .lrn-stats--tight { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* Season notes timeline */
 .lrn-timeline { list-style: none; margin: 0.6rem 0 0; padding: 0 0 0 1.4rem; border-left: 2px solid var(--border); counter-reset: n; }
@@ -3171,10 +3254,6 @@ iframe:hover {
 .int-stat { display: flex; align-items: baseline; gap: 8px; margin: 10px 0 0; padding: 6px 10px; border-radius: 10px; background: var(--sky-50); }
 .int-stat b { font-size: 1.4rem; color: var(--sky-900); }
 .int-stat span { font-size: 0.8rem; color: var(--text-secondary); }
-.int-preview {
-  font-size: 0.86rem; color: var(--text-secondary); line-height: 1.45; margin: 10px 0 4px;
-  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-}
 .int-stat-big { margin: 12px 0 4px; font-size: 0.95rem; color: var(--text-secondary); }
 .int-stat-big b { font-size: 1.6rem; color: var(--sky-900); margin-right: 4px; }
 .int-lede { font-size: 0.95rem; color: var(--text-primary); line-height: 1.55; margin: 10px 0; }
@@ -3187,7 +3266,7 @@ iframe:hover {
 }
 .int-key { font-size: 0.8rem; color: var(--text-secondary); border-top: 1px solid var(--border); padding-top: 8px; }
 .element-container:has(.int-actions) { overflow: visible !important; }
-@media (max-width: 640px) { .lrn-stats--3 { grid-template-columns: 1fr 1fr 1fr; } .lrn-stat b { font-size: 1.4rem; } }
+@media (max-width: 640px) { .lrn-stats--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } .lrn-stats--tight .lrn-stat span, .lrn-stats--tight .lrn-stat small { white-space: normal; } .lrn-stat b { font-size: 1.4rem; } }
 
 /* ----- Glossary ----- */
 .st-key-glossary-scale { background: var(--surface); border-radius: 16px; }
@@ -3212,21 +3291,12 @@ iframe:hover {
   display: grid; place-items: center; background: var(--sky-50);
 }
 .gs-stage span { font-size: 0.74rem; font-weight: 700; color: var(--sky-900); white-space: nowrap; }
-.gl-count { font-size: 0.78rem; color: var(--text-secondary); margin: 0.2rem 0 0.4rem; }
-.gl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
-.gl-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 0.85rem 1rem;
-  border-left: 5px solid var(--gl, var(--brand)); box-shadow: 0 6px 16px rgba(11,107,203,0.05);
-}
 .gl-air { --gl: #e8590c; } .gl-weather { --gl: #7048e8; } .gl-policy { --gl: #c22a1e; }
 .gl-institutions { --gl: #0b6bcb; } .gl-data { --gl: #6b7f99; }
 .gl-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
 .gl-term { font-size: 1.25rem; font-weight: 800; color: var(--gl); }
 .gl-cat { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); }
 .gl-exp { font-weight: 650; color: var(--text-primary); font-size: 0.9rem; margin-top: 2px; }
-.gl-card p { font-size: 0.86rem; color: var(--text-secondary); line-height: 1.5; margin: 6px 0 4px; }
-.gl-src { font-size: 0.72rem; color: var(--brand) !important; text-decoration: none; }
-.gl-src::before { content: "Source: "; color: var(--text-secondary); }
 @media (max-width: 640px) {
   .gs-band b { font-size: 0.62rem; } .gs-band small { display: none; } .gs-band { padding: 0 3px; }
   .gs-stage span { font-size: 0.6rem; }
@@ -3236,6 +3306,78 @@ iframe:hover {
 [data-testid="stColumn"]:has([class*="st-key-int-card-"]) > [data-testid="stVerticalBlock"] { height: 100%; }
 [class*="st-key-int-card-"] { flex: 1 1 auto; }
 [class*="st-key-int-card-"] > div:last-child { margin-top: auto; }
+
+/* ----- Sectoral interventions: one-screen layout ----- */
+.int-disclaimer {
+  display: flex; align-items: flex-start; gap: 8px; padding: 0.55rem 0.8rem; border-radius: 10px;
+  background: #fdecea; border: 1px solid #f5b5ae; color: #a51d12; font-size: 0.85rem; line-height: 1.45;
+}
+.int-disclaimer .sky-icon { color: #c22a1e; flex: none; margin-top: 1px; }
+.int-disclaimer b { font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.72rem; margin-right: 4px; }
+[class*="st-key-int-card-"] { padding: 0.75rem !important; gap: 0.6rem !important; }
+[class*="st-key-int-card-"] .int-head { gap: 10px; }
+[class*="st-key-int-card-"] .int-icon { width: 34px; height: 34px; border-radius: 10px; }
+[class*="st-key-int-card-"] .int-title {
+  font-size: 0.92rem; line-height: 1.3; min-height: 3.9em;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.int-head-text { min-width: 0; flex: 1; }
+.int-group { display: flex; align-items: center; gap: 6px; }
+.int-stat-pill {
+  margin-left: auto; padding: 0 7px; border-radius: 999px; background: var(--sky-50); border: 1px solid #cfe2f7;
+  color: var(--sky-900); font-size: 0.7rem; font-weight: 800; letter-spacing: 0; text-transform: none; white-space: nowrap;
+}
+/* the site-wide -16px margin under text blocks made titles run into the button */
+[class*="st-key-int-card-"] [data-testid="stMarkdownContainer"] { margin-bottom: 0 !important; }
+[class*="st-key-int-card-"] .int-stat { margin: 8px 0 0; padding: 4px 8px; align-items: center; }
+[class*="st-key-int-card-"] .int-stat b { font-size: 1.1rem; white-space: nowrap; }
+[class*="st-key-int-card-"] .int-stat span {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+[data-testid="stColumn"]:has(.st-key-int_group) [data-testid="stButtonGroup"] { justify-content: flex-end; }
+.lrn-stats--tight.lrn-stats--3 { margin: 0; }
+[class*="st-key-int-card-"] .int-stat span { font-size: 0.72rem; line-height: 1.3; }
+
+/* ----- Glossary: A-Z dictionary list (views/glossary.py) ----- */
+.st-key-gl-hint p { margin: 0; text-align: right; font-size: 0.85rem !important; color: var(--brand); }
+.st-key-gl-hint [data-testid="stIconMaterial"] { color: var(--brand); }
+.gl-az {
+  display: flex; flex-wrap: wrap; gap: 0.15rem 0.55rem; padding: 0.5rem 0.2rem 0.2rem;
+  font-family: 'EB Garamond', Garamond, Georgia, serif; font-size: 1.3rem; line-height: 1;
+}
+.gl-az a { color: var(--sky-900) !important; text-decoration: none !important; padding: 0 0.1rem; border-bottom: 1px solid transparent; }
+.gl-az a:hover { border-bottom-color: var(--sky-900); }
+.gl-az span { color: #c3cedb; }
+.st-key-gl-list { gap: 0 !important; margin-top: 0.4rem; }
+[class*="st-key-gl-sec-"] { padding: 1rem 0 1.1rem; border-top: 1px solid var(--border); flex-wrap: nowrap !important; }
+[class*="st-key-gl-sec-"] > [data-testid="stElementContainer"] { width: 3.2rem !important; flex: none; }
+.gl-letter {
+  font-family: 'EB Garamond', Garamond, Georgia, serif; font-size: 2.6rem; font-weight: 500; line-height: 0.9;
+  color: var(--sky-900); scroll-margin-top: 5rem;
+}
+[class*="st-key-gl-terms-"] { flex: 1; min-width: 0; flex-wrap: wrap !important; gap: 0.5rem 0.55rem !important; }
+[class*="st-key-gl-terms-"] [data-testid="stElementContainer"] { width: auto !important; }
+[class*="st-key-gl-terms-"] button[kind] {
+  min-height: 0; padding: 0.4rem 0.9rem; border-radius: 999px; text-align: left;
+  background: var(--surface); border: 1px solid var(--border); box-shadow: 0 1px 2px rgba(10, 61, 122, 0.05);
+  transition: border-color .15s ease, background .15s ease, transform .15s ease;
+}
+[class*="st-key-gl-terms-"] button[kind]:hover { border-color: var(--brand); background: var(--surface-alt); transform: translateY(-1px); }
+[class*="st-key-gl-terms-"] button[kind] p { font-size: 0.88rem !important; color: var(--text-secondary); white-space: normal; }
+[class*="st-key-gl-terms-"] button[kind] p strong { color: var(--text-primary); font-weight: 750; }
+@media (max-width: 640px) {
+  .gl-letter { font-size: 2rem; }
+  [class*="st-key-gl-sec-"] > [data-testid="stElementContainer"] { width: 2.4rem !important; }
+}
+.gl-dlg .gl-term { font-size: 1.6rem; color: var(--sky-900); }
+.gl-dlg .gl-exp { font-size: 1rem; }
+.gl-dlg p { font-size: 0.95rem; color: var(--text-primary); line-height: 1.6; margin: 0.6rem 0; }
+.gl-dlg-src { font-size: 0.8rem; color: var(--text-secondary); border-top: 1px solid var(--border); padding-top: 0.5rem; }
+.gl-dlg-src a { color: var(--brand) !important; }
+.st-key-glossary-scale .gs-title { margin-bottom: 6px; }
+.st-key-glossary-scale .gs-bar { height: 42px; }
+.st-key-glossary-scale .gs-stages { height: 26px; }
+.gl-scale-src { margin-top: 0.35rem; }
 
 
 /* ----- Per-card sources (Overview hero, KPI cards, Key insights) ----- */
@@ -3689,15 +3831,22 @@ button[data-variant="segmented_control"]:focus-visible {
 .element-container:has(.grap-after) { overflow: visible !important; }
 .grap-tl-today em { bottom: auto; top: -17px; left: -18px; }
 
-/* GRAP page: navy action buttons (AQI and GRAP stages dialog, CAQM orders link) */
+/* Navy action buttons: GRAP page (AQI and GRAP stages dialog, CAQM orders link) and
+   Recent trends (GRAP orders, Compare whole winters, More headlines) */
 .st-key-grap_scale button,
-.st-key-grap-caqm-link a {
+.st-key-grap-caqm-link a,
+.st-key-trend_grap_popover button,
+.st-key-trend_compare_open button,
+.st-key-trend_news_more button {
   border-color: var(--sky-900) !important;
   background: var(--sky-900) !important;
   color: #ffffff !important;
 }
 .st-key-grap_scale button:hover,
-.st-key-grap-caqm-link a:hover {
+.st-key-grap-caqm-link a:hover,
+.st-key-trend_grap_popover button:hover,
+.st-key-trend_compare_open button:hover,
+.st-key-trend_news_more button:hover {
   border-color: #072c59 !important;
   background: #072c59 !important;
   color: #ffffff !important;
