@@ -11,7 +11,7 @@ from views.delhi_weather import render_aqi_delhi, render_health_advisory
 from views.render_aqi_pdf import render_aqi_pdf
 from views.fires import render_fires_page
 from views.render_google_doc import render_google_doc
-from views.render_aqi_fc import render_aqi_fc, get_error_message
+from views.render_aqi_fc import render_aqi_categories_button, render_aqi_fc, get_error_message
 from views.render_pm25_fc import render_pm10_fc, render_pm25_fc
 from views.aqews_bulletin import render_bulletin_button
 from views.components import hr, outage_banner, section_header
@@ -126,7 +126,9 @@ def page_forecast():
         'Open the AQEWS portal ↗</a>',
         unsafe_allow_html=True,
     )
-    render_bulletin_button()
+    with st.container(horizontal=True, gap="small", key="fc-actions"):
+        render_bulletin_button()
+        render_aqi_categories_button()
     fc_options = ["AQI", "PM2.5", "PM10"]
     selection = st.segmented_control(
             "**Variable**",

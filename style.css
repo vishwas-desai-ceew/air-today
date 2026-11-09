@@ -3552,6 +3552,17 @@ iframe:hover {
   border-color: var(--sky-900) !important; background: var(--sky-900) !important; color: #fff !important;
 }
 .st-key-open_aqews_bulletin button:hover { border-color: #072c59 !important; background: #072c59 !important; }
+/* AQEWS Forecast: bulletin + AQI categories buttons side by side */
+.st-key-fc-actions { margin: 0 0 0.6rem; flex-wrap: wrap; justify-content: flex-start !important; }
+.st-key-fc-actions > * { flex: 0 0 auto !important; width: auto !important; }
+.st-key-fc-actions .st-key-aqews-bulletin-open { margin: 0; width: auto !important; }
+.st-key-open_aqi_categories button {
+  border: 1px solid var(--sky-900) !important; background: #ffffff !important; color: var(--sky-900) !important;
+}
+.st-key-open_aqi_categories button p, .st-key-open_aqi_categories button [data-testid="stIconMaterial"] { color: var(--sky-900) !important; }
+.st-key-open_aqi_categories button:hover { background: var(--sky-50, #eef5fd) !important; }
+/* day cards inside the Daily AQI forecast card */
+.st-key-fc-chart-card .fc-cals { margin: 0.7rem 0 0.2rem; }
 .aqb-title { margin: -0.4rem 0 0.8rem; color: var(--text-secondary); font-size: 0.9rem; font-weight: 650; }
 .aqb-sec { display: grid; grid-template-columns: 1.8rem 1fr; gap: 0.6rem; margin-bottom: 0.85rem; }
 .aqb-num {
