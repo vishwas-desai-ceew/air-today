@@ -7,8 +7,8 @@ weather cards need (humidity, wind direction, apparent temperature, cloud,
 visibility).
 
 `fetch_live()` is called by the dashboard (cached 5 min, auto-refreshed): it
-takes OBSERVED values from the METAR reports of Safdarjung (VIDD, IMD's
-reference station for Delhi; IGI airport VIDP as fallback) via NOAA's
+takes OBSERVED values from the METAR reports of Indira Gandhi International
+Airport (VIDP; Safdarjung VIDD as fallback) via NOAA's
 aviationweather.gov API (no key, refreshed every 30 min), and fills the gaps
 METAR doesn't report (feels-like, mixing height, daily high/low) from the
 Open-Meteo model.
@@ -95,7 +95,7 @@ def fetch_current() -> dict:
 
 
 METAR_URL = "https://aviationweather.gov/api/data/metar"
-METAR_STATIONS = {"VIDD": "Safdarjung", "VIDP": "IGI Airport"}
+METAR_STATIONS = {"VIDP": "IGI Airport", "VIDD": "Safdarjung"}
 METAR_WEATHER = {  # present-weather codes most relevant to Delhi
     "TS": "Thunderstorm", "RA": "Rain", "DZ": "Drizzle", "SH": "Showers", "FG": "Fog",
     "BR": "Mist", "HZ": "Haze", "FU": "Smoke", "DU": "Dust", "SA": "Sand",
@@ -121,7 +121,7 @@ def describe_metar(obs) -> str:
 
 
 def fetch_metar() -> dict:
-    """Latest observation from Safdarjung, else IGI. Units converted to the
+    """Latest observation from IGI Airport, else Safdarjung. Units converted to the
     dashboard's (m/s, metres, %)."""
     r = requests.get(METAR_URL, params={"ids": ",".join(METAR_STATIONS), "format": "json"},
                      headers=HTTP_HEADERS, timeout=15)

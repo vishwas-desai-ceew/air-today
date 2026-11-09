@@ -108,7 +108,7 @@ def meteo_hourly() -> pd.DataFrame:
 
 @st.cache_data(ttl=300, show_spinner=False)
 def current_weather() -> dict:
-    """Observed METAR conditions (Safdarjung) + Open-Meteo gaps, 5-min cache.
+    """Observed METAR conditions (IGI Airport, VIDP) + Open-Meteo gaps, 5-min cache.
     Falls back to the nearest hour of the last cron forecast if both APIs
     are unreachable."""
     from ingestion.weather import fetch_live

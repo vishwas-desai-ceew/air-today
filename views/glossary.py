@@ -38,7 +38,7 @@ TERMS = [
     ("Rain classes", "IMD 24-hour rainfall", "Very light 0.1–2.4 mm, light 2.5–7.5 mm, moderate 7.6–35.5 mm, rather "
      "heavy 35.6–64.4 mm, heavy 64.5–124.4 mm in a day.", "Weather", "imd_glossary"),
     ("METAR", "Aviation weather report", "A routine observation report from an airport weather station. The "
-     "dashboard's live weather uses Safdarjung (VIDD), with IGI Airport (VIDP) as fallback.", "Weather", None),
+     "dashboard's live weather uses Indira Gandhi International Airport (VIDP), with Safdarjung (VIDD) as fallback.", "Weather", None),
 
     ("GRAP", "Graded Response Action Plan", "Emergency measures for Delhi NCR applied in stages as air quality "
      "worsens: Stage I at AQI 201–300, II at 301–400, III at 401–450 and IV above 450. Each stage adds to the ones "

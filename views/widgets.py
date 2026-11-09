@@ -71,9 +71,9 @@ def cpcb_src(row):
 
 def metar_src(wx, short=True):
     """Link to the METAR report of the station the observation came from
-    (Safdarjung VIDD, or IGI VIDP as fallback)."""
-    station = wx.get("station") or "Safdarjung (VIDD)"
-    icao = station.split("(")[-1].rstrip(")") if "(" in station else "VIDD"
+    (IGI Airport VIDP, or Safdarjung VIDD as fallback)."""
+    station = wx.get("station") or "IGI Airport (VIDP)"
+    icao = station.split("(")[-1].rstrip(")") if "(" in station else "VIDP"
     label = f"METAR, {station.split(' (')[0] if short else station}"
     return src("metar", label, f"https://aviationweather.gov/data/metar/?ids={icao}")
 
