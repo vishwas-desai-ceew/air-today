@@ -262,32 +262,40 @@ def render_aqi_delhi(compact=False, show_insights=True):
 
 
 def render_health_advisory(df=None):
-    """Render health guidance using already-loaded AQI rows when available."""
+    """Health advisory for the latest CPCB AQI category, from the Ministry of
+    Health / NCDC air pollution advisory (config.reference.HEALTH_ADVISORY):
+    possible health effects, advice for everyone and for vulnerable groups,
+    and, on days above AQI 200, the advisory's practical steps."""
+    from html import escape
+    from config.reference import HEALTH_ADVISORY, HEALTH_STEPS_ABOVE_200, HEALTH_VULNERABLE, SOURCES
     if df is None:
         df = get_last_two_days()
-    # Handle available rows safely
     if df.empty:
         return
-    
-    df1 = df.iloc[0]
-    category = df1["category"]
-    category_class = AQI_CATEGORY_CLASSES.get(category, "aqi-category-chip--unknown")
-    impact = STYLES.get(category, DEF).get("impact", "No data available")
+    category = df.iloc[0]["category"]
+    if category not in HEALTH_ADVISORY:
+        return
+    effects, general, vulnerable = HEALTH_ADVISORY[category]
+    chip = AQI_CATEGORY_CLASSES.get(category, "aqi-category-chip--unknown")
+    name, url = SOURCES["mohfw_air_advisory"]
+    steps = ""
+    if category in ("Poor", "Very Poor", "Severe"):     # AQI above 200
+        steps = ("<div class='ha-steps'><div class='ha-label'>On days above AQI 200</div><ul>"
+                 + "".join(f"<li>{escape(step)}</li>" for step in HEALTH_STEPS_ABOVE_200) + "</ul></div>")
     st.markdown(
-            f"""
-            <section class="health-advisory-card">
-                <div class="aqi-panel-title">
-                    Health Advisory <span>(per CPCB)</span>
-                </div>
-                <ul>
-                <li><span class="aqi-category-chip {category_class}">{category}</span> {impact}</li>
-                <li><span class="aqi-category-chip-rec">Recommendation</span> Wear an <b>N95</b> mask outdoors during periods of severe air pollution.</li>
-                </ul>
-            </section>
-            """,
-            unsafe_allow_html=True
-        )
-    
-    
-        
-                    
+        "<section class='health-advisory-card'>"
+        "<div class='aqi-panel-title'>Health advisory</div>"
+        f"<div class='ha-effects'><span class='aqi-category-chip {chip}'>{escape(category)}</span>"
+        "<div><div class='ha-label'>Possible health effects</div>"
+        + "".join(f"<p>{escape(e)}</p>" for e in effects) + "</div></div>"
+        "<div class='ha-advice'>"
+        f"<div><div class='ha-label'>Everyone</div><p>{escape(general)}</p></div>"
+        f"<div><div class='ha-label'>Vulnerable groups</div><p>{escape(vulnerable)}</p>"
+        f"<small>{escape(HEALTH_VULNERABLE)}</small></div>"
+        "</div>"
+        f"{steps}"
+        f"<div class='side-source'><b>Source</b><a href='{escape(url)}' target='_blank' rel='noopener'>"
+        f"{escape(name)}</a> · advice for the day's CPCB AQI category</div>"
+        "</section>",
+        unsafe_allow_html=True,
+    )

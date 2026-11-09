@@ -1882,6 +1882,24 @@ h6 {
   color: #ffffff;
 }
 
+/* Health advisory (Daily update): MoHFW / NCDC advisory by CPCB category */
+.health-advisory-card .ha-label {
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #8a5a17; margin-bottom: 0.15rem;
+}
+.health-advisory-card p { margin: 0 !important; color: #3f3426; font-size: 0.92rem; line-height: 1.45; }
+.ha-effects { display: flex; gap: 0.7rem; align-items: flex-start; margin: 0.5rem 0 0.7rem; }
+.ha-effects .aqi-category-chip { flex: none; margin-top: 0.1rem; }
+.ha-advice { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+.ha-advice > div, .ha-steps {
+  padding: 0.6rem 0.75rem; border: 1px solid rgba(226, 188, 129, 0.5); border-radius: 10px; background: rgba(255, 255, 255, 0.6);
+}
+.ha-advice p { font-weight: 650; }
+.ha-advice small { display: block; margin-top: 0.25rem; font-size: 0.74rem; color: #7a6a55; }
+.ha-steps { margin-top: 0.6rem; }
+.ha-steps ul { display: flex !important; flex-direction: column; gap: 0.3rem; margin: 0.2rem 0 0 !important; padding-left: 1.1rem !important; list-style: disc !important; }
+.ha-steps li { padding: 0 !important; border: 0 !important; background: none !important; font-size: 0.88rem; color: #3f3426; }
+.health-advisory-card .side-source { border-top-color: rgba(226, 188, 129, 0.6); }
+@media (max-width: 640px) { .ha-advice { grid-template-columns: 1fr; } }
 .aqi-category-chip-rec {
   display: inline-block;
   margin-right: 0.25rem;

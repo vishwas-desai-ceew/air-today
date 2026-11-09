@@ -26,6 +26,8 @@ SOURCES = {
               "https://aviationweather.gov/data/metar/?ids=VIDP"),
     "open_meteo_model": ("Open-Meteo model", "https://open-meteo.com/"),
     "nasa_fires": ("NASA FIRMS active fires (VIIRS)", "https://firms.modaps.eosdis.nasa.gov/"),
+    "mohfw_air_advisory": ("MoHFW / NCDC, Health Advisory on Air Pollution (NPCCHH), 1 Nov 2025",
+                           "https://ncdc.mohfw.gov.in/uploads/pdf/air2.pdf"),
     "aqews_dss": ("IITM AQEWS, source apportionment (DSS)", "https://ews.tropmet.res.in/"),
     "cpcb_naaqs": ("CPCB, National Ambient Air Quality Standards (Gazette of India, 18 November 2009)",
                    "https://cpcb.gov.in/uploads/National_Ambient_Air_Quality_Standards.pdf"),
@@ -125,3 +127,52 @@ def band_for(value, bands):
         if high is None or value <= high:
             return name, colour
     return bands[-1][0], bands[-1][3]
+
+
+# ----- Health advisory (Daily update) -------------------------------------
+# Source: SOURCES["mohfw_air_advisory"], the Ministry of Health and Family
+# Welfare / NCDC "Health Advisory on Air Pollution" under NPCCHH, sent with the
+# Health Secretary's D.O. letter of 1 Nov 2025. Wording copied from the scanned
+# PDF (read from the page images, 10 Nov 2026); check against the PDF on update.
+#
+# "Table: AQI levels, Health effects and Certain Protective Health Measures",
+# advisory pp. 6-7 (PDF pp. 10-11): category -> (possible health consequences,
+# advice for the general population, advice for the vulnerable population).
+HEALTH_ADVISORY = {
+    "Good": (["Low risk"],
+             "No special precautions",
+             "No special precautions"),
+    "Satisfactory": (["Minor breathing discomfort in vulnerable population"],
+                     "No special precautions",
+                     "Do less prolonged or strenuous outdoor physical exertion"),
+    "Moderate": (["Breathing or other health related discomfort in vulnerable population"],
+                 "Do less prolonged or strenuous outdoor physical exertion",
+                 "Avoid prolonged or strenuous outdoor physical exertion"),
+    "Poor": (["Breathing discomfort in healthy people on prolonged exposure",
+              "Breathing or other health related discomfort in vulnerable population on short exposure"],
+             "Avoid outdoor physical exertion",
+             "Avoid outdoor physical activities"),
+    "Very Poor": (["Respiratory illness in healthy people on prolonged exposure",
+                   "Pronounced respiratory or other illnesses in vulnerable population on short exposure"],
+                  "Avoid outdoor physical activities, especially during morning and late evening hours",
+                  "Remain indoors and keep activity levels low"),
+    "Severe": (["Respiratory illness in healthy people on prolonged exposure",
+                "Serious respiratory or other illnesses in vulnerable population on short exposure"],
+               "Avoid outdoor physical activities",
+               "Remain indoors and keep activity levels low"),
+}
+# Who the advisory means by vulnerable (p. 16, Annexure I; Annexure II item 4g adds pregnant women)
+HEALTH_VULNERABLE = "Children, elderly people, pregnant women and people with heart or lung conditions"
+# Annexure II "Social Media Messages", for days of poor to severe plus air
+# pollution (AQI > 200), advisory pp. 19-20. Items 4a-4b, 4c-4d, 14, 11 and 4f,
+# lightly shortened; meaning unchanged.
+HEALTH_STEPS_ABOVE_200 = [
+    "Avoid outdoor morning and late-evening walks, jogging, running and other exertional activity.",
+    "Keep external doors and windows shut in the morning and late evening; if needed, ventilate rooms "
+    "between 12 PM and 4 PM.",
+    "Consider close-fitted N95 or N99 masks to reduce exposure.",
+    "People with chronic lung or heart disease should keep their prescribed medicines at hand when going out.",
+    "If you have breathlessness, cough, chest discomfort or pain, giddiness, or red or watery eyes, consult "
+    "the nearest doctor immediately.",
+]
+
