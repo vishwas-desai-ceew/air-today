@@ -1,12 +1,13 @@
 """Glossary: the AQI and GRAP scale as a picture, then searchable,
-filterable term cards. Terms carry a source where they state a threshold."""
+filterable term cards on one screen. Each card shows the term and its
+expansion; clicking it opens the definition (and source, where a term states
+a threshold) in a dialog."""
 from html import escape
 
 import streamlit as st
 
 from config.reference import (AQI_BANDS, AQI_HEALTH, GRAP_COLOURS_DISCLAIMER, GRAP_STAGES as GRAP_STAGE_DEFS,
                               SOURCES, VENTILATION_INDEX_UNFAVOURABLE)
-from views.charts import source_line
 
 # GRAP stages by AQI, from CAQM's GRAP schedule (SOURCES["caqm_grap_schedule"]).
 GRAP_STAGES = [("Stage I", 201, 300), ("Stage II", 301, 400), ("Stage III", 401, 450), ("Stage IV", 451, 500)]
@@ -73,11 +74,64 @@ TERMS = [
     ("API", "Application Programming Interface", "A way for systems to exchange data automatically.", "Institutions", None),
 
     ("Outage", "Service interruption", "A source or portal is temporarily unavailable or not responding as "
-     "expected.", "Data status", None),
+     "expected.", "Data and sources", None),
     ("Insufficient data", "Not enough validated observations", "A value cannot be reliably reported for the "
-     "relevant period.", "Data status", None),
+     "relevant period.", "Data and sources", None),
 ]
-CATEGORIES = ["All", "Air quality", "Weather", "Policy", "Institutions", "Data status"]
+# Terms added on 10 Nov 2026: ones the dashboard has used since the glossary was
+# last revised (6 Nov) - fires, pollutants, weather, Recent trends and the
+# interventions text.
+TERMS += [
+    ("NAAQS", "National Ambient Air Quality Standards", "India's legal limits for outdoor air, notified by CPCB "
+     "in November 2009. For PM2.5 the limit is 60 µg/m³ over 24 hours and 40 µg/m³ as an annual average; for PM10, "
+     "100 µg/m³ and 60 µg/m³. The 24-hour limits must be met 98% of the time in a year.", "Air quality", "cpcb_naaqs"),
+    ("Prominent pollutant", "The pollutant that sets the AQI", "The pollutant with the highest sub-index on a "
+     "day. CPCB bulletins name it alongside the AQI; in Delhi's winter it is usually PM2.5 or PM10.",
+     "Air quality", "cpcb_aqi"),
+    ("Very Poor+ spell", "Run of Very Poor or worse days", "Consecutive days with a daily AQI above 300, the "
+     "Very Poor and Severe categories. The Recent trends page reports the longest such run in each winter.",
+     "Air quality", None),
+    ("Stubble burning", "Paddy straw burning", "Setting fire to the straw left in fields after the paddy "
+     "harvest to clear them quickly for sowing wheat, mainly in Punjab and Haryana in October and November.",
+     "Policy", None),
+    ("Active fire", "Satellite fire detection", "A spot where a satellite sensor picks up heat from a fire. "
+     "Counts are detections, not individual fires: one large fire can produce several, while small or short fires, "
+     "or fires under cloud, can be missed.", "Data and sources", "nasa_fires"),
+    ("FIRMS", "Fire Information for Resource Management System", "NASA's service that publishes near real-time "
+     "active fire detections from the VIIRS and MODIS sensors. The Fires pages use it.", "Data and sources",
+     "nasa_fires"),
+    ("VIIRS", "Visible Infrared Imaging Radiometer Suite", "A satellite sensor that detects active fires at "
+     "375 m resolution; the dashboard's main source of farm-fire counts.", "Data and sources", "nasa_fires"),
+    ("MODIS", "Moderate Resolution Imaging Spectroradiometer", "A sensor on NASA's Terra and Aqua satellites that "
+     "detects active fires at 1 km resolution, coarser than VIIRS.", "Data and sources", "nasa_fires"),
+    ("Open-Meteo", "Open weather forecast service", "The free weather model service behind the dashboard's "
+     "hourly and 3-day forecasts, and the values a METAR report does not include.", "Data and sources",
+     "open_meteo"),
+    ("NOAA", "National Oceanic and Atmospheric Administration", "The US agency whose aviationweather.gov service "
+     "supplies the METAR reports used for live weather.", "Institutions", None),
+    ("IST", "Indian Standard Time", "UTC + 5:30. All times on the dashboard are in IST.", "Data and sources", None),
+    ("NCR", "National Capital Region", "Delhi together with surrounding districts of Haryana, Uttar Pradesh and "
+     "Rajasthan. GRAP applies across the NCR.", "Policy", None),
+    ("Feels like", "Apparent temperature", "How warm or cold it feels, combining air temperature with humidity "
+     "and wind. The weather card takes it from Open-Meteo.", "Weather", "open_meteo"),
+    ("Solar noon", "Midday", "The moment the sun is highest in the sky, halfway between sunrise and sunset. "
+     "The weather card's daylight panel marks it.", "Weather", None),
+    ("MCD", "Municipal Corporation of Delhi", "The municipal body for most of Delhi.", "Institutions", None),
+    ("NDMC", "New Delhi Municipal Council", "The municipal body for central New Delhi.", "Institutions", None),
+    ("SAMEER", "CPCB's air quality app", "CPCB's mobile app for AQI updates and pollution complaints.",
+     "Institutions", None),
+    ("BS-VI", "Bharat Stage VI", "India's current vehicle emission standard.", "Policy", None),
+    ("CNG / LNG", "Compressed / liquefied natural gas", "Cleaner-burning gas fuels for vehicles and industry.",
+     "Policy", None),
+    ("DG set", "Diesel generator set", "A diesel engine that generates electricity, usually as backup power; "
+     "restricted under GRAP.", "Policy", None),
+    ("MSME", "Micro, small and medium enterprises", "Smaller industrial units, often the focus of clean-fuel "
+     "support.", "Policy", None),
+    ("IEC", "Information, education and communication", "Public awareness and outreach activities.", "Policy", None),
+    ("Hotspot", "Pollution hotspot", "A location with recurring high pollution, usually from local sources such "
+     "as traffic, dust or waste burning.", "Policy", None),
+]
+CATEGORIES = ["All", "Air quality", "Weather", "Policy", "Institutions", "Data and sources"]
 
 
 def scale_html():
@@ -98,33 +152,56 @@ def scale_html():
             f"<div class='gs-stages'>{stages}</div></div>")
 
 
+def _slug(category):
+    return category.split()[0].lower()
+
+
+@st.dialog("Glossary")
+def term_dialog(index):
+    term, expansion, definition, category, src = TERMS[index]
+    src_html = (f"<div class='gl-dlg-src'>Source: <a href='{SOURCES[src][1]}' target='_blank' rel='noopener'>"
+                f"{escape(SOURCES[src][0])}</a></div>" if src else "")
+    st.markdown(
+        f"<div class='gl-dlg gl-{_slug(category)}'>"
+        f"<div class='gl-top'><span class='gl-term'>{escape(term)}</span>"
+        f"<span class='gl-cat'>{escape(category)}</span></div>"
+        f"<div class='gl-exp'>{escape(expansion)}</div><p>{escape(definition)}</p>{src_html}</div>",
+        unsafe_allow_html=True,
+    )
+
+
 def render_glossary():
     with st.container(border=True, key="glossary-scale"):
-        st.markdown(scale_html(), unsafe_allow_html=True)
-        source_line("cpcb_aqi", "caqm_grap_schedule", note="GRAP stage AQI ranges from the CAQM schedule")
-        st.caption(f":material/info: {GRAP_COLOURS_DISCLAIMER}")
+        # Source line in the same block as the scale, so it cannot overlap the stage labels
+        links = " · ".join(f"<a href='{SOURCES[k][1]}' target='_blank'>{escape(SOURCES[k][0])}</a>"
+                           for k in ("cpcb_aqi", "caqm_grap_schedule"))
+        st.markdown(scale_html() + f"<div class='chart-source gl-scale-src'>Source: {links} · "
+                    f"{escape(GRAP_COLOURS_DISCLAIMER)}</div>", unsafe_allow_html=True)
 
-    q_col, f_col = st.columns([2, 3], gap="medium", vertical_alignment="bottom")
-    with q_col:
-        query = st.text_input("Search", placeholder="e.g. ventilation, GRAP, PM2.5", key="gloss_q",
-                              label_visibility="collapsed", icon=":material/search:")
+    f_col, hint_col = st.columns([3, 2], gap="medium", vertical_alignment="center")
     with f_col:
         cat = st.segmented_control("Category", options=CATEGORIES, default="All", key="gloss_cat",
                                    label_visibility="collapsed") or "All"
-    q = (query or "").strip().lower()
-    shown = [t for t in TERMS
-             if (cat == "All" or t[3] == cat) and (not q or any(q in x.lower() for x in t[:3]))]
-    if not shown:
-        st.info("No terms match. Try a shorter word.")
-        return
-    cards = []
-    for term, expansion, definition, category, src in shown:
-        src_html = (f"<a class='gl-src' href='{SOURCES[src][1]}' target='_blank'>{escape(SOURCES[src][0])}</a>"
-                    if src else "")
-        cards.append(
-            f"<article class='gl-card gl-{category.split()[0].lower()}'>"
-            f"<div class='gl-top'><span class='gl-term'>{escape(term)}</span><span class='gl-cat'>{escape(category)}</span></div>"
-            f"<div class='gl-exp'>{escape(expansion)}</div><p>{escape(definition)}</p>{src_html}</article>"
-        )
-    st.markdown(f"<div class='gl-count'>{len(shown)} term{'s' if len(shown) != 1 else ''}</div>"
-                f"<div class='gl-grid'>{''.join(cards)}</div>", unsafe_allow_html=True)
+    with hint_col, st.container(key="gl-hint"):
+        st.markdown(":material/touch_app: **Click a term** to view its definition")
+    shown = [i for i, t in enumerate(TERMS) if cat == "All" or t[3] == cat]
+
+    # A to Z, dictionary style: an index of letters to jump to, then one section
+    # per letter with its terms as pills that wrap naturally
+    groups = {}
+    for i in sorted(shown, key=lambda i: TERMS[i][0].casefold()):
+        groups.setdefault(TERMS[i][0][0].upper(), []).append(i)
+    az = "".join(f"<a href='#gl-{ch}'>{ch}</a>" if ch in groups else f"<span>{ch}</span>"
+                 for ch in "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    st.markdown(f"<nav class='gl-az' aria-label='Jump to letter'>{az}</nav>", unsafe_allow_html=True)
+    with st.container(key="gl-list"):
+        for letter, items in groups.items():
+            with st.container(horizontal=True, gap="medium", vertical_alignment="top", key=f"gl-sec-{letter}"):
+                st.markdown(f"<div class='gl-letter' id='gl-{letter}'>{letter}</div>", unsafe_allow_html=True,
+                            width="content")
+                with st.container(horizontal=True, gap="small", key=f"gl-terms-{letter}"):
+                    for i in items:
+                        term, expansion, _d, category, _s = TERMS[i]
+                        label = f"**{term}**" + (f" · {expansion}" if expansion != term else "")
+                        if st.button(label, key=f"gl-{_slug(category)}-{i}"):
+                            term_dialog(i)

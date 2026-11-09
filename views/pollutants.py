@@ -22,7 +22,7 @@ from config.reference import AQI_BANDS, NAAQS_24H, PM10_BANDS, PM25_BANDS, band_
 from views import data
 from views.charts import PLOT_CONFIG, add_bands, base_layout
 from views.render_aqi_fc import aqi_chart, band_legend_html
-from views.widgets import cpcb_src, icon
+from views.widgets import cpcb_src, icon, side_points, side_source, src
 
 POLLUTANTS = {
     "PM2.5": dict(label="PM₂.₅", bands=PM25_BANDS, colour="#0a3d7a", y_floor=300),
@@ -68,12 +68,13 @@ CHART_HEIGHT = 340          # the weather page's strips are 230
 CHART_HEIGHT_COMPACT = 300
 
 
-def _info_html(icon_name, title, period, stat_html, why, extra=""):
-    """Left panel of a strip, in the weather page's style."""
+def _info_html(icon_name, title, period, stat_html, points, source):
+    """Left panel of a strip, in the weather page's style: title, period,
+    the latest value, two or three short points and a linked source line."""
     return (
         f"<div class='wx-info pol-info'><div class='wx-info-head'>{icon(icon_name, 22)}<span>{escape(title)}</span></div>"
-        f"<div class='pol-period'><span>Time period</span>{escape(period)}</div>"
-        f"<div class='pol-info-stat'>{stat_html}</div>{extra}<p>{escape(why)}</p></div>"
+        f"<div class='pol-period'>{escape(period)}</div>"
+        f"<div class='pol-info-stat'>{stat_html}</div>{side_points(points)}{source}</div>"
     )
 
 
@@ -91,19 +92,21 @@ def render_pm_tracker(compact=False):
     last = df.iloc[-1]
     names = " and ".join(POLLUTANTS[c]["label"] for c in cols)
 
-    stat, extra = "", ""
+    stat, points = "", []
     for c in cols:
         cfg = POLLUTANTS[c]
         if pd.isna(last[c]):
             continue
         _, colour = band_for(last[c], cfg["bands"])
         peak = df.loc[df[c].idxmax()]
-        stat += (f"<div class='pol-stat-line'><small>{cfg['label']} · latest hour ({last['time']:%H:%M, %d %b})</small>"
+        stat += (f"<div class='pol-stat-line'><small>{cfg['label']} · {last['time']:%H:%M, %d %b}</small>"
                  f"<b style='color:{colour}'>{last[c]:.0f}</b><span>µg/m³</span></div>")
-        extra += (f"<div class='pol-info-sub'>{cfg['label']}: peak hour {peak[c]:.0f} µg/m³ at "
-                  f"{peak['time']:%H:%M, %d %b} · period average {df[c].mean():.0f} µg/m³</div>")
+        points.append(f"<b>{cfg['label']}</b> peak {peak[c]:.0f} at {peak['time']:%H:%M, %d %b}; "
+                      f"average {df[c].mean():.0f} µg/m³.")
+    points.append("Shading shows CPCB bands; the dashed line is the 24-hour NAAQS limit. Both are set for "
+                  "daily averages, so single hours are a guide.")
     if "PM10" not in cols:
-        extra += "<div class='pol-info-sub muted'>PM₁₀ isn't in the current data file yet.</div>"
+        points.append("<i>PM₁₀ isn't in the current data file yet.</i>")
 
     with st.container(border=True, key="pol-strip-pm"):
         info, chart = st.columns([1, 3], gap="medium")
@@ -119,19 +122,11 @@ def render_pm_tracker(compact=False):
         with info:
             st.markdown(_info_html(
                 "fog", f"{names}, hourly",
-                f"{_period(df['time'].min(), df['time'].max())} IST ({len(df)} hours)",
-                stat,
-                "The line is each hour's value; the shading marks the CPCB bands. The dashed line is the "
-                "NAAQS 24-hour standard. India's NAAQS has no 1-hour standard for PM, and CPCB's bands are "
-                "also set for 24-hour averages, so for single hours both are a guide.",
-                extra,
+                f"{_period(df['time'].min(), df['time'].max(), '%d %b, %H:%M')} IST · {len(df)} hours",
+                stat, points,
+                side_source("CAAQMS stations via signalsfunc (<b>sample data</b>)",
+                            src("cpcb_aqi", "CPCB AQI bands"), src("cpcb_naaqs", "CPCB NAAQS (2009)")),
             ), unsafe_allow_html=True)
-            st.markdown(
-                "<div class='chart-source'>Source: CAAQMS station data for Delhi via signalsfunc "
-                "(<b>sample data</b>) · bands from CPCB National AQI breakpoints · standard from the CPCB NAAQS "
-                "notification, 18 Nov 2009</div>",
-                unsafe_allow_html=True,
-            )
 
 
 def render_aqi_tracker(compact=False):
@@ -163,14 +158,13 @@ def render_aqi_tracker(compact=False):
                 f"{start.day} {start:%b} – {latest.day} {latest:%b %Y}",
                 f"<div class='pol-stat-line'><small>{latest.day} {latest:%b}</small>"
                 f"<b style='color:{colour}'>{int(latest_row['aqi'])}</b><span>AQI</span>{_cat_chip(cat, colour)}</div>",
-                "Each value is CPCB's daily bulletin AQI: the 24-hour average up to 4 PM IST. "
-                "Points are coloured by category; shading marks the CPCB category bands.",
-                f"<div class='pol-info-sub'>7-day range {lo:.0f}–{hi:.0f}</div>"
-                + (f"<div class='pol-info-sub muted'>{missing} of {AQI_DAYS} days have no bulletin.</div>"
-                   if missing > 0 else ""),
+                [f"7-day range <b>{lo:.0f}–{hi:.0f}</b>.",
+                 "CPCB's daily bulletin AQI: the 24-hour average up to 4 PM IST."]
+                + ([f"<i>{missing} of {AQI_DAYS} days have no bulletin.</i>"] if missing > 0 else []),
+                side_source(cpcb_src(latest_row) + f" ({latest.day} {latest:%b})",
+                            src("cpcb_aqi", "CPCB AQI bands"),
+                            "<a href='/archive' target='_self'>earlier days in the Archive</a>"),
             ), unsafe_allow_html=True)
-            st.markdown(f"<div class='chart-source'>Source: {cpcb_src(latest_row)} ({latest.day} {latest:%b}) · "
-                        "earlier days in the Archive · bands from CPCB Table 3.2</div>", unsafe_allow_html=True)
 
 
 def render_pollutants_page(compact=False):

@@ -14,9 +14,9 @@ import streamlit as st
 
 from config.reference import RAIN_CLASSES_24H, VENTILATION_INDEX_UNFAVOURABLE, WIND_UNFAVOURABLE_KMH
 from views import data
-from views.charts import PLOT_CONFIG, base_layout, hex_rgba, source_line
+from views.charts import PLOT_CONFIG, base_layout, hex_rgba
 from views.sky import solar_elevation
-from views.widgets import compass, icon
+from views.widgets import compass, icon, side_points, side_source, src
 
 WIND_LIMIT_MS = round(WIND_UNFAVOURABLE_KMH / 3.6, 1)  # 10 km/h = 2.8 m/s
 GOOD, BAD = "#1e8e5a", "#c22a1e"
@@ -185,29 +185,31 @@ def _day_cards(df):
     return "<div class='wx-days'>" + "".join("".join(l.strip() for l in c.splitlines()) for c in cards) + "</div>"
 
 
+# Side-panel text: two or three short points per chart, sources linked
+SHORT_LABELS = {"open_meteo": "Open-Meteo", "iitm_aqews": "IITM AQEWS bulletin", "imd_glossary": "IMD glossary"}
 PARAMS = [
     dict(key="temp", icon="temp", title="Temperature & humidity", chart=temp_chart,
-         why="Cold nights strengthen the surface inversion that traps smoke and dust near the ground. "
-             "High humidity helps fine particles grow and fog or smog form.",
+         points=["Cold nights strengthen the inversion that traps pollution near the ground.",
+                 "High humidity helps fog and smog form."],
          stat=lambda d: f"{d['temperature_2m'].min():.0f}° to {d['temperature_2m'].max():.0f}°C",
-         sources=("open_meteo",), note=""),
+         sources=("open_meteo",)),
     dict(key="wind", icon="wind", title="Wind", chart=wind_chart,
-         why=f"Wind carries pollution away. Below about {WIND_LIMIT_MS} m/s (10 km/h) the IITM AQEWS bulletin "
-             "treats conditions as unfavourable for dispersion. Red bars are hours below that line; arrows show "
-             "where the wind blows to. North-westerly winds can carry smoke from crop-residue fires in Punjab and Haryana towards Delhi.",
+         points=[f"Below {WIND_LIMIT_MS} m/s (10 km/h), dispersion is poor. Red bars mark those hours.",
+                 "Arrows show where the wind blows to.",
+                 "North-westerlies can bring crop-fire smoke from Punjab and Haryana."],
          stat=lambda d: f"mean {d['wind_speed_10m'].mean():.1f} m/s",
-         sources=("open_meteo", "iitm_aqews"), note="threshold from the IITM AQEWS bulletin"),
+         sources=("open_meteo", "iitm_aqews")),
     dict(key="blh", icon="layers", title="Mixing height", chart=blh_chart,
-         why="The depth of air that pollution mixes into, also called boundary layer height. It collapses to "
-             "a few hundred metres at night, putting a lid on emissions. Multiplied by the average wind speed in that layer it gives the "
-             f"ventilation index (IITM: below {VENTILATION_INDEX_UNFAVOURABLE:,} m²/s is unfavourable).",
+         points=["The depth of air that pollution mixes into.",
+                 "Drops to a few hundred metres at night, trapping emissions.",
+                 f"× wind speed = ventilation index; below {VENTILATION_INDEX_UNFAVOURABLE:,} m²/s is unfavourable."],
          stat=lambda d: f"{d['boundary_layer_height'].min():,.0f}–{d['boundary_layer_height'].max():,.0f} m",
-         sources=("open_meteo", "iitm_aqews"), note=""),
+         sources=("open_meteo", "iitm_aqews")),
     dict(key="rain", icon="rain", title="Rain", chart=rain_chart,
-         why="Rain washes particles out of the air, so a rainy spell can lower particle levels. "
-             "Daily totals on the cards above use IMD's 24-hour classes (light rain is 2.5–7.5 mm).",
+         points=["Rain washes particles out of the air.",
+                 "Light rain is 2.5–7.5 mm in a day (IMD); the day cards use these classes."],
          stat=lambda d: f"{d['rain'].sum():.1f} mm in 72 h",
-         sources=("open_meteo", "imd_glossary"), note=""),
+         sources=("open_meteo", "imd_glossary")),
 ]
 
 
@@ -232,10 +234,10 @@ def render_weather_fcast():
                 st.markdown(
                     f"<div class='wx-info'><div class='wx-info-head'>{icon(p['icon'], 22)}<span>{escape(p['title'])}</span></div>"
                     f"<div class='wx-info-stat'>{escape(p['stat'](df))}</div>"
-                    f"<p>{escape(p['why'])}</p></div>",
+                    f"{side_points([escape(t) for t in p['points']])}"
+                    f"{side_source(*(src(k, SHORT_LABELS.get(k)) for k in p['sources']))}</div>",
                     unsafe_allow_html=True,
                 )
-                source_line(*p["sources"], note=p["note"])
             with chart:
                 st.plotly_chart(p["chart"](df, spans), key=f"wx_{p['key']}", width="stretch", config=PLOT_CONFIG)
     st.caption("Forecast: Open-Meteo model for central Delhi, hourly, next 3 days. Model output, not IMD's forecast; "

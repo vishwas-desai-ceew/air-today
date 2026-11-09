@@ -212,34 +212,44 @@ def intervention_dialog(key):
     )
 
 
+DISCLAIMER = ("Compiled by the Clean Air team. Figures are as originally written; check the underlying "
+              "source before citing.")
+
+
 def render_interventions():
+    """One screen: disclaimer, three counts, a filter and a 4-across grid of
+    short cards; each card opens its full list of actions in a dialog."""
+    st.markdown(f"<div class='int-disclaimer'>{_icon('alert', 18)}<span><b>Disclaimer</b> "
+                f"{escape(DISCLAIMER)}</span></div>", unsafe_allow_html=True)
     total = sum(len(c["actions"]) for c in INTERVENTIONS)
     now = sum(i["now"] for c in INTERVENTIONS for i in _items(c))
-    st.markdown(
-        "<div class='lrn-stats lrn-stats--3'>"
+    stats_col, filter_col = st.columns([2.3, 1], gap="small", vertical_alignment="center")
+    stats_col.markdown(
+        "<div class='lrn-stats lrn-stats--3 lrn-stats--tight'>"
         f"<div class='lrn-stat' style='--c:#0b6bcb'><span>Areas</span><b>{len(INTERVENTIONS)}</b><small>sources and policy levers</small></div>"
         f"<div class='lrn-stat' style='--c:#7048e8'><span>Actions</span><b>{total}</b><small>recommended or in place</small></div>"
         f"<div class='lrn-stat' style='--c:#1e8e5a'><span>Under way</span><b>{now}</b><small>already being carried out</small></div>"
         "</div>",
         unsafe_allow_html=True,
     )
-    group = st.segmented_control("**Show**", options=GROUPS, default="All", key="int_group")
-    group = group or "All"
+    with filter_col:
+        group = st.segmented_control("Show", options=GROUPS, default="All", key="int_group",
+                                     label_visibility="collapsed") or "All"
     cards = [c for c in INTERVENTIONS if group == "All" or c["group"] == group]
 
-    for row in range(0, len(cards), 2):
-        cols = st.columns(2, gap="medium")
-        for col, card in zip(cols, cards[row:row + 2]):
+    for row in range(0, len(cards), 4):
+        cols = st.columns(4, gap="small")
+        for col, card in zip(cols, cards[row:row + 4]):
             items = _items(card)
             with col, st.container(border=True, key=f"int-card-{card['key']}"):
-                stat = (f"<div class='int-stat'><b>{escape(card['stat'][0])}</b><span>{escape(card['stat'][1])}</span></div>"
-                        if card["stat"] else "")
-                preview = card["lede"] or items[0]["text"]
+                # The headline figure is a small badge (full wording on hover and in the dialog),
+                # so every card is the same height
+                stat = (f"<span class='int-stat-pill' title='{escape(card['stat'][0])} "
+                        f"{escape(card['stat'][1])}'>{escape(card['stat'][0])}</span>" if card["stat"] else "")
                 st.markdown(
-                    f"<div class='int-head'><div class='int-icon'>{_icon(card['icon'])}</div>"
-                    f"<div><div class='int-group'>{escape(card['group'])}</div>"
-                    f"<div class='int-title'>{escape(card['title'])}</div></div></div>{stat}"
-                    f"<p class='int-preview'>{escape(preview)}</p>",
+                    f"<div class='int-head'><div class='int-icon'>{_icon(card['icon'], 18)}</div>"
+                    f"<div class='int-head-text'><div class='int-group'>{escape(card['group'])}{stat}</div>"
+                    f"<div class='int-title'>{escape(card['title'])}</div></div></div>",
                     unsafe_allow_html=True,
                 )
                 n_now = sum(i["now"] for i in items)
@@ -247,5 +257,3 @@ def render_interventions():
                 if st.button(label, key=f"int_open_{card['key']}", icon=":material/arrow_forward:",
                              width="stretch"):
                     intervention_dialog(card["key"])
-    st.caption("Compiled by the Clean Air team. Figures are as originally written; check the underlying "
-               "source before citing.")

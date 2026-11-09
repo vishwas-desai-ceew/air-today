@@ -208,3 +208,11 @@ def daily_update_text() -> list:
     """The archived sentences for the latest update."""
     archive = read_json(ARCHIVE_TEMP)
     return next(iter(archive.values()), []) if archive else []
+
+
+@st.cache_data(ttl=1800, show_spinner=False)
+def aqi_news() -> list[dict]:
+    """Delhi air-quality headlines (The Hindu, TOI, NDTV feeds), 30-min cache.
+    Shared by the header dropdown and the Recent trends page."""
+    from ingestion.news import fetch_aqi_news
+    return fetch_aqi_news(limit=15)
