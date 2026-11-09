@@ -153,7 +153,7 @@ def page_fires():
     render_fires_page()
 
 def page_pm25():
-    section_header("Pollutants and AQI", caption="Delhi hourly PM2.5 and PM10 against the CPCB bands, and the last 7 days of CPCB AQI")
+    section_header("Pollutants and AQI", caption="Delhi hourly PM2.5 and PM10 against the CPCB bands, the last 7 days of CPCB AQI, and where Delhi's PM2.5 comes from")
     render_pollutants_page(compact=is_mobile)
 
 def page_bulletin():

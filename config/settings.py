@@ -29,6 +29,8 @@ AQEWS_PM10_CSV = DATA_DIR / "AQEWS_PM10_forecast.csv"
 AQEWS_BULLETIN_JSON = DATA_DIR / "aqews_bulletin.json"  # full text of the day's AQEWS bulletin
 AQEWS_CATEGORY_CSV = DATA_DIR / "AQI_forecast_category.csv"
 VENTILATION_CSV = DATA_DIR / "ventilation_index_forecast.csv"
+AQEWS_BULLETIN_DAYS_CSV = DATA_DIR / "aqews_bulletin_days.csv"  # day cards: sky, temps, wind, MD, VI
+AQEWS_SOURCES_JSON = DATA_DIR / "aqews_source_apportionment.json"  # DSS shares of Delhi PM2.5
 FIRE_CSV = DATA_DIR / "fire_pbhr.csv"  # legacy: Suomi-NPP/VIIRS only, both states, up to Nov 2025
 # One file per state: date + one count column per satellite instrument.
 FIRE_STATE_CSVS = {

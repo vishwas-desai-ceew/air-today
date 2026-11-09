@@ -26,6 +26,7 @@ SOURCES = {
               "https://aviationweather.gov/data/metar/?ids=VIDP"),
     "open_meteo_model": ("Open-Meteo model", "https://open-meteo.com/"),
     "nasa_fires": ("NASA FIRMS active fires (VIIRS)", "https://firms.modaps.eosdis.nasa.gov/"),
+    "aqews_dss": ("IITM AQEWS, source apportionment (DSS)", "https://ews.tropmet.res.in/"),
     "cpcb_naaqs": ("CPCB, National Ambient Air Quality Standards (Gazette of India, 18 November 2009)",
                    "https://cpcb.gov.in/uploads/National_Ambient_Air_Quality_Standards.pdf"),
     # GRAP (CAQM). Orders are listed on the GRAP Orders page; the schedule PDF

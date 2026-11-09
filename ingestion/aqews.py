@@ -13,7 +13,15 @@ Writes:
   AQEWS_PM10_forecast.csv         2-hourly PM10 concentration
   aqews_bulletin.json             full text of the day's bulletin (title + numbered sections)
   ventilation_index_forecast.csv  date, mixing_depth, ventilation_index
-  AQI_forecast_category.csv       date, category   (from the IMD/IITM bulletin text)
+  AQI_forecast_category.csv       date, category
+  aqews_bulletin_days.csv         the bulletin's day cards in full (sky, temps, wind, MD, VI)
+  aqews_source_apportionment.json DSS source shares of Delhi's daily-mean PM2.5
+
+The home page was redesigned around 7 Nov 2026: the prose bulletin
+("The ventilation index is likely to be ... on 25.10.2026") was replaced by
+one card per day (section#ewsBulletin). The card parser is used first; the
+prose parser stays as a fallback. If neither finds a forecast the run fails,
+so the dashboard's health panel flags it instead of serving stale files.
 
 Usage (cron, daily ~17:30 IST):  python ingestion/aqews.py
 """
@@ -31,7 +39,8 @@ PARENT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PARENT_DIR))
 from config.settings import (
     AQEWS_10DAY_URL, AQEWS_AQI_CSV, AQEWS_BULLETIN_JSON, AQEWS_CATEGORY_CSV, AQEWS_HOME_URL,
-    AQEWS_PM10_CSV, AQEWS_PM25_CSV, HTTP_HEADERS, IST, VENTILATION_CSV,
+    AQEWS_BULLETIN_DAYS_CSV, AQEWS_PM10_CSV, AQEWS_PM25_CSV, AQEWS_SOURCES_JSON, HTTP_HEADERS, IST,
+    VENTILATION_CSV,
 )
 from config.logging_config import get_logger
 from ingestion.cpcb_common import AQI_BINS, AQI_LABELS
@@ -177,6 +186,130 @@ def parse_bulletin(text: str) -> dict:
     return out
 
 
+# ------------------------------------------------- bulletin day cards (new) --
+NUM_RE = re.compile(r"-?\d+(?:\.\d+)?")
+
+
+def _infer_date(label: str, ref):
+    """'Tue, 10 Nov' -> date, choosing the year that puts it closest to `ref`
+    (the bulletin's issue date), so a card for 1 Jan issued on 31 Dec works."""
+    m = re.search(r"(\d{1,2})\s+([A-Za-z]{3})", label or "")
+    if not m:
+        return None
+    best = None
+    for year in (ref.year - 1, ref.year, ref.year + 1):
+        try:
+            d = datetime.strptime(f"{m.group(1)} {m.group(2)} {year}", "%d %b %Y").date()
+        except ValueError:
+            continue
+        if best is None or abs((d - ref).days) < abs((best - ref).days):
+            best = d
+    return best
+
+
+def _range(text):
+    """'27–29' -> (27.0, 29.0); '16' -> (16.0, 16.0); None if no number."""
+    nums = [float(n) for n in NUM_RE.findall((text or "").replace("–", " ").replace("-", " "))]
+    if not nums:
+        return None, None
+    return nums[0], nums[1] if len(nums) > 1 else nums[0]
+
+
+def extract_bulletin_cards(html: str) -> dict:
+    """The redesigned home page's bulletin: issue date plus one dict per day card."""
+    soup = BeautifulSoup(html, "html.parser")
+    box = soup.select_one("#ewsBulletin")
+    if box is None:
+        raise ValueError("AQEWS bulletin cards (#ewsBulletin) not found")
+    ts = box.select_one(".ews-ts")
+    m = re.search(DATE_RE, ts.get_text(" ", strip=True) if ts else "")
+    issued = _to_date(*m.groups()) if m else datetime.now(IST).date()
+    days = []
+    for card in box.select(".ews-bday"):
+        txt = lambda sel: (card.select_one(sel).get_text(" ", strip=True) if card.select_one(sel) else "")
+        day = _infer_date(txt(".bd"), issued)
+        if day is None:
+            continue
+        tmax = _range(txt(".bt"))
+        subs = [s.get_text(" ", strip=True) for s in card.select(".bsub")]
+        min_txt = next((s for s in subs if s.startswith("Min")), "")
+        wind_txt = next((s for s in subs if s.startswith("Wind")), "")
+        tmin = _range(re.sub(r"\(.*?\)", "", min_txt))
+        wind_dir = card.select_one(".bsub b")
+        speed = re.search(r"up to\s*(\d+)\s*km/h", wind_txt)
+        md = re.search(r"(\d+)\s*m\b", txt(".bkv"))
+        vi_el = card.select_one(".bvg .gv") or card.select_one(".bvg")
+        vi = re.search(r"(\d[\d,]*)", vi_el.get_text(" ", strip=True) if vi_el else "")
+        days.append({
+            "date": day,
+            "category": txt(".bcat") or None,
+            "sky": txt(".bsky") or None,
+            "tmax_low": tmax[0], "tmax_high": tmax[1],
+            "tmin_low": tmin[0], "tmin_high": tmin[1],
+            "tmin_observed": "observed" in min_txt,
+            "wind_direction": wind_dir.get_text(" ", strip=True).replace(" ", "") if wind_dir and wind_txt else None,
+            "wind_max_kmh": int(speed.group(1)) if speed else None,
+            "mixing_depth": int(md.group(1)) if md else None,
+            "ventilation_index": int(vi.group(1).replace(",", "")) if vi else None,
+            "dispersion_unfavourable": bool(card.select_one(".bwarn")),
+        })
+    if not days:
+        raise ValueError("AQEWS bulletin cards are empty")
+    return {"issued": issued, "days": days}
+
+
+def cards_to_parsed(cards: dict) -> dict:
+    """Day cards in the shape parse_bulletin returns, so save_bulletin is shared."""
+    out = {"mixing_depth": {}, "ventilation_index": {}, "category": {}, "outlook": None}
+    for d in cards["days"]:
+        for key in ("mixing_depth", "ventilation_index", "category"):
+            if d.get(key) is not None:
+                out[key][d["date"]] = d[key]
+    return out
+
+
+def save_bulletin_cards(cards: dict, path=AQEWS_BULLETIN_DAYS_CSV):
+    df = pd.DataFrame(cards["days"])
+    df.insert(1, "issued", cards["issued"])
+    df.to_csv(path, index=False)
+    return df
+
+
+# --------------------------------------------- source apportionment (DSS) --
+def extract_source_apportionment(html: str, ref=None) -> dict:
+    """DSS shares of Delhi's daily-mean PM2.5 from the home page's pie legend."""
+    soup = BeautifulSoup(html, "html.parser")
+    card = soup.select_one(".ews-outlook-card")
+    if card is None:
+        raise ValueError("AQEWS source apportionment card not found")
+    ref = ref or datetime.now(IST).date()
+    ts = card.select_one(".ews-ts")
+    sources = []
+    for li in card.select(".ews-pie-legend-list li"):
+        spans, b = li.find_all("span"), li.find("b")
+        name = spans[-1].get_text(" ", strip=True) if spans else ""
+        pct = NUM_RE.search(b.get_text() if b else "")
+        if name and pct:
+            sources.append({"source": name, "percent": float(pct.group())})
+    if not sources:
+        raise ValueError("AQEWS source apportionment legend is empty")
+    split = {}
+    for span in card.select(".ews-src-split span"):
+        label = span.get_text(" ", strip=True)
+        pct = NUM_RE.search(span.find("b").get_text() if span.find("b") else "")
+        if pct:
+            split["local_percent" if label.lower().startswith("local") else "non_local_percent"] = float(pct.group())
+    day = _infer_date(ts.get_text(" ", strip=True) if ts else "", ref)
+    return {
+        "date": day.isoformat() if day else None,
+        "model": "AQEWS Decision Support System (DSS), Delhi-NCR",
+        **split,
+        "sources": sorted(sources, key=lambda r: -r["percent"]),
+        "source_url": AQEWS_HOME_URL,
+        "fetched_at": datetime.now(IST).isoformat(timespec="minutes"),
+    }
+
+
 def save_bulletin(parsed: dict):
     days = sorted(set(parsed["mixing_depth"]) | set(parsed["ventilation_index"]))
     if days:
@@ -207,18 +340,46 @@ def run() -> dict:
     try:
         home = _fetch(AQEWS_HOME_URL)
         try:
-            write_json_atomic(AQEWS_BULLETIN_JSON, extract_bulletin(home), indent=2, ensure_ascii=False)
-        except Exception as e:
-            logger.warning("AQEWS bulletin text not saved: %s", e)
-        parsed = parse_bulletin(bulletin_text(home))
+            cards = extract_bulletin_cards(home)
+            save_bulletin_cards(cards)
+            parsed = cards_to_parsed(cards)
+            write_json_atomic(AQEWS_BULLETIN_JSON, {
+                "title": f"Air Quality and Weather Bulletin for Delhi ({cards['issued']:%d.%m.%Y})",
+                "date": cards["issued"].isoformat(),
+                "days": [{**d, "date": d["date"].isoformat()} for d in cards["days"]],
+                "source_url": AQEWS_HOME_URL,
+                "fetched_at": datetime.now(IST).isoformat(timespec="minutes"),
+            }, indent=2, ensure_ascii=False)
+            result["bulletin_format"] = "cards"
+        except ValueError as e:
+            logger.warning("AQEWS bulletin cards not found (%s); trying the old prose bulletin", e)
+            parsed = parse_bulletin(bulletin_text(home))
+            try:
+                write_json_atomic(AQEWS_BULLETIN_JSON, extract_bulletin(home), indent=2, ensure_ascii=False)
+            except Exception as e2:
+                logger.warning("AQEWS bulletin text not saved: %s", e2)
+            result["bulletin_format"] = "prose"
+        if not (parsed["ventilation_index"] or parsed["category"]):
+            raise ValueError("no forecast found in either the bulletin cards or the prose bulletin "
+                             "(AQEWS page layout may have changed)")
         save_bulletin(parsed)
         result["bulletin_days"] = len(parsed["category"])
+        result["ventilation_days"] = len(parsed["ventilation_index"])
         result["outlook"] = parsed["outlook"]
+        try:
+            sa = extract_source_apportionment(home)
+            write_json_atomic(AQEWS_SOURCES_JSON, sa, indent=2, ensure_ascii=False)
+            result["source_apportionment_date"] = sa["date"]
+        except Exception as e:
+            logger.warning("AQEWS source apportionment not saved: %s", e)
     except Exception as e:
         logger.error("AQEWS bulletin failed: %s", e)
         result["bulletin_error"] = str(e)
     if "charts_error" in result and "bulletin_error" in result:
         raise RuntimeError(f"AQEWS unavailable: {result['charts_error']}")
+    if "bulletin_error" in result:
+        # Charts were saved; fail the step so the health panel shows the bulletin is missing
+        raise RuntimeError(f"AQEWS bulletin: {result['bulletin_error']} (10-day charts saved)")
     return result
 
 

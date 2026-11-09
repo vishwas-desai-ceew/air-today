@@ -1,0 +1,128 @@
+<!-- Trimmed from https://ews.tropmet.res.in/ on 10 Nov 2026: source apportionment card and bulletin day cards -->
+<html><body>
+<div class="ews-card ews-outlook-card">
+<div class="ews-card-h">
+<span class="ews-ico"><svg fill="#2f9e44" viewbox="0 0 24 24"><path d="M11 2v9H2a10 10 0 0 0 9 11 10 10 0 0 0 11-10A10 10 0 0 0 13 2.050V11z" opacity=".9"></path></svg></span>
+<div class="grow">
+<h2>Source apportionment of PM<sub>2.5</sub> <button aria-controls="ewsPieLegend" aria-haspopup="dialog" class="ews-info ews-pie-info" id="ewsPieInfoBtn" title="Explain pie-chart colours" type="button">i</button></h2>
+<div class="ews-ts">Sun, 8 Nov</div> </div>
+</div>
+<div class="ews-sa-panels">
+<div aria-labelledby="ewsSaTabDss" class="ews-sa-panel on" id="ewsSaDss" role="tabpanel">
+<div class="ews-src">
+<div aria-label="Pie chart of daily mean contribution to PM2.5 in Delhi" class="ews-src-pie" id="ewsSrcPie" role="img"></div>
+<div class="ews-src-flag" style="border-left-color:#bddfe4;">
+<span class="fl"><svg fill="#C41206" viewbox="0 0 24 24"><path d="M5 2h2v20H5zM8 3h11l-2.500 4.500L19 12H8z"></path></svg></span>
+<div class="ft"><small>Dominant contribution</small><b>Others</b></div>
+<div class="fv">20.6%</div>
+</div>
+<div class="ews-src-split"><span><i style="background:#1d6fd6"></i>Local (Delhi) <b>37%</b></span><span><i style="background:#e9b221"></i>Non-local <b>63%</b></span></div>
+</div>
+</div>
+<!-- Real-Time - Delhi: one tab per date from the Excel sheet -->
+<div aria-labelledby="ewsSaTabRt" class="ews-sa-panel" id="ewsSaRt" role="tabpanel">
+<p class="ews-cap">Real-time source contribution data is not available right now.</p>
+</div>
+</div>
+<div aria-label="Source apportionment type" class="ews-sa-tabs" role="tablist">
+<button aria-controls="ewsSaDss" aria-selected="true" class="on" data-sa="dss" id="ewsSaTabDss" role="tab" type="button">DSS - DELHI-NCR</button>
+<button aria-controls="ewsSaRt" aria-selected="false" data-sa="rt" id="ewsSaTabRt" role="tab" type="button">RTSA - Delhi</button>
+</div>
+<dialog aria-labelledby="ewsPieLegendTitle" class="ews-pie-dialog" id="ewsPieLegend">
+<div class="ews-pie-dialog-head"><h3 id="ewsPieLegendTitle">Pie-chart colour legend</h3><button aria-label="Close legend" class="ews-pie-dialog-close" id="ewsPieLegendClose" type="button">×</button></div>
+<p>Each slice is a source's percentage contribution to Delhi's daily-mean PM<sub>2.5</sub>.</p>
+<ul class="ews-pie-legend-list">
+<li><span class="ews-pie-swatch" style="background:#bddfe4"></span><span>Others</span><b>20.6%</b></li>
+<li><span class="ews-pie-swatch" style="background:#e9b221"></span><span>Delhi Transport</span><b>19.0%</b></li>
+<li><span class="ews-pie-swatch" style="background:#07950f"></span><span>Gautam Buddha Nagar</span><b>6.7%</b></li>
+<li><span class="ews-pie-swatch" style="background:#9be979"></span><span>Gurgaon</span><b>5.7%</b></li>
+<li><span class="ews-pie-swatch" style="background:#ad2e63"></span><span>Ghaziabad</span><b>5.5%</b></li>
+<li><span class="ews-pie-swatch" style="background:#0071bd"></span><span>Jhajjar</span><b>5.2%</b></li>
+<li><span class="ews-pie-swatch" style="background:#a31430"></span><span>Stubble Burning</span><b>5.1%</b></li>
+<li><span class="ews-pie-swatch" style="background:#088996"></span><span>Delhi Residential</span><b>4.8%</b></li>
+<li><span class="ews-pie-swatch" style="background:#e05a74"></span><span>Delhi &amp; peripheral Industries</span><b>4.0%</b></li>
+<li><span class="ews-pie-swatch" style="background:#4ebeee"></span><span>Bulandshahr</span><b>3.0%</b></li>
+<li><span class="ews-pie-swatch" style="background:#c7b6fc"></span><span>Faridabad</span><b>2.8%</b></li>
+<li><span class="ews-pie-swatch" style="background:#9ae3ae"></span><span>Delhi Construction</span><b>2.6%</b></li>
+<li><span class="ews-pie-swatch" style="background:#5833FF"></span><span>Delhi Energy</span><b>1.8%</b></li>
+<li><span class="ews-pie-swatch" style="background:#c7c50c"></span><span>Delhi Waste burning</span><b>1.7%</b></li>
+<li><span class="ews-pie-swatch" style="background:#FF5833"></span><span>Delhi Road Dust</span><b>1.4%</b></li>
+<li><span class="ews-pie-swatch" style="background:#4d2e28"></span><span>Rohtak</span><b>1.4%</b></li>
+<li><span class="ews-pie-swatch" style="background:#8F63B6"></span><span>Delhi Other Sectors</span><b>1.3%</b></li>
+<li><span class="ews-pie-swatch" style="background:#e78598"></span><span>Sonipat</span><b>1.2%</b></li>
+<li><span class="ews-pie-swatch" style="background:#ffa282"></span><span>Bagpat</span><b>1.1%</b></li>
+<li><span class="ews-pie-swatch" style="background:#fe2600"></span><span>Rewari</span><b>1.1%</b></li>
+<li><span class="ews-pie-swatch" style="background:#d8ab94"></span><span>Bhiwani</span><b>1.0%</b></li>
+<li><span class="ews-pie-swatch" style="background:#cca768"></span><span>Alwar</span><b>0.7%</b></li>
+<li><span class="ews-pie-swatch" style="background:#812f8b"></span><span>Mahendergarh</span><b>0.6%</b></li>
+<li><span class="ews-pie-swatch" style="background:#c109e5"></span><span>Meerut</span><b>0.6%</b></li>
+<li><span class="ews-pie-swatch" style="background:#6f7922"></span><span>Jind</span><b>0.4%</b></li>
+<li><span class="ews-pie-swatch" style="background:#8c8b87"></span><span>Bharatpur</span><b>0.3%</b></li>
+<li><span class="ews-pie-swatch" style="background:#7798ab"></span><span>Panipat</span><b>0.2%</b></li>
+<li><span class="ews-pie-swatch" style="background:#f5d98f"></span><span>Muzaffarnagar</span><b>0.1%</b></li>
+<li><span class="ews-pie-swatch" style="background:#ffff00"></span><span>Karnal</span><b>0.1%</b></li>
+</ul>
+<p class="ews-pie-dialog-note">The summary below the chart groups sources into Local (Delhi) and Non-local; slice colours distinguish individual sources.</p>
+</dialog>
+</div>
+<section class="ews-card ews-bsec" id="ewsBulletin">
+<div class="ews-card-h">
+<span class="ews-ico"><svg fill="#1d6fd6" viewbox="0 0 24 24"><path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.500V9h5.500zM7 13h10v1.500H7zm0 3.500h10V18H7z"></path></svg></span>
+<h2 class="grow">Air Quality and Weather Bulletin for Delhi <a class="ews-blink" href="https://mausam.imd.gov.in/imd_latest/contents/all_india_forcast_bulletin.php" rel="noopener" target="_blank">IMD Bulletin ↗</a></h2>
+<span class="ews-ts">Issued 09.11.2026</span> </div>
+<div class="ews-bgrid">
+<div class="ews-bday">
+<div class="bh"><span class="bd">Mon, 9 Nov</span>
+<span class="bcat" style="border-left-color:#810100;background:#8101002e;">Severe</span></div>
+<div class="bcols">
+<div class="bleft">
+<div class="bsky">Mainly clear sky</div> <div class="bt">28–30<small>°C max</small></div>
+<div class="bsub">Min 16–17°C <small style="font-size:11px;color:#5d6f84">(observed, past 24 h)</small></div> <div class="bsub">Wind <b>E</b>, up to 15 km/h</div> <div class="bkv"><span>Mixing depth</span><b>2200 m</b></div> </div>
+<div class="bvg" title="Ventilation index: 3000 m²/s (tick = 6000 m²/s; below it dispersion is unfavourable)">
+<svg viewbox="0 0 80 50"><path d="M10 42A30 30 0 0 1 70 42" fill="none" stroke="#dfe5ec" stroke-linecap="round" stroke-width="7"></path><path d="M10 42A30 30 0 0 1 70 42" fill="none" pathlength="100" stroke="#C41206" stroke-dasharray="38 200" stroke-linecap="round" stroke-width="7"></path><line opacity=".7" stroke="#0a2a5c" stroke-width="2" x1="57" x2="66.2" y1="25" y2="15.8"></line><text class="gv" fill="#C41206" text-anchor="middle" x="40" y="38">3000</text><text class="gu" text-anchor="middle" x="40" y="48">m²/s</text></svg>
+<span class="gl">Ventilation index</span>
+<span class="bwarn">Unfavourable for dispersion</span> </div>
+</div>
+</div>
+<div class="ews-bday today">
+<div class="bh"><span class="bd">Tue, 10 Nov · Today</span>
+<span class="bcat" style="border-left-color:#C41206;background:#C412062e;">Very Poor</span></div>
+<div class="bcols">
+<div class="bleft">
+<div class="bsky">Partly cloudy sky</div> <div class="bt">27–29<small>°C max</small></div>
+<div class="bsub">Min 14–16°C</div> <div class="bsub">Wind <b>E → NE → E</b>, up to 10 km/h</div> <div class="bkv"><span>Mixing depth</span><b>1850 m</b></div> </div>
+<div class="bvg" title="Ventilation index: 2700 m²/s (tick = 6000 m²/s; below it dispersion is unfavourable)">
+<svg viewbox="0 0 80 50"><path d="M10 42A30 30 0 0 1 70 42" fill="none" stroke="#dfe5ec" stroke-linecap="round" stroke-width="7"></path><path d="M10 42A30 30 0 0 1 70 42" fill="none" pathlength="100" stroke="#C41206" stroke-dasharray="34 200" stroke-linecap="round" stroke-width="7"></path><line opacity=".7" stroke="#0a2a5c" stroke-width="2" x1="57" x2="66.2" y1="25" y2="15.8"></line><text class="gv" fill="#C41206" text-anchor="middle" x="40" y="38">2700</text><text class="gu" text-anchor="middle" x="40" y="48">m²/s</text></svg>
+<span class="gl">Ventilation index</span>
+<span class="bwarn">Unfavourable for dispersion</span> </div>
+</div>
+</div>
+<div class="ews-bday">
+<div class="bh"><span class="bd">Wed, 11 Nov</span>
+<span class="bcat" style="border-left-color:#C41206;background:#C412062e;">Very Poor</span></div>
+<div class="bcols">
+<div class="bleft">
+<div class="bsky">Partly cloudy sky</div> <div class="bt">27–29<small>°C max</small></div>
+<div class="bsub">Min 14–16°C</div> <div class="bsub">Wind <b>SE → NE → E</b>, up to 10 km/h</div> <div class="bkv"><span>Mixing depth</span><b>2050 m</b></div> </div>
+<div class="bvg" title="Ventilation index: 9500 m²/s (tick = 6000 m²/s; below it dispersion is unfavourable)">
+<svg viewbox="0 0 80 50"><path d="M10 42A30 30 0 0 1 70 42" fill="none" stroke="#dfe5ec" stroke-linecap="round" stroke-width="7"></path><path d="M10 42A30 30 0 0 1 70 42" fill="none" pathlength="100" stroke="#0b64c0" stroke-dasharray="100 200" stroke-linecap="round" stroke-width="7"></path><line opacity=".7" stroke="#0a2a5c" stroke-width="2" x1="57" x2="66.2" y1="25" y2="15.8"></line><text class="gv" fill="#0b64c0" text-anchor="middle" x="40" y="38">9500</text><text class="gu" text-anchor="middle" x="40" y="48">m²/s</text></svg>
+<span class="gl">Ventilation index</span>
+</div>
+</div>
+</div>
+<div class="ews-bday">
+<div class="bh"><span class="bd">Thu, 12 Nov</span>
+<span class="bcat" style="border-left-color:#C41206;background:#C412062e;">Very Poor</span></div>
+<div class="bcols">
+<div class="bleft">
+<div class="bsky">Partly cloudy sky</div> <div class="bt">27–29<small>°C max</small></div>
+<div class="bsub">Min 15–17°C</div> <div class="bsub">Wind <b>E → NE</b>, up to 15 km/h</div> <div class="bkv"><span>Mixing depth</span><b>1600 m</b></div> </div>
+<div class="bvg" title="Ventilation index: 7000 m²/s (tick = 6000 m²/s; below it dispersion is unfavourable)">
+<svg viewbox="0 0 80 50"><path d="M10 42A30 30 0 0 1 70 42" fill="none" stroke="#dfe5ec" stroke-linecap="round" stroke-width="7"></path><path d="M10 42A30 30 0 0 1 70 42" fill="none" pathlength="100" stroke="#0b64c0" stroke-dasharray="88 200" stroke-linecap="round" stroke-width="7"></path><line opacity=".7" stroke="#0a2a5c" stroke-width="2" x1="57" x2="66.2" y1="25" y2="15.8"></line><text class="gv" fill="#0b64c0" text-anchor="middle" x="40" y="38">7000</text><text class="gu" text-anchor="middle" x="40" y="48">m²/s</text></svg>
+<span class="gl">Ventilation index</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</body></html>
