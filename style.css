@@ -3565,6 +3565,25 @@ iframe:hover {
 .pol-info-sub.muted { font-style: italic; }
 .pol-info p { margin-top: 0.5rem !important; }
 .st-key-pol-strip-pm, .st-key-pol-strip-aqi { margin-bottom: 0.9rem; }
+
+/* Chart side panels (Pollutants and AQI, Weather forecast): short points + linked source */
+.pol-period { margin: 0.1rem 0 0.45rem; color: var(--text-secondary); font-size: 0.78rem; font-weight: 600; }
+.side-points { list-style: none; margin: 0.5rem 0 0 !important; padding: 0 !important; display: flex; flex-direction: column; gap: 0.35rem; }
+.side-points li {
+  position: relative; margin: 0 !important; padding-left: 0.95rem; font-size: 0.82rem; line-height: 1.4;
+  color: var(--text-secondary);
+}
+.side-points li::before {
+  content: ""; position: absolute; left: 0.1rem; top: 0.5em; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--brand);
+}
+.side-points li b { color: var(--text-primary); }
+.side-source {
+  margin-top: 0.7rem; padding-top: 0.5rem; border-top: 1px solid var(--border);
+  font-size: 0.74rem; line-height: 1.45; color: var(--text-secondary);
+}
+.side-source > b:first-child { color: var(--text-primary); font-weight: 800; margin-right: 0.35rem; }
+.side-source a { color: var(--brand) !important; text-decoration: underline; text-underline-offset: 2px; }
 @media (max-width: 768px) {
   .st-key-pol-strip-pm [data-testid="stElementContainer"]:has(.wx-info),
   .st-key-pol-strip-pm [data-testid="stElementContainer"]:has(.band-legend),

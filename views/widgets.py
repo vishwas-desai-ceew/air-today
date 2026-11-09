@@ -65,6 +65,18 @@ def source_html(*links, cls="card-source"):
     return f'<div class="{cls}">Source: {" · ".join(links)}</div>' if links else ""
 
 
+def side_source(*links):
+    """Source line for a chart's side panel: bold 'Source', each source linked
+    where it has a URL (pass src(...) / cpcb_src(...) results or plain text)."""
+    links = [l for l in links if l]
+    return f"<div class='side-source'><b>Source</b>{' · '.join(links)}</div>" if links else ""
+
+
+def side_points(points):
+    """Two or three short bullet points for a chart's side panel (HTML allowed)."""
+    return "<ul class='side-points'>" + "".join(f"<li>{p}</li>" for p in points) + "</ul>"
+
+
 def cpcb_src(row):
     return src("cpcb", "CPCB bulletin", data.cpcb_bulletin_url(row)) if row else src("cpcb", "CPCB", "https://cpcb.gov.in/")
 
