@@ -15,11 +15,11 @@ An internal Streamlit dashboard for Delhi's winter air quality, used by the CEEW
 | | **Weather Forecast** | 3-day forecast read for dispersion: temperature and humidity, wind, mixing height, rain |
 | | **Farm fires** | Daily satellite fire detections in Punjab and Haryana, by instrument |
 | Reports | **IMD bulletin** | The day's IMD air quality bulletin (PDF) |
-| | **Briefing note** | The team's briefing note (a published Google Doc) ; **hidden** for now (`SHOW_BRIEFING_NOTE` in `dashboard.py`) |
+| | **Briefing note** | The team's briefing note (a published Google Doc); **hidden** for now (`HIDDEN_PAGES` in `dashboard.py`) |
 | | **Archive** | Every past daily update, on a calendar |
 | | **GRAP** | CAQM GRAP orders by winter, with the stage in force each day |
 | Learn | **Recent trends** | Season-by-season AQI, same-date comparison across winters, AQI in the news |
-| | **Sectoral interventions** | The team's recommended actions by source and policy lever |
+| | **Sectoral interventions** | The team's recommended actions by source and policy lever ; **hidden** for now (`HIDDEN_PAGES` in `dashboard.py`) |
 | | **Glossary** | The AQI and GRAP scale, and an A–Z of terms used on the dashboard |
 
 The top bar on every page has an "AQI in the news" dropdown and a data-health pill showing whether each source updated on time.
