@@ -75,8 +75,8 @@ def _state_card(name, colour, day_n, prev_n, prev_day, season_n, last_n, latest,
         f"<div class='wx-day-temp'>{day_n:,}<small> events</small></div>{change}"
         "<div class='wx-day-grid'>"
         f"<div><span>Since 15 Sep</span><b>{season_n:,}</b></div>"
-        f"<div><span>vs {latest.year - 1}, same dates</span><b class='{pct_cls}'>{pct_txt}</b>"
-        f"<small>{last_n:,}</small></div>"
+        f"<div><span>vs {latest.year - 1}</span><b class='{pct_cls}'>{pct_txt}</b>"
+        f"<span class='fire-pill' title='{latest.year - 1}, 15 Sep to {latest.day} {latest:%b}'>{last_n:,}</span></div>"
         "</div></article>"
     )
 
@@ -265,30 +265,31 @@ def render_fires_page():
                                 default=PB_HR, key="fires_area") or PB_HR
     states = AREAS[area]
 
-    with chart_card(title=f"Season so far against earlier years · {area}",
-                    caption=f"Cumulative paddy residue burning events from 15 September. Earlier years are shown "
-                            f"to the same date ({latest:%d %b}), as in the bulletin."):
-        st.plotly_chart(cumulative_chart(daily, states, latest), key="fires_cumulative", width="stretch",
-                        config=PLOT_CONFIG)
-        st.markdown(_source_line(), unsafe_allow_html=True)
-
-    with chart_card(title=f"Events per day, {latest.year} season · {area}",
-                    caption=f"Bars: {latest.year}, by state. Dotted line: {latest.year - 1} on the same dates."):
-        st.plotly_chart(daily_chart(daily, states, latest), key="fires_daily", width="stretch", config=PLOT_CONFIG)
-        st.markdown(_source_line(), unsafe_allow_html=True)
-
     day_events = events[(events["date"] == latest) & (events["state"].isin(states))]
     if day_events.empty:
         st.caption(f"No individual fires listed for {area} on {_d(latest)}.")
     else:
         left, right = st.columns([3, 2])
         with left, chart_card(title=f"Where the fires were · {_d(latest)}",
-                              caption="One point per fire; larger points had higher fire radiative power."):
+                              caption="One point per fire; larger points had higher fire radiative power. Drag to move, double-click to zoom in."):
             st.plotly_chart(fire_map(day_events), key="fires_map", width="stretch",
-                            config={**PLOT_CONFIG, "scrollZoom": True})
+                            config={**PLOT_CONFIG, "scrollZoom": False})
             st.markdown(_source_line(), unsafe_allow_html=True)
         with right, chart_card(title=f"Top districts · {_d(latest)}", caption=f"{len(day_events):,} fires in {area}."):
             st.plotly_chart(district_chart(day_events), key="fires_districts", width="stretch", config=PLOT_CONFIG)
+
+    left, right = st.columns(2)
+    with left, chart_card(title=f"Season so far against earlier years · {area}",
+                          caption=f"Cumulative events from 15 September. Earlier years run to the same date "
+                                  f"({latest:%d %b}), as in the bulletin."):
+        st.plotly_chart(cumulative_chart(daily, states, latest), key="fires_cumulative", width="stretch",
+                        config=PLOT_CONFIG)
+        st.markdown(_source_line(), unsafe_allow_html=True)
+    with right, chart_card(title=f"Events per day, {latest.year} season · {area}",
+                           caption=f"Bars: {latest.year}, by state. Dotted line: {latest.year - 1} on the same dates."):
+        st.plotly_chart(daily_chart(daily, states, latest, height=400), key="fires_daily", width="stretch",
+                        config=PLOT_CONFIG)
+        st.markdown(_source_line(), unsafe_allow_html=True)
 
     with st.container(key="fires-disclaimer"):
         danger_card(DISCLAIMER, title="Read with care:")
