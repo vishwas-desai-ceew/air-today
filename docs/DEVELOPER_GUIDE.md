@@ -413,7 +413,7 @@ Grouped by priority. File references point to where to start.
 ### Accuracy and sourcing
 
 1. **Health advisory wording** (`config/reference.py` `HEALTH_ADVISORY`): read from a scanned PDF. Check it against the advisory before relying on it publicly.
-2. **Hourly PM on the Pollutants page is sample data** (`SIGNALS_HOURLY_CSV`): needs a live feed and PM10. It's labelled on the page, but the panel otherwise looks live.
+2. **Hourly PM on the Pollutants page** comes live from `signalsfunc.read_cpcb` (Earthmetry, city = Delhi, PM2.5 + PM10, last 7 days), cached for an hour in a temp file (`CPCB_HOURLY_CACHE`, `ingestion/cpcb_hourly.py`). The app needs `signalsfunc` importable to refresh it; otherwise run `python ingestion/cpcb_hourly.py` hourly from the `geospatial` env. With no cache at all it falls back to `SIGNALS_HOURLY_CSV`, labelled as sample data.
 3. **Thresholds without a source** (§7): the 500 m mixing height, the 2,000 m visibility, the 10 °C minimum temperature and the 0.1 mm hourly rain rule.
 4. **New glossary terms** (`views/glossary.py`, added 10 Nov 2026): the VIIRS and MODIS resolutions are unverified in-session. Review all 23 new definitions.
 5. **Sectoral interventions text** (`views/interventions.py`): dated figures from the 2024-25 winter.

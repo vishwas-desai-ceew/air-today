@@ -3,8 +3,10 @@ the last 7 days of CPCB bulletin AQI.
 
 Replaces the embedded Earthmetry Signals dashboard (an iframe) with charts
 drawn from data the app already has:
-  - data/signalsfunc_pm25_sample_data.csv - hourly PM2.5 (PM10 when the file
-    has it), the shape signalsfunc returns; a sample file for now.
+  - Earthmetry Signals, signalsfunc.read_cpcb(['PM25', 'PM10'], city = Delhi,
+    aggregate_to_city=True): hourly PM2.5 and PM10, the average of all CPCB
+    stations in Delhi, cached for an hour (ingestion/cpcb_hourly.py).
+    data/signalsfunc_pm25_sample_data.csv is the fallback, labelled as sample.
   - data/delhi_aqi_cpcb.csv - the daily CPCB bulletin AQI.
 
 The hourly line is drawn over the shaded CPCB bands. CPCB's bands are defined
@@ -82,8 +84,15 @@ def _cat_chip(cat, colour):
     return f"<em class='pol-chip' style='--c:{colour}'>{escape(cat)}</em>"
 
 
+def _pm_source_text(info):
+    if info["source"] != "live":
+        return "Earthmetry Signals, <code>read_cpcb</code>, city = Delhi (<b>sample data</b>)"
+    return (f"Earthmetry Signals, <code>read_cpcb</code> (CPCB CAAQMS), city = Delhi, all stations averaged; "
+            f"fetched {info['fetched_at']:%H:%M, %d %b} IST, refreshed hourly")
+
+
 def render_pm_tracker(compact=False):
-    df = data.pm_hourly()
+    df, meta = data.pm_hourly()
     cols = [c for c in ("PM2.5", "PM10") if c in df.columns and df[c].notna().any()]
     if not cols:
         st.info("Hourly PM data is not available yet.")
@@ -105,8 +114,15 @@ def render_pm_tracker(compact=False):
                       f"average {df[c].mean():.0f} µg/m³.")
     points.append("Shading shows CPCB bands; the dashed line is the 24-hour NAAQS limit. Both are set for "
                   "daily averages, so single hours are a guide.")
+    if meta["source"] == "live":
+        points.append("Each hour is the average across all CPCB monitoring stations in Delhi.")
+        if meta["stale"]:
+            points.append(f"<i>Couldn't refresh from Earthmetry; showing data fetched "
+                          f"{meta['fetched_at']:%H:%M, %d %b}.</i>")
+    else:
+        points.append("<i>Live data from Earthmetry isn't available, so this is <b>sample data</b>.</i>")
     if "PM10" not in cols:
-        points.append("<i>PM₁₀ isn't in the current data file yet.</i>")
+        points.append("<i>PM₁₀ isn't in the current data yet.</i>")
 
     with st.container(border=True, key="pol-strip-pm"):
         info, chart = st.columns([1, 3], gap="medium")
@@ -124,7 +140,7 @@ def render_pm_tracker(compact=False):
                 "fog", f"{names}, hourly",
                 f"{_period(df['time'].min(), df['time'].max(), '%d %b, %H:%M')} IST · {len(df)} hours",
                 stat, points,
-                side_source("CAAQMS stations via signalsfunc (<b>sample data</b>)",
+                side_source(_pm_source_text(meta),
                             src("cpcb_aqi", "CPCB AQI bands"), src("cpcb_naaqs", "CPCB NAAQS (2009)")),
             ), unsafe_allow_html=True)
 
