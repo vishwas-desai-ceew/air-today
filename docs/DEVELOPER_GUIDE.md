@@ -209,6 +209,7 @@ Each entry lists what the page shows, the files it reads, the sources it credits
 
 ### 3.8 Briefing note (`/briefing-note`, `page_general_info`)
 
+- **Hidden:** off the menu at the team's request (`SHOW_BRIEFING_NOTE = False` in `dashboard.py`); `/briefing-note` opens the Overview. Set it to `True` to restore the page.
 - **Shows:** a Google Doc published to the web, in an iframe, with Refresh and "Download as a PDF" buttons.
 - **Reads:** nothing local. The document URL is hard-coded in `views/render_google_doc.py`.
 - **Review:** anyone with edit access to that Google Doc changes this page directly. Confirm who owns it.

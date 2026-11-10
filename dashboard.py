@@ -205,6 +205,11 @@ def page_glossary():
     render_glossary()
 
 
+# The Briefing note page is hidden at the team's request. Set this to True to
+# bring it back; while False the page is out of the menu and /briefing-note
+# opens the Overview instead.
+SHOW_BRIEFING_NOTE = False
+
 # Four groups, ordered by how often each is used: today's picture first,
 # live trackers next, documents, then background reading.
 pages = {
@@ -220,7 +225,8 @@ pages = {
     ],
     "Reports": [
         st.Page(page_bulletin, title="IMD bulletin", url_path="imd-bulletin", icon=":material/picture_as_pdf:"),
-        st.Page(page_general_info, title="Briefing note", url_path="briefing-note", icon=":material/description:"),
+        *([st.Page(page_general_info, title="Briefing note", url_path="briefing-note", icon=":material/description:")]
+          if SHOW_BRIEFING_NOTE else []),
         st.Page(page_archive, title="Archive", url_path="archive", icon=":material/history:"),
         st.Page(page_grap, title="GRAP", url_path="grap", icon=":material/gavel:"),
     ],
