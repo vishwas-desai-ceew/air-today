@@ -1,6 +1,8 @@
 [server]
 port = 8501
 enableCORS = true
+# Serves ./static at /app/static/ (used for the iPhone home-screen icon).
+enableStaticServing = true
 
 
 [client]

@@ -1,5 +1,6 @@
 import pytz
 import streamlit as st
+import streamlit.components.v1 as components
 from datetime import datetime
 from views.interventions import render_interventions
 from views.pollutants import render_pollutants_page
@@ -45,6 +46,37 @@ st.set_page_config(
             ),
         },
     )
+
+# Home-screen icon and name for "Add to Home Screen" on iPhone/iPad and
+# Android (manifest + 192px icon for Chrome). Safari
+# ignores page_icon for this and falls back to a letter tile, so we add an
+# apple-touch-icon link to the page <head>. The PNG is served from static/
+# (server.enableStaticServing in .streamlit/config.toml) at /app/static/.
+# Runs before the login gate so the icon is there on the sign-in screen too.
+components.html(
+    """
+    <script>
+    const head = window.parent.document.head;
+    const tags = [
+        ["link", {rel: "apple-touch-icon", href: "/app/static/apple-touch-icon.png"}],
+        ["meta", {name: "apple-mobile-web-app-title", content: "Air Today"}],
+        // Android Chrome: name and 192/512px icons for "Add to Home screen".
+        ["link", {rel: "manifest", href: "/app/static/manifest.json"}],
+        ["link", {rel: "icon", sizes: "192x192", href: "/app/static/icon-192.png"}],
+    ];
+    for (const [tag, attrs] of tags) {
+        const key = tag === "link"
+            ? `link[rel="${attrs.rel}"]${attrs.sizes ? `[sizes="${attrs.sizes}"]` : ""}`
+            : `meta[name="${attrs.name}"]`;
+        if (head.querySelector(key)) continue;
+        const el = window.parent.document.createElement(tag);
+        Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+        head.appendChild(el);
+    }
+    </script>
+    """,
+    height=0,
+)
 
 css_path = Path("style.css")
 if css_path.exists():
