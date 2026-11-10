@@ -15,7 +15,7 @@ An internal Streamlit dashboard for Delhi's winter air quality, used by the CEEW
 | | **Weather Forecast** | 3-day forecast read for dispersion: temperature and humidity, wind, mixing height, rain |
 | | **Farm fires** | Daily satellite fire detections in Punjab and Haryana, by instrument |
 | Reports | **IMD bulletin** | The day's IMD air quality bulletin (PDF) |
-| | **Briefing note** | The team's briefing note (a published Google Doc) |
+| | **Briefing note** | The team's briefing note (a published Google Doc) ; **hidden** for now (`SHOW_BRIEFING_NOTE` in `dashboard.py`) |
 | | **Archive** | Every past daily update, on a calendar |
 | | **GRAP** | CAQM GRAP orders by winter, with the stage in force each day |
 | Learn | **Recent trends** | Season-by-season AQI, same-date comparison across winters, AQI in the news |
