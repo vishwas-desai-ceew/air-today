@@ -126,9 +126,23 @@ def current_weather() -> dict:
         return row
 
 
-@st.cache_data(ttl=600)
-def pm_hourly() -> pd.DataFrame:
-    """Delhi hourly PM2.5 (and PM10 when present): time, PM2.5[, PM10], sorted."""
+@st.cache_data(ttl=600, show_spinner="Fetching hourly PM data from Earthmetry...")
+def pm_hourly() -> tuple[pd.DataFrame, dict]:
+    """Delhi hourly PM2.5 and PM10: (time, PM2.5, PM10 sorted; info).
+
+    Live from signalsfunc.read_cpcb via an hour-long file cache
+    (ingestion/cpcb_hourly.py). Falls back to the sample CSV only when no
+    live data has ever been fetched. info = {source: live|sample, fetched_at, stale}."""
+    from ingestion import cpcb_hourly
+
+    raw, fetched_at, stale = cpcb_hourly.load()
+    wide = cpcb_hourly.to_wide(raw)
+    if not wide.empty:
+        return wide, {"source": "live", "fetched_at": fetched_at, "stale": stale}
+    return _pm_sample(), {"source": "sample", "fetched_at": None, "stale": True}
+
+
+def _pm_sample() -> pd.DataFrame:
     df = _read_csv(SIGNALS_HOURLY_CSV)
     if df.empty or "observation_hour_start" not in df.columns:
         return pd.DataFrame()

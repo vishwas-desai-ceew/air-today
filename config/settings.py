@@ -1,4 +1,5 @@
 from datetime import datetime, time, timedelta
+import tempfile
 from pathlib import Path
 
 import pytz
@@ -47,6 +48,9 @@ PIPELINE_STATUS_JSON = DATA_DIR / "pipeline_status.json"
 # Delhi hourly PM2.5 / PM10, in the shape signalsfunc returns (observation_hour_start,
 # PM25[, PM10]). A sample file for now; the pipeline will write the live one here.
 SIGNALS_HOURLY_CSV = DATA_DIR / "signalsfunc_pm25_sample_data.csv"
+# Live Delhi hourly PM2.5 + PM10 from signalsfunc.read_cpcb (Earthmetry), refreshed at
+# most once an hour by ingestion/cpcb_hourly.py. The sample file above is the fallback.
+CPCB_HOURLY_CACHE = Path(tempfile.gettempdir()) / "aq_winter_cpcb_delhi_hourly.csv"
 
 # ---- Location + upstream URLs ----
 DELHI_LAT, DELHI_LON = 28.6448, 77.216721
