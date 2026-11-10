@@ -108,7 +108,7 @@ def _is_attention_insight(entry):
     plain_entry = re.sub(r"[*_`]", "", entry)
     is_unavailable = "unavailable" in plain_entry.lower()
     is_zero_fire_count = bool(
-        re.search(r"\bfire\s+count\s+on\b.*?\bis\s+0\b", plain_entry, flags=re.IGNORECASE)
+        re.search(r"\bfire\s+count\b.*?\bon\b.*?\bis\s+0\b", plain_entry, flags=re.IGNORECASE)
     )
     return is_unavailable or is_zero_fire_count
 

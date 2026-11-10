@@ -168,7 +168,7 @@ def build_daily_update(df):
         fire_line = f"Fire count for {fmt_date(prev_date)} is currently unavailable."
     else:
         fire_line = (
-            f"Fire count (NOAA/VIIRS) on {fmt_date(prev_date)} is {sum(fire_counts.values())} (Punjab: {fire_counts.get('Punjab', 0)}, Haryana: {fire_counts.get('Haryana', 0)})."
+            f"Paddy residue burning fire count on {fmt_date(prev_date)} is {sum(fire_counts.values())} (Punjab: {fire_counts.get('Punjab', 0)}, Haryana: {fire_counts.get('Haryana', 0)}; ICAR-IARI CREAMS)."
         )
 
     # --- Combine all lines into final summary ---

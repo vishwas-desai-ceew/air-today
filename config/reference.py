@@ -26,6 +26,8 @@ SOURCES = {
               "https://aviationweather.gov/data/metar/?ids=VIDP"),
     "open_meteo_model": ("Open-Meteo model", "https://open-meteo.com/"),
     "nasa_fires": ("NASA FIRMS active fires (VIIRS)", "https://firms.modaps.eosdis.nasa.gov/"),
+    "creams": ("ICAR-IARI CREAMS Lab, Monitoring of Paddy Residue Burning bulletin",
+               "https://creams.iari.res.in/?page_id=1123"),
     "mohfw_air_advisory": ("MoHFW / NCDC, Health Advisory on Air Pollution (NPCCHH), 1 Nov 2025",
                            "https://ncdc.mohfw.gov.in/uploads/pdf/air2.pdf"),
     "aqews_dss": ("IITM AQEWS, source apportionment (DSS)", "https://ews.tropmet.res.in/"),

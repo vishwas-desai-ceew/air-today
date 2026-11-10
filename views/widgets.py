@@ -286,7 +286,7 @@ def _hero_insights():
             st.markdown(_html(
                 f'<div class="hero-box-eyebrow">Key insights · {_d(datetime.fromisoformat(facts["date"]))}</div>'
                 f'<div class="hero-ins-title">{title}</div><div class="hero-aqi-meta">{escape(line)}</div>'
-                + source_html(src("cpcb", "CPCB"), src("aqews", "AQEWS"), src("open_meteo_model", "Open-Meteo"), src("nasa_fires", "NASA FIRMS"), cls="hero-source")
+                + source_html(src("cpcb", "CPCB"), src("aqews", "AQEWS"), src("open_meteo_model", "Open-Meteo"), src("creams", "ICAR-IARI CREAMS"), cls="hero-source")
             ), unsafe_allow_html=True)
         else:
             st.markdown(_html('<div class="hero-box-eyebrow">Key insights</div>'
@@ -393,8 +393,8 @@ def insight_items(facts):
     fires = facts["fires"]
     items.append(dict(icon="fire", label=f'Fires PB+HR · {_short_date(facts["fire_date"])}',
                       value="—" if fires is None else fires["total"], unit="", chip=None,
-                      note="feed not updated" if fires is None else f'PB {fires["punjab"]} · HR {fires["haryana"]}',
-                      source=src("nasa_fires", "NASA FIRMS"), tone=None))
+                      note="bulletin not out yet" if fires is None else f'PB {fires["punjab"]} · HR {fires["haryana"]} · paddy residue',
+                      source=src("creams", "ICAR-IARI CREAMS"), tone=None))
     return items
 
 
@@ -568,12 +568,12 @@ def render_kpi_grid():
                           source=src("open_meteo_model"), stamp="Last hour"))
     fire_day = _d(today - timedelta(days=1))
     if fires is None:
-        cards.append(kpi_card("fire", "Fires PB + HR", "—", "", "Fire feed not updated",
-                              source=src("nasa_fires", "NASA FIRMS"), stamp=fire_day))
+        cards.append(kpi_card("fire", "Fires PB + HR", "—", "", "CREAMS bulletin not out yet",
+                              source=src("creams", "ICAR-IARI CREAMS"), stamp=fire_day))
     else:
         cards.append(kpi_card("fire", "Fires PB + HR", sum(fires.values()), "",
-                              f'Punjab {fires.get("Punjab", 0)} · Haryana {fires.get("Haryana", 0)} · VIIRS',
-                              source=src("nasa_fires", "NASA FIRMS"), stamp=fire_day))
+                              f'Punjab {fires.get("Punjab", 0)} · Haryana {fires.get("Haryana", 0)} · paddy residue',
+                              source=src("creams", "ICAR-IARI CREAMS"), stamp=fire_day))
 
     st.markdown(_html(f'<div class="sky-kpi-grid">{"".join(cards)}</div>'), unsafe_allow_html=True)
     if wx:

@@ -11,7 +11,7 @@ import pandas as pd
 import streamlit as st
 
 from config.settings import (
-    AQEWS_AQI_CSV, AQEWS_CATEGORY_CSV, AQEWS_SOURCES_JSON, ARCHIVE_TEMP, CPCB_AQI_CSV, FIRE_HEADLINE_INSTRUMENT, FIRE_STATE_CSVS, IMD_BULLETIN_PDF, INSIGHTS_JSON,
+    AQEWS_AQI_CSV, AQEWS_CATEGORY_CSV, AQEWS_SOURCES_JSON, ARCHIVE_TEMP, CPCB_AQI_CSV, CREAMS_BULLETIN_JSON, CREAMS_FIRES_CSV, CREAMS_HEADLINE_STATES, IMD_BULLETIN_PDF, INSIGHTS_JSON,
     IST, METEO_HOURLY_CSV, PIPELINE_STATUS_JSON, SIGNALS_HOURLY_CSV, VENTILATION_CSV, effective_today,
 )
 from ingestion.json_store import read_json
@@ -155,23 +155,33 @@ def _pm_sample() -> pd.DataFrame:
 
 
 @st.cache_data(ttl=600)
-def state_fires(state) -> pd.DataFrame:
-    """date + one count column per instrument for `state`."""
-    from ingestion.get_fire_pbhr import read_state_fires
-    return read_state_fires(state)
+def creams_daily() -> pd.DataFrame:
+    """date, state, events: CREAMS paddy residue burning events, 2020 onwards."""
+    from ingestion.creams import read_daily
+    return read_daily()
+
+
+@st.cache_data(ttl=600)
+def creams_events() -> pd.DataFrame:
+    """One row per fire from the CREAMS bulletins (district, lat/lon, satellite, FRP)."""
+    from ingestion.creams import read_events
+    return read_events()
+
+
+@st.cache_data(ttl=600)
+def creams_bulletin() -> dict:
+    """The latest CREAMS bulletin: number, dates, URL, highlights."""
+    return read_json(CREAMS_BULLETIN_JSON)
 
 
 def fire_counts(day):
-    """{state: headline-instrument count} for `day`, or None if the fire feed
-    hasn't covered it."""
-    counts = {}
-    for state in FIRE_STATE_CSVS:
-        df = state_fires(state)
-        row = df[df["date"] == day]
-        if row.empty:
-            return None
-        counts[state] = int(row[FIRE_HEADLINE_INSTRUMENT].iloc[0])
-    return counts
+    """{state: CREAMS events} for Punjab and Haryana on `day`, or None if no
+    bulletin has covered it yet."""
+    df = creams_daily()
+    rows = df[df["date"] == day].set_index("state")["events"]
+    if any(s not in rows.index for s in CREAMS_HEADLINE_STATES):
+        return None
+    return {s: int(rows[s]) for s in CREAMS_HEADLINE_STATES}
 
 
 SOURCE_FILES = {
@@ -179,7 +189,7 @@ SOURCE_FILES = {
     "aqews": ("AQEWS forecast", AQEWS_AQI_CSV),
     "weather": ("Weather", METEO_HOURLY_CSV),
     "imd": ("IMD bulletin", IMD_BULLETIN_PDF),
-    "fires": ("Farm fires", FIRE_STATE_CSVS["Punjab"]),
+    "creams": ("Farm fires (CREAMS)", CREAMS_FIRES_CSV),
 }
 
 

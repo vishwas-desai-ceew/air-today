@@ -7,7 +7,7 @@ sys.path.insert(0, str(PARENT_DIR))
 from config.logging_config import get_logger
 from config.settings import (
     AQEWS_AQI_CSV as AQI_FC_FILE, AQEWS_CATEGORY_CSV as AQI_FC_CAT,
-    FIRE_HEADLINE_INSTRUMENT, FIRE_STATE_CSVS, METEO_HOURLY_CSV as METEO_CSV, VENTILATION_CSV,
+    CREAMS_HEADLINE_STATES, METEO_HOURLY_CSV as METEO_CSV, VENTILATION_CSV,
 )
 logger = get_logger(__name__)
 
@@ -28,19 +28,11 @@ def get_tomorrow_avg(c_date, csv_file=METEO_CSV):
     return min_temp, avg_wind, avg_rainfall
 
 def get_fire_count(p_date):
-    """{state: count} for p_date from the headline instrument (NOAA/VIIRS),
-    or None when the fire feed hasn't covered p_date yet (so it isn't
-    reported as 0)."""
-    from ingestion.get_fire_pbhr import read_state_fires
-    p_date = pd.to_datetime(p_date).date()
-    counts = {}
-    for state in FIRE_STATE_CSVS:
-        df = read_state_fires(state)
-        row = df[df["date"] == p_date]
-        if row.empty:
-            return None
-        counts[state] = int(row[FIRE_HEADLINE_INSTRUMENT].iloc[0])
-    return counts
+    """{state: paddy residue burning events} for p_date in Punjab and Haryana,
+    from the CREAMS bulletin, or None when no bulletin has covered p_date yet
+    (so it isn't reported as 0)."""
+    from ingestion.creams import headline_counts
+    return headline_counts(pd.to_datetime(p_date).date(), CREAMS_HEADLINE_STATES)
 
 
 def get_fc_aqi(c_date, csv_file=AQI_FC_FILE):

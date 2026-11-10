@@ -13,7 +13,7 @@ An internal Streamlit dashboard for Delhi's winter air quality, used by the CEEW
 | | **AQEWS Forecast** | IITM AQEWS 10-day AQI, PM2.5 and PM10 forecast; the AQEWS bulletin; what the AQI categories mean |
 | Trackers | **Pollutants and AQI** | Hourly PM2.5/PM10 against the CPCB bands, the last 7 days of CPCB AQI, and where Delhi's PM2.5 comes from (AQEWS DSS) |
 | | **Weather Forecast** | 3-day forecast read for dispersion: temperature and humidity, wind, mixing height, rain |
-| | **Farm fires** | Daily satellite fire detections in Punjab and Haryana, by instrument |
+| | **Farm fires** | Paddy residue burning events from the ICAR-IARI CREAMS daily bulletin: today's count per state, the season against 2020 onwards, a map and district breakdown of the day's fires |
 | Reports | **IMD bulletin** | The day's IMD air quality bulletin (PDF) |
 | | **Briefing note** | The team's briefing note (a published Google Doc); **hidden** for now (`HIDDEN_PAGES` in `dashboard.py`) |
 | | **Archive** | Every past daily update, on a calendar |
@@ -43,7 +43,7 @@ upstream sources ──► ingestion/ (run_daily.py, cron) ──► data/ (CSV,
 | [Open-Meteo](https://open-meteo.com/) | Hourly weather forecast, mixing height |
 | [NOAA aviationweather.gov](https://aviationweather.gov/) METAR (IGI Airport, VIDP) | Current observed weather |
 | [IMD](https://nwp.imd.gov.in/silam/aqbulletin.pdf) | Daily air quality bulletin PDF |
-| NASA VIIRS/MODIS via the private `signalsfunc` package | Punjab and Haryana fire counts |
+| [ICAR-IARI CREAMS](https://creams.iari.res.in/?page_id=1123) daily bulletin (PDF) | Paddy residue burning events in Punjab, Haryana and five other states |
 | [CAQM](https://caqm.nic.in/) | GRAP orders |
 | [MoHFW / NCDC](https://ncdc.mohfw.gov.in/uploads/pdf/air2.pdf) | Health advisory text |
 | The Hindu, Times of India, NDTV RSS feeds | AQI in the news |
@@ -69,7 +69,6 @@ py_envs/bin/pip install -r requirements-dev.txt
    py_envs/bin/python ingestion/run_daily.py
    ```
 
-   The fires step needs the private `signalsfunc` package and is skipped (not failed) without it.
 3. **Run the app.** Open http://127.0.0.1:8501. Use `127.0.0.1`, not `localhost`, when sign-in is on, because the sign-in cookie is tied to that host.
 
    ```bash
@@ -89,7 +88,8 @@ The live server runs `streamlit run dashboard.py` from a clone of this repositor
 ```
 20 16 * * *  cd /path/to/aq_winter && py_envs/bin/python ingestion/run_daily.py
 10 18 * * *  cd /path/to/aq_winter && py_envs/bin/python ingestion/run_daily.py
-30 2  * * *  cd /path/to/aq_winter && py_envs/bin/python ingestion/run_daily.py --only imd fires
+30 2  * * *  cd /path/to/aq_winter && py_envs/bin/python ingestion/run_daily.py --only imd
+30 21 * * *  cd /path/to/aq_winter && py_envs/bin/python ingestion/run_daily.py --only creams
 ```
 
 To update the server: pull `main`, then restart the Streamlit process. A restart (not just a browser refresh) is needed whenever Python dependencies or the sign-in configuration change. The server needs outbound internet access to every source above.

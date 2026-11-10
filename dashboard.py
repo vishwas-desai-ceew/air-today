@@ -37,7 +37,7 @@ st.set_page_config(
                 "Delhi's winter air quality in one place: the official CPCB AQI, the IITM AQEWS forecast, "
                 "weather, farm fires in Punjab and Haryana, and CAQM's GRAP orders, brought together in a "
                 "daily update.\n\n"
-                "**Data:** CPCB, IITM AQEWS, IMD, Open-Meteo, NOAA (METAR), NASA (VIIRS/MODIS) and CAQM. "
+                "**Data:** CPCB, IITM AQEWS, IMD, Open-Meteo, NOAA (METAR), ICAR-IARI CREAMS (farm fires) and CAQM. "
                 "Every page links the sources it uses; forecasts are model output, not official forecasts "
                 "unless stated.\n\n"
                 "An internal dashboard of the Council on Energy, Environment and Water (CEEW), for CEEW staff.\n\n"
@@ -165,7 +165,7 @@ def page_weather():
 
 
 def page_fires():
-    section_header("Farm fires - Punjab & Haryana", caption="Daily satellite fire detections by instrument")
+    section_header("Farm fires", caption="Paddy residue burning in Punjab, Haryana and five other states, from the ICAR-IARI CREAMS daily bulletin")
     render_fires_page()
 
 def page_pm25():

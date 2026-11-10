@@ -30,7 +30,6 @@ uvicorn==0.51.0
 anyio==4.11.0
 python-multipart==0.0.32
 
-# NOT pinned here: `signalsfunc`, imported by ingestion/get_fire_pbhr.py. It isn't installed
-# in this venv and isn't on PyPI under that name - it's a private/internal package (per the
-# original review). Install it from wherever it's actually sourced before running that script.
-# ingestion/run_daily.py skips the fires step (rather than failing) when it is missing.
+# NOT pinned here: `signalsfunc`, imported by ingestion/cpcb_hourly.py (hourly PM on the
+# Pollutants page). It isn't on PyPI under that name - it's a private/internal package.
+# Farm fires no longer need it: they come from the CREAMS bulletin (ingestion/creams.py).

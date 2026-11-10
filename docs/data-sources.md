@@ -11,7 +11,7 @@ Checked 26–27 October 2026. Updated 10 November 2026: the Gemini IMD summary s
 | Ventilation index, mixing depth, AQ category | AQEWS / IMD bulletin text | Regex (was Gemini) | `ingestion/aqews.py` |
 | Weather forecast and current conditions | Open-Meteo | JSON API, no key | `ingestion/weather.py` |
 | IMD AQ bulletin PDF | nwp.imd.gov.in | Download | `ingestion/download_imd_bulletin.py` |
-| Punjab/Haryana fire counts | NASA VIIRS via private `signalsfunc` | Python package | `ingestion/get_fire_pbhr.py` |
+| Farm fire counts (paddy residue burning) | ICAR-IARI CREAMS daily bulletin, https://creams.iari.res.in/?page_id=1123 | PDF, pdfplumber | `ingestion/creams.py` |
 | Station pollutants, fire map | Earthmetry Superset dashboards | iframe | `views/pm25_hourly.py`, `views/render_farm_firesh_dash.py` |
 
 All of it runs from one command, `ingestion/run_daily.py`. The suggested crontab is in that file's docstring. Each step's result goes to `data/pipeline_status.json`, which feeds the sidebar's data-health panel.
@@ -52,7 +52,7 @@ The current Pollutants page embeds an Earthmetry Superset dashboard, not OAQ. Re
 | 10 | Open-Meteo Air Quality (CAMS) | PM2.5, PM10, NO2, O3, dust, AOD; ~45 km model | No key **[LIVE]** https://open-meteo.com/en/docs/air-quality-api | Viable as a modelled forecast, labelled as model data |
 | 11 | Open-Meteo Forecast / ERA5 | Weather, BLH, history from 1940 | No key **[LIVE]** https://open-meteo.com/en/docs | **In use** |
 | 12 | CAMS via Copernicus ADS | Gridded CAMS fields | Personal token **[DOC]** https://ads.atmosphere.copernicus.eu/how-to-api | Research and maps |
-| 13 | NASA FIRMS | VIIRS/MODIS fire points, FRP | Free MAP_KEY **[DOC]** https://firms.modaps.eosdis.nasa.gov/api/area/ | **Recommended** to replace private `signalsfunc` |
+| 13 | NASA FIRMS | VIIRS/MODIS fire points, FRP | Free MAP_KEY **[DOC]** https://firms.modaps.eosdis.nasa.gov/api/area/ | Not used: farm fires now come from the CREAMS bulletin (10 Nov 2026) |
 | 14 | NASA POWER | Daily met, 0.5° | No key; about 4-day lag **[LIVE]** https://power.larc.nasa.gov/docs/services/api/temporal/daily/ | History only |
 | 15 | OpenAQ v3 | Re-hosted station data | API key **[LIVE]**; limits **[DOC]** https://docs.openaq.org/using-the-api/rate-limits | History fallback |
 | 16 | Sentinel-5P TROPOMI | NO2, CO columns | Free registration **[DOC]** https://documentation.dataspace.copernicus.eu/Data/SentinelMissions/Sentinel5P.html | Map layer |

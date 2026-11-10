@@ -112,14 +112,14 @@ Each entry lists what the page shows, the files it reads, the sources it credits
   - `insights_today.json`
   - `AQEWS_AQI_forecast.csv`, `ventilation_index_forecast.csv`, `AQI_forecast_category.csv`
   - `meteo_api_hourly.csv`
-  - `fires_*.csv`
+  - `creams_fires.csv`
   - live METAR + Open-Meteo
 - **Assumptions:**
   - Weather station: IGI Airport (VIDP) first, Safdarjung (VIDD) as fallback. Safdarjung is IMD's reference station for Delhi, so values may differ from IMD's Delhi figures.
   - Rain chances are shown only from 10% upwards (`RAIN_SHOW_PCT`).
 - **Review:**
   - The KPI and insight thresholds (§7) are fixed in code.
-  - The fires card shows only NOAA/VIIRS.
+  - The fires card shows yesterday's CREAMS paddy residue burning events for Punjab + Haryana, even when that evening's bulletin for today is already out (it matches the daily update).
 
 ### 3.2 Daily update (`/daily-update`, `page_today`)
 
@@ -184,20 +184,21 @@ Each entry lists what the page shows, the files it reads, the sources it credits
 
 ### 3.6 Farm fires (`/fires`, `page_fires`)
 
+Paddy residue burning events from the ICAR-IARI CREAMS daily bulletin (replaced the NASA counts from `signalsfunc` on 10 Nov 2026).
+
 - **Shows:**
-  - A choice of Punjab, Haryana or both states.
-  - Three instrument cards (NOAA/VIIRS, Aqua/MODIS, Terra/MODIS) with the latest day and its change.
-  - A line chart with one line per instrument. Instruments are never summed, because each one detects the same fires separately.
-  - A table with a CSV download.
-  - A dialog embedding the Earthmetry Signals dashboard.
-- **Reads:** `fires_punjab.csv`, `fires_haryana.csv`.
+  - The bulletin number, date and a link to the PDF.
+  - A card per state (Punjab, Haryana, Uttar Pradesh, Delhi, Rajasthan, Madhya Pradesh, Uttarakhand): the day's events, change vs the previous day, season total vs the same dates last year.
+  - The bulletin's highlights as published, including its cloud-cover note.
+  - An area picker (Punjab + Haryana, each state, all seven) for: cumulative season-to-date for every year from 2020; events per day this season stacked by state, with last year as a line; a map of the day's fires (sized by fire radiative power); top districts.
+  - Tables with CSV downloads.
+- **Reads:** `creams_fires.csv`, `creams_fire_events.csv`, `creams_bulletin.json`.
 - **Assumptions:**
-  - Detections at all confidence levels (low, nominal and high) are counted.
-  - A day with no data has no row, rather than zero.
+  - Counts are CREAMS's own (its standard protocol), not raw satellite detections, so they are lower than NASA FIRMS counts.
+  - Earlier years are shown only to the same date as the current bulletin, because that is all the bulletin carries; later dates of past seasons are kept once stored.
+  - A day no bulletin has covered has no row, rather than zero.
 - **Review:**
-  - The fetcher needs the private `signalsfunc` package. Without it the step is skipped; the last local run (9 Nov 2026) skipped it. Check the server has it.
-  - The embedded dashboard is on a **demo** host (`signals-demo.earthmetry.com`).
-  - `docs/data-sources.md` recommends the public NASA FIRMS API to replace `signalsfunc`.
+  - The parser reads the bulletin's tables with `pdfplumber`. If CREAMS changes the layout, the step fails (no date-wise table) or logs `check_problems` in `creams_bulletin.json` (per-fire list doesn't add up to the table).
 
 ### 3.7 IMD bulletin (`/imd-bulletin`, `page_bulletin`)
 
@@ -301,11 +302,11 @@ Each entry lists what the page shows, the files it reads, the sources it credits
 | 2 | `aqews` | `aqews.run()` | `AQEWS_{AQI,PM25,PM10}_forecast.csv`, `ventilation_index_forecast.csv`, `AQI_forecast_category.csv`, `aqews_bulletin.json`, `aqews_bulletin_days.csv`, `aqews_source_apportionment.json` |
 | 3 | `cpcb` | `cpcb.run()` | `delhi_aqi_cpcb.csv` |
 | 4 | `imd` | `download_imd_bulletin.download_pdf()` | `imd_bulletin_today.pdf` |
-| 5 | `fires` | `get_fire_pbhr.run()` | `fires_punjab.csv`, `fires_haryana.csv` |
+| 5 | `creams` | `creams.run()` | `creams_fires.csv`, `creams_fire_events.csv`, `creams_bulletin.json` |
 | 6 | `grap` | `grap_orders.run()` | `grap/grap_<season>.json` |
 | 7 | `summary` | `get_aqi_summary.run()` | `archive_temp.json`, `archive.json`, `insights_today.json`, appends to `missing_forecast_days.txt` |
 
-**Schedule:** suggested crontab (IST): full runs at 16:20 and 18:10, plus `--only imd fires` at 02:30. See the docstring.
+**Schedule:** suggested crontab (IST): full runs at 16:20 and 18:10, `--only imd` at 02:30 and `--only creams` at 21:30 (CREAMS publishes between about 17:00 and 21:00; a few go up the next day). See the docstring.
 
 **Run a single step:**
 
@@ -326,7 +327,7 @@ py_envs/bin/python ingestion/run_daily.py --only aqews
   - **Since about 7 Nov 2026 the home page shows day cards** (`#ewsBulletin`) instead of written text. The card parser runs first and the old text parser is the fallback.
   - **If neither finds a forecast, the step fails loudly.** Before this fix, it kept serving the 6 Nov files without any warning.
 - **Weather:** Open-Meteo hourly forecast for central Delhi (28.6448 N, 77.2167 E), with no API key.
-- **Fires:** `signalsfunc.read_nasa_active_fires` for IN-PB and IN-HR, per state, per day, split by satellite. Re-fetches the last 3 days.
+- **Fires:** the newest rice residue bulletin linked on the CREAMS page (`?page_id=1123`). Skipped when the URL and `Last-Modified` are unchanged. Each bulletin repeats the season to date for 2020 onwards, so one download rebuilds the history and a missed day corrects itself. Parsing the 60-odd pages takes about 30 s.
 - **GRAP:** CAQM document API. Merges new orders into the season JSON, keeping the team's notes by order ID.
 - **Summary:** seven template sentences and a structured `facts` dict. Days without a numeric AQEWS forecast are logged to `missing_forecast_days.txt`.
 
@@ -353,7 +354,7 @@ All files are in `data/`, which is **not in git**. The server's copy is the only
 | `aqews_source_apportionment.json` | aqews | Pollutants (DSS panel) |
 | `meteo_api_hourly.csv` | weather | Weather page, weather card, KPIs, summary |
 | `imd_bulletin_today.pdf` | imd | IMD bulletin page |
-| `fires_punjab.csv`, `fires_haryana.csv` | fires | Fires page, KPIs, summary |
+| `creams_fires.csv`, `creams_fire_events.csv`, `creams_bulletin.json` | creams | Fires page, KPIs, summary |
 | `grap/grap_<season>.json` | grap | GRAP page, Recent trends |
 | `archive.json`, `archive_temp.json`, `insights_today.json`, `missing_forecast_days.txt` | summary | Archive, Daily update, Overview |
 | `pipeline_status.json` | run_daily | Health pill |
@@ -374,11 +375,10 @@ All files are in `data/`, which is **not in git**. The server's copy is the only
 | Open-Meteo | <https://open-meteo.com/> | JSON API, no key | Free tier is labelled non-commercial; see §8 |
 | NOAA aviationweather.gov | <https://aviationweather.gov/data/metar/?ids=VIDP> | JSON API, no key | METAR, refreshed about every 30 min |
 | IMD AQ bulletin | <https://nwp.imd.gov.in/silam/aqbulletin.pdf> | PDF | |
-| NASA FIRMS (via `signalsfunc`) | <https://firms.modaps.eosdis.nasa.gov/> | Private package | VIIRS 375 m, MODIS 1 km |
+| ICAR-IARI CREAMS | <https://creams.iari.res.in/?page_id=1123> | Daily PDF, no key | Paddy residue burning events, 7 states, 2020 onwards; usually out 17:00-21:00 IST |
 | CAQM GRAP | <https://caqm.nic.in/landingpage/pages/grap/grap-orders> | Document API | Orders and schedule |
 | MoHFW / NCDC advisory | <https://ncdc.mohfw.gov.in/uploads/pdf/air2.pdf> | Scanned PDF | Health advisory, 1 Nov 2025 |
 | The Hindu, TOI, NDTV | RSS (see `ingestion/news.py`) | RSS, no key | Headlines only, linked to the publisher |
-| Earthmetry Signals | <https://signals-demo.earthmetry.com/> | iframe | Fires dashboard (demo host) |
 | Google Docs | published doc | iframe | Briefing note |
 | Google Fonts | fonts.googleapis.com | CSS | EB Garamond (glossary letters) |
 
@@ -397,7 +397,7 @@ The wider survey of sources considered (OAQ, data.gov.in, SAFAR, CAMS and others
 | Minimum temperature below 10 °C favours biomass burning | insights | Dashboard choice; no cited source |
 | Mean hourly rain of 0.1 mm or more counts as rain | summary, insights | Dashboard choice. IMD's lowest class ("very light", 0.1 mm) is a 24-hour total, so this is not the same rule |
 | Rain chance shown only from 10% | `RAIN_SHOW_PCT` | Display choice |
-| Fires headline instrument is NOAA/VIIRS; instruments are never summed | `FIRE_HEADLINE_INSTRUMENT` | Separate detections of overlapping fires |
+| Headline fire counts cover Punjab + Haryana only | `CREAMS_HEADLINE_STATES` | The states whose smoke reaches Delhi in the post-monsoon season; the Fires page shows all seven |
 | AQEWS daily AQI: hourly sub-indices, 8 h shift, daily mean, maximum of PM2.5 and PM10 | `aqews.save_aqi_to_csv` | Aligns with CPCB's 4 PM bulletin day; our aggregation |
 | AQI above 200 triggers the health steps | health advisory | MoHFW/NCDC advisory, Annexure II |
 | "Delhi …" sources are local in the DSS split | `source_apportionment._is_local` | Matches AQEWS's local share; checked by a test |
@@ -427,11 +427,11 @@ Grouped by priority. File references point to where to start.
 ### Reliability
 
 10. **AQEWS fix awaits deployment:** until the `aqews-landing-page` branch is merged and the server is updated, the live server serves ventilation index, mixing depth and categories from 6 Nov 2026.
-11. **Fires on the server:** confirm `signalsfunc` is installed there. Without it the fires step is skipped and the fires KPI goes stale.
+11. ~~Fires on the server needed `signalsfunc`~~ **Replaced (10 Nov 2026):** fires come from the public CREAMS bulletin and run in the main environment.
 12. ~~Every page depended on `AQEWS_AQI_forecast.csv`~~ **Fixed (10 Nov 2026):** the outage check is fail-safe, uses IST, and runs only on the three pages that show it.
 13. **CPCB 16:20 run marks the step failed** when the bulletin is late. The health pill then shows "failed" until 18:10, which looks like an outage.
 14. **Archive crashes** without `missing_forecast_days.txt` (`views/archive.load_missing_days`).
-15. **Health pill coverage:** it tracks CPCB, AQEWS, weather, IMD and fires (Punjab file only). It doesn't track GRAP, the daily summary or the news feeds.
+15. **Health pill coverage:** it tracks CPCB, AQEWS, weather, IMD and CREAMS fires. It doesn't track GRAP, the daily summary or the news feeds.
 16. **`data/` is not in git:** back up the server's copy, especially `archive.json`, which can't be regenerated.
 17. **Timezone:** `views/grap.py` (`date.today()`) uses the server clock. Fine on an IST server; wrong elsewhere.
 
@@ -439,7 +439,7 @@ Grouped by priority. File references point to where to start.
 
 18. ~~Gemini summary was unused~~ **Removed (10 Nov 2026):** the step, `ingestion/get_gemini_summary.py`, the `google-genai` dependency and `GEMINI_API_KEY`. The dashboard uses no LLM. An old `data/gemini_summary.json` can be deleted.
 19. ~~Placeholder help links~~ **Fixed (10 Nov 2026):** the menu emails vishwas.desai@ceew.in and has a real About text.
-20. **Earthmetry demo host** on the Fires page (`views/fires.py` `EXTERNAL_DASHBOARD`).
+20. ~~Earthmetry demo host on the Fires page~~ **Removed (10 Nov 2026)** with the switch to CREAMS.
 21. **Dead code:**
     - `views/render_insights.py`, and `views/farm_fires.py` (reachable only from it)
     - `views/sectors.py`

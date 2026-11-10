@@ -97,11 +97,17 @@ TERMS += [
     ("Active fire", "Satellite fire detection", "A spot where a satellite sensor picks up heat from a fire. "
      "Counts are detections, not individual fires: one large fire can produce several, while small or short fires, "
      "or fires under cloud, can be missed.", "Data and sources", "nasa_fires"),
+    ("CREAMS", "Consortium for Research on Agroecosystem Monitoring and Modeling from Space", "The ICAR-IARI "
+     "lab (Division of Agricultural Physics, New Delhi) that publishes a daily bulletin of paddy residue burning "
+     "events in Punjab, Haryana, Uttar Pradesh, Delhi, Rajasthan, Madhya Pradesh and Uttarakhand during the "
+     "kharif season. It applies a standard protocol to VIIRS and MODIS detections to count crop residue fires. "
+     "The dashboard's farm-fire counts come from it.", "Data and sources", "creams"),
     ("FIRMS", "Fire Information for Resource Management System", "NASA's service that publishes near real-time "
-     "active fire detections from the VIIRS and MODIS sensors. The Fires pages use it.", "Data and sources",
-     "nasa_fires"),
+     "active fire detections from the VIIRS and MODIS sensors. CREAMS uses these detections, with data received "
+     "at the NRSC ground station.", "Data and sources", "nasa_fires"),
     ("VIIRS", "Visible Infrared Imaging Radiometer Suite", "A satellite sensor that detects active fires at "
-     "375 m resolution; the dashboard's main source of farm-fire counts.", "Data and sources", "nasa_fires"),
+     "375 m resolution. Most of the fires in the CREAMS bulletins are from the VIIRS sensor on NOAA-20 (JPSS-1).",
+     "Data and sources", "nasa_fires"),
     ("MODIS", "Moderate Resolution Imaging Spectroradiometer", "A sensor on NASA's Terra and Aqua satellites that "
      "detects active fires at 1 km resolution, coarser than VIIRS.", "Data and sources", "nasa_fires"),
     ("Open-Meteo", "Open weather forecast service", "The free weather model service behind the dashboard's "

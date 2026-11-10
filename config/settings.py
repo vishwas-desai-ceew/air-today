@@ -32,17 +32,12 @@ AQEWS_CATEGORY_CSV = DATA_DIR / "AQI_forecast_category.csv"
 VENTILATION_CSV = DATA_DIR / "ventilation_index_forecast.csv"
 AQEWS_BULLETIN_DAYS_CSV = DATA_DIR / "aqews_bulletin_days.csv"  # day cards: sky, temps, wind, MD, VI
 AQEWS_SOURCES_JSON = DATA_DIR / "aqews_source_apportionment.json"  # DSS shares of Delhi PM2.5
-FIRE_CSV = DATA_DIR / "fire_pbhr.csv"  # legacy: Suomi-NPP/VIIRS only, both states, up to Nov 2025
-# One file per state: date + one count column per satellite instrument.
-FIRE_STATE_CSVS = {
-    "Punjab": DATA_DIR / "fires_punjab.csv",
-    "Haryana": DATA_DIR / "fires_haryana.csv",
-}
-FIRE_INSTRUMENTS = ["NOAA/VIIRS", "Aqua/MODIS", "Terra/MODIS"]
-# The one instrument used for headline counts (KPI card, daily summary).
-# Counts from different satellites are separate detections of overlapping
-# fires, so they are never summed across instruments.
-FIRE_HEADLINE_INSTRUMENT = "NOAA/VIIRS"
+# Paddy residue burning events from the ICAR-IARI CREAMS daily bulletin (ingestion/creams.py).
+CREAMS_FIRES_CSV = DATA_DIR / "creams_fires.csv"  # date, state, events (every season 2020 onwards)
+CREAMS_EVENTS_CSV = DATA_DIR / "creams_fire_events.csv"  # one row per fire: district, lat/lon, satellite, FRP
+CREAMS_BULLETIN_JSON = DATA_DIR / "creams_bulletin.json"  # latest bulletin: number, dates, URL, highlights
+# The states the headline counts (Overview card, Key insights, daily update) cover.
+CREAMS_HEADLINE_STATES = ["Punjab", "Haryana"]
 IMD_BULLETIN_PDF = DATA_DIR / "imd_bulletin_today.pdf"
 PIPELINE_STATUS_JSON = DATA_DIR / "pipeline_status.json"
 # Delhi hourly PM2.5 / PM10, in the shape signalsfunc returns (observation_hour_start,
@@ -58,6 +53,7 @@ DELHI_LAT, DELHI_LON = 28.6448, 77.216721
 AQEWS_HOME_URL = "https://ews.tropmet.res.in/"
 AQEWS_10DAY_URL = "https://ews.tropmet.res.in/10_days_forecast.php"
 IMD_BULLETIN_URL = "https://nwp.imd.gov.in/silam/aqbulletin.pdf"
+CREAMS_PAGE_URL = "https://creams.iari.res.in/?page_id=1123"
 OPEN_METEO_FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
 
 HTTP_HEADERS = {"User-Agent": "CEEW-AirToday/1.0 (+https://www.ceew.in)"}

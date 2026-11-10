@@ -9,10 +9,12 @@ data/pipeline_status.json, which the dashboard's sidebar status panel reads.
 Suggested crontab (IST machine clock):
     20 16 * * *  cd /path/to/aq_winter && py_envs/bin/python ingestion/run_daily.py
     10 18 * * *  cd /path/to/aq_winter && py_envs/bin/python ingestion/run_daily.py
-    30 2  * * *  cd /path/to/aq_winter && py_envs/bin/python ingestion/run_daily.py --only imd fires
-(fires needs `signalsfunc`; run it with an interpreter that has it installed.)
+    30 2  * * *  cd /path/to/aq_winter && py_envs/bin/python ingestion/run_daily.py --only imd
+    30 21 * * *  cd /path/to/aq_winter && py_envs/bin/python ingestion/run_daily.py --only creams
 The 16:20 run picks up the CPCB bulletin as soon as it is out; the 18:10 run
-is a safety net. Every step is idempotent, so re-running is always safe.
+is a safety net. The 21:30 run picks up that evening's CREAMS fire bulletin
+(usually out between 17:00 and 21:00); the 16:20 run catches any that came
+out late. Every step is idempotent, so re-running is always safe.
 
     python ingestion/run_daily.py                 # everything
     python ingestion/run_daily.py --only cpcb summary
@@ -53,10 +55,9 @@ def _imd():
     return {"file": str(download_imd_bulletin.OUTPUT_FILE)}
 
 
-def _fires():
-    # Depends on the private `signalsfunc` package; skipped where it isn't installed.
-    from ingestion import get_fire_pbhr
-    return get_fire_pbhr.run()
+def _creams():
+    from ingestion import creams
+    return creams.run()
 
 
 def _grap():
@@ -75,7 +76,7 @@ STEPS = {
     "aqews": ("AQEWS forecast", _aqews),
     "cpcb": ("CPCB AQI bulletin", _cpcb),
     "imd": ("IMD AQ bulletin", _imd),
-    "fires": ("Punjab/Haryana fires", _fires),
+    "creams": ("CREAMS farm fires", _creams),
     "grap": ("CAQM GRAP orders", _grap),
     "summary": ("Daily update", _summary),
 }
