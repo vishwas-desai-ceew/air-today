@@ -189,7 +189,7 @@ SOURCE_FILES = {
     "aqews": ("AQEWS forecast", AQEWS_AQI_CSV),
     "weather": ("Weather", METEO_HOURLY_CSV),
     "imd": ("IMD bulletin", IMD_BULLETIN_PDF),
-    "creams": ("Farm fires (CREAMS)", CREAMS_FIRES_CSV),
+    "creams": ("Paddy residue burning (CREAMS)", CREAMS_FIRES_CSV),
 }
 
 

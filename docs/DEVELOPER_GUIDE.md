@@ -182,7 +182,7 @@ Each entry lists what the page shows, the files it reads, the sources it credits
   - Night is computed from the sun's position.
 - **Review:** Open-Meteo is model output, not IMD's forecast; the page caption says so.
 
-### 3.6 Farm fires (`/fires`, `page_fires`)
+### 3.6 Paddy residue burning (`/fires`, `page_fires`)
 
 Paddy residue burning events from the ICAR-IARI CREAMS daily bulletin (replaced the NASA counts from `signalsfunc` on 10 Nov 2026).
 

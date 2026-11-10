@@ -102,6 +102,34 @@ TERMS += [
      "events in Punjab, Haryana, Uttar Pradesh, Delhi, Rajasthan, Madhya Pradesh and Uttarakhand during the "
      "kharif season. It applies a standard protocol to VIIRS and MODIS detections to count crop residue fires. "
      "The dashboard's farm-fire counts come from it.", "Data and sources", "creams"),
+    ("ICAR", "Indian Council of Agricultural Research", "The apex body for agricultural research and education "
+     "in India, under the Ministry of Agriculture and Farmers Welfare. IARI is one of its institutes.",
+     "Data and sources", None),
+    ("IARI", "Indian Agricultural Research Institute", "ICAR's institute in New Delhi (also known as Pusa "
+     "Institute). Its Division of Agricultural Physics runs the CREAMS Lab.", "Data and sources", "creams"),
+    ("Paddy residue burning", "Burning paddy straw after harvest", "CREAMS's term for stubble burning in rice "
+     "fields. An event is a satellite fire detection that CREAMS's standard protocol attributes to it.",
+     "Policy", "creams"),
+    ("Kharif", "Monsoon cropping season", "The crop season sown with the monsoon (June to July) and harvested in "
+     "autumn. Paddy is the main kharif crop in Punjab and Haryana, so its residue is burnt in October and "
+     "November.", "Policy", None),
+    ("NRSC", "National Remote Sensing Centre", "The Indian Space Research Organisation (ISRO) centre whose ground "
+     "station receives the satellite data CREAMS uses, alongside NASA FIRMS.", "Data and sources", None),
+    ("Suomi NPP", "Suomi National Polar-orbiting Partnership", "A NASA/NOAA satellite carrying a VIIRS sensor; "
+     "one of the four satellites CREAMS uses.", "Data and sources", "nasa_fires"),
+    ("NOAA-20 (JPSS-1)", "Joint Polar Satellite System 1", "A NOAA satellite carrying a VIIRS sensor, launched as "
+     "JPSS-1. Most fires in the CREAMS bulletins come from it; the fire lists show it as JPSS-1.",
+     "Data and sources", "nasa_fires"),
+    ("Terra / Aqua", "NASA satellites carrying MODIS", "Two NASA satellites with the MODIS sensor, each passing "
+     "over at a different time of day; the fire lists show them as TERRA and AQUA.",
+     "Data and sources", "nasa_fires"),
+    ("FRP", "Fire radiative power", "The heat a fire gives off as seen by the satellite, in watts per square metre "
+     "(W/m²) in the CREAMS fire lists. Larger values usually mean bigger or hotter fires; the fire map sizes "
+     "points by it.", "Data and sources", "creams"),
+    ("D / N", "Day / night detection", "Whether a fire was detected on a daytime or night-time satellite pass, as "
+     "given in the CREAMS fire lists.", "Data and sources", "creams"),
+    ("UP / MP / UK", "Uttar Pradesh / Madhya Pradesh / Uttarakhand", "State abbreviations used in the CREAMS "
+     "bulletin's text.", "Data and sources", "creams"),
     ("FIRMS", "Fire Information for Resource Management System", "NASA's service that publishes near real-time "
      "active fire detections from the VIIRS and MODIS sensors. CREAMS uses these detections, with data received "
      "at the NRSC ground station.", "Data and sources", "nasa_fires"),

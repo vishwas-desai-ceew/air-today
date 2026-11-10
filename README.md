@@ -13,7 +13,7 @@ An internal Streamlit dashboard for Delhi's winter air quality, used by the CEEW
 | | **AQEWS Forecast** | IITM AQEWS 10-day AQI, PM2.5 and PM10 forecast; the AQEWS bulletin; what the AQI categories mean |
 | Trackers | **Pollutants and AQI** | Hourly PM2.5/PM10 against the CPCB bands, the last 7 days of CPCB AQI, and where Delhi's PM2.5 comes from (AQEWS DSS) |
 | | **Weather Forecast** | 3-day forecast read for dispersion: temperature and humidity, wind, mixing height, rain |
-| | **Farm fires** | Paddy residue burning events from the ICAR-IARI CREAMS daily bulletin: today's count per state, the season against 2020 onwards, a map and district breakdown of the day's fires |
+| | **Paddy residue burning** | Events from the ICAR-IARI CREAMS daily bulletin: today's count per state, the season against 2020 onwards, a map and district breakdown of the day's fires |
 | Reports | **IMD bulletin** | The day's IMD air quality bulletin (PDF) |
 | | **Briefing note** | The team's briefing note (a published Google Doc); **hidden** for now (`HIDDEN_PAGES` in `dashboard.py`) |
 | | **Archive** | Every past daily update, on a calendar |

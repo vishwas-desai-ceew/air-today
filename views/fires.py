@@ -1,4 +1,4 @@
-"""Farm fires page: paddy residue burning events from the ICAR-IARI CREAMS
+"""Paddy residue burning page: paddy residue burning events from the ICAR-IARI CREAMS
 daily bulletin (ingestion/creams.py).
 
 Everything is drawn from the bulletin's own tables, not its images:
@@ -17,7 +17,7 @@ from config.reference import SOURCES
 from ingestion.creams import STATES
 from views import data
 from views.charts import PLOT_CONFIG, base_layout, hex_rgba
-from views.components import chart_card, metric_card, warning_card
+from views.components import chart_card, danger_card, metric_card, warning_card
 
 STATE_COLOURS = {
     "Punjab": "#e0541b", "Haryana": "#0a3d7a", "Uttar Pradesh": "#2f9e8f", "Delhi": "#7b5ea7",
@@ -46,12 +46,14 @@ def _season(daily: pd.DataFrame, year: int) -> pd.DataFrame:
 
 # ------------------------------------------------------------------ pieces --
 def render_header(meta: dict, latest: date):
-    bits = [f"Bulletin no. {meta['number']}" if meta.get("number") else None,
-            f"fires on {_d(latest)}",
+    """The fire date, large, then the bulletin details."""
+    bits = [f"CREAMS bulletin no. {meta['number']}" if meta.get("number") else None,
             f"issued {_d(date.fromisoformat(meta['issue_date']))}" if meta.get("issue_date") else None]
-    link = (f" · <a href='{escape(meta['url'])}' target='_blank' rel='noopener'>open the bulletin (PDF) ↗</a>"
-            if meta.get("url") else "")
-    st.markdown(f"<div class='ceew-caption'>{' · '.join(b for b in bits if b)}{link}</div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='fires-date'><span>Fires detected on</span><div class='fires-date-day'>{latest:%A}, {latest.day} {latest:%B %Y}</div>"
+        f"<small>{' · '.join(b for b in bits if b)}</small></div>",
+        unsafe_allow_html=True,
+    )
 
 
 def render_state_cards(daily: pd.DataFrame, latest: date):
@@ -75,19 +77,42 @@ def render_state_cards(daily: pd.DataFrame, latest: date):
                   else f" · {change:+d}% vs {latest.year - 1}")
             with col:
                 metric_card(state, f"{int(today.iloc[0]):,}",
-                            caption=f"Season {total:,}{vs}",
+                            caption=f"Since 15 Sep: {total:,}{vs}",
                             delta=None if before.empty else int(today.iloc[0] - before.iloc[0]),
                             delta_good_when="down", color=STATE_COLOURS[state])
 
 
-def render_highlights(meta: dict):
-    """The bulletin's own summary, as published. The first sentence (the
-    method) goes into the note at the bottom instead."""
-    lines = [s for s in meta.get("highlights", []) if "Standard Protocol" not in s]
-    if not lines:
+# Highlight sentences rebuilt from the bulletin's tables as nested lists; the
+# rest (cloud cover and other notes) are shown as published.
+_REBUILT = ("Satellites detected", "state wise events", "burning events were detected in the")
+
+
+def _state_list(counts: dict) -> str:
+    items = "".join(f"<li><span>{escape(s)}</span><b>{counts[s]:,}</b></li>" for s in STATES if s in counts)
+    return f"<ul class='fires-states'>{items}</ul>"
+
+
+def render_highlights(meta: dict, daily: pd.DataFrame, latest: date):
+    day = daily[daily["date"] == latest].set_index("state")["events"].to_dict()
+    season = _season(daily, latest.year)
+    season = season[season["date"] <= latest].groupby("state")["events"].sum().to_dict()
+    notes = [s for s in meta.get("highlights", [])
+             if "Standard Protocol" not in s and not any(k in s for k in _REBUILT)]
+    items = []
+    if day:
+        items.append(f"<li><b>{sum(day.values()):,}</b> paddy residue burning events on {_d(latest)}{_state_list(day)}</li>")
+    if season:
+        items.append(f"<li><b>{sum(season.values()):,}</b> events from 15 Sep to {_d(latest)}{_state_list(season)}</li>")
+    items += [f"<li>{escape(n)}</li>" for n in notes]
+    if not items:
         return
-    with chart_card(title="Bulletin highlights", caption="As published by CREAMS (UK = Uttarakhand, MP = Madhya Pradesh)."):
-        st.markdown("\n".join(f"- {escape(s)}" for s in lines))
+    st.markdown(
+        "<div class='fires-highlights'><div class='fires-highlights-title'>Bulletin highlights</div>"
+        f"<ul>{''.join(items)}</ul>"
+        "<div class='fires-highlights-legend'>Counts from the bulletin's state-wise tables; notes as published by "
+        "CREAMS. In the bulletin's text, UK = Uttarakhand, UP = Uttar Pradesh and MP = Madhya Pradesh.</div></div>",
+        unsafe_allow_html=True,
+    )
 
 
 def cumulative_chart(daily: pd.DataFrame, states: list, latest: date, height=400):
@@ -173,6 +198,36 @@ def fire_map(events: pd.DataFrame, height=520):
     return fig
 
 
+@st.dialog("Data tables and downloads", width="large")
+def data_dialog(daily: pd.DataFrame, events: pd.DataFrame, latest: date, area: str):
+    states = AREAS[area]
+    season = _season(daily, latest.year)
+    table = (season[season["state"].isin(states)].pivot(index="date", columns="state", values="events")
+             .reindex(columns=states).sort_index(ascending=False).reset_index())
+    st.markdown(f"**Events per day, {latest.year} season · {area}**")
+    st.dataframe(table, hide_index=True, width="stretch")
+    st.download_button("Download all CREAMS daily counts (2020 onwards, CSV)",
+                       daily.to_csv(index=False).encode("utf-8"), file_name="creams_fires.csv",
+                       mime="text/csv", key="dl_creams_daily", icon=":material/download:")
+    day_events = events[(events["date"] == latest) & (events["state"].isin(states))]
+    if not day_events.empty:
+        st.markdown(f"**Fires listed on {_d(latest)} · {area}**")
+        st.dataframe(day_events.drop(columns=["date"]), hide_index=True, width="stretch")
+        st.download_button(f"Download every fire listed on {_d(latest)} (CSV)",
+                           events[events["date"] == latest].to_csv(index=False).encode("utf-8"),
+                           file_name=f"creams_fire_events_{latest}.csv", mime="text/csv", key="dl_creams_events",
+                           icon=":material/download:")
+
+
+DISCLAIMER = (
+    "Counts are paddy residue burning events identified by the CREAMS Lab, ICAR-IARI, under the \"Standard "
+    "Protocol for Estimation of Crop Residue Burning Fire Events using Satellite Data\", from VIIRS (Suomi NPP, "
+    "NOAA-20) and MODIS (Terra, Aqua) detections received at the NRSC ground station and NASA FIRMS. Satellites see "
+    "a fire only if it is burning at overpass time and not under cloud, so a day's count is a lower bound; check "
+    "the highlights for cloud cover."
+)
+
+
 # -------------------------------------------------------------------- page --
 def render_fires_page():
     daily, events, meta = data.creams_daily(), data.creams_events(), data.creams_bulletin()
@@ -183,8 +238,14 @@ def render_fires_page():
     latest = (date.fromisoformat(meta["events_date"]) if meta.get("events_date")
               else daily["date"].max())
     render_header(meta, latest)
+    with st.container(horizontal=True, gap="small", vertical_alignment="center", key="fires-actions"):
+        if meta.get("url"):
+            st.markdown(f"<a class='portal-link' href='{escape(meta['url'])}' target='_blank' rel='noopener'>"
+                        "Open the CREAMS bulletin (PDF) ↗</a>", unsafe_allow_html=True)
+        if st.button("Data tables and downloads", key="open_fires_data", icon=":material/table_view:"):
+            data_dialog(daily, events, latest, st.session_state.get("fires_area") or PB_HR)
     render_state_cards(daily, latest)
-    render_highlights(meta)
+    render_highlights(meta, daily, latest)
 
     area = st.segmented_control("**Area**", options=list(AREAS), selection_mode="single",
                                 default=PB_HR, key="fires_area") or PB_HR
@@ -215,26 +276,5 @@ def render_fires_page():
         with right, chart_card(title=f"Top districts · {_d(latest)}", caption=f"{len(day_events):,} fires in {area}."):
             st.plotly_chart(district_chart(day_events), key="fires_districts", width="stretch", config=PLOT_CONFIG)
 
-    with st.expander("Data tables and downloads"):
-        season = _season(daily, latest.year)
-        table = (season[season["state"].isin(states)].pivot(index="date", columns="state", values="events")
-                 .reindex(columns=states).sort_index(ascending=False).reset_index())
-        st.markdown(f"**Events per day, {latest.year} season · {area}**")
-        st.dataframe(table, hide_index=True, width="stretch")
-        st.download_button("Download all CREAMS daily counts (2020 onwards, CSV)",
-                           daily.to_csv(index=False).encode("utf-8"), file_name="creams_fires.csv",
-                           mime="text/csv", key="dl_creams_daily")
-        if not day_events.empty:
-            st.markdown(f"**Fires listed on {_d(latest)} · {area}**")
-            st.dataframe(day_events.drop(columns=["date"]), hide_index=True, width="stretch")
-            st.download_button(f"Download the fire list for {_d(latest)} (CSV)",
-                               events[events["date"] == latest].to_csv(index=False).encode("utf-8"),
-                               file_name=f"creams_fire_events_{latest}.csv", mime="text/csv", key="dl_creams_events")
-
-    st.caption(
-        "Counts are paddy residue burning events identified by the CREAMS Lab, ICAR-IARI, under the "
-        "\"Standard Protocol for Estimation of Crop Residue Burning Fire Events using Satellite Data\", from VIIRS "
-        "(Suomi NPP, NOAA-20) and MODIS (Terra, Aqua) detections received at the NRSC ground station and NASA FIRMS. "
-        "Satellites see a fire only if it is burning at overpass time and not under cloud, so a day's count is a "
-        "lower bound; check the highlights for cloud cover."
-    )
+    with st.container(key="fires-disclaimer"):
+        danger_card(DISCLAIMER, title="Read with care:")

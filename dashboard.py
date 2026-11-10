@@ -165,7 +165,7 @@ def page_weather():
 
 
 def page_fires():
-    section_header("Farm fires", caption="Paddy residue burning in Punjab, Haryana and five other states, from the ICAR-IARI CREAMS daily bulletin")
+    section_header("Paddy residue burning", caption="Paddy residue burning in north central India, from the ICAR-IARI CREAMS daily bulletin")
     render_fires_page()
 
 def page_pm25():
@@ -220,7 +220,7 @@ pages = {
     "Trackers": [
         st.Page(page_pm25, title="Pollutants and AQI", url_path="pollutants", icon=":material/aq:"),
         st.Page(page_weather, title="Weather Forecast", url_path="weather", icon=":material/air:"),
-        st.Page(page_fires, title="Farm fires", url_path="fires", icon=":material/local_fire_department:"),
+        st.Page(page_fires, title="Paddy residue burning", url_path="fires", icon=":material/local_fire_department:"),
     ],
     "Reports": [
         st.Page(page_bulletin, title="IMD bulletin", url_path="imd-bulletin", icon=":material/picture_as_pdf:"),

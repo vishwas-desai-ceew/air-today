@@ -1249,6 +1249,7 @@ h6 {
 }
 
 .ceew-danger-card {
+  display: block;
   border-color: #f0b7b2;
   border-left: 6px solid #d44235;
   background: #fdecea;
@@ -3916,3 +3917,31 @@ button[data-variant="segmented_control"]:focus-visible {
   background: #072c59 !important;
   color: #ffffff !important;
 }
+
+/* Paddy residue burning page (views/fires.py) */
+.fires-date { display: flex; flex-direction: column; gap: 2px; margin: 0.1rem 0 0.7rem; }
+.fires-date span { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); }
+.fires-date-day { font-size: 2rem; font-weight: 800; line-height: 1.2; color: var(--text-primary); }
+.fires-date small { font-size: 0.85rem; color: var(--text-secondary); }
+.st-key-fires-actions { margin-bottom: 0.4rem; }
+.st-key-fires-actions .portal-link { margin: 0; }
+.st-key-open_fires_data button {
+  border-color: var(--sky-900) !important; background: var(--sky-900) !important; color: #fff !important;
+  border-radius: 999px !important;
+}
+.st-key-open_fires_data button:hover { border-color: #072c59 !important; background: #072c59 !important; }
+.fires-highlights {
+  margin: 1.1rem 0 1rem; padding: 1rem 1.25rem; background: #ffffff;
+  border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary);
+}
+.fires-highlights-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; }
+.fires-highlights > ul { margin: 0; padding-left: 1.2rem; }
+.fires-highlights > ul > li { margin: 0 0 0.6rem; line-height: 1.5; }
+.fires-states {
+  list-style: disc; margin: 0.3rem 0 0; padding-left: 1.3rem;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); column-gap: 1.5rem;
+}
+.fires-states li { display: list-item; margin: 0.1rem 0; }
+.fires-states li span { display: inline-block; min-width: 9.5rem; color: var(--text-secondary); }
+.fires-highlights-legend { margin-top: 0.4rem; font-size: 0.78rem; color: var(--text-secondary); border-top: 1px solid var(--border); padding-top: 0.5rem; }
+.st-key-fires-disclaimer .ceew-danger-card { margin-top: 1rem; padding: 0.75rem 1rem; line-height: 1.55; }
