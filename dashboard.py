@@ -205,10 +205,9 @@ def page_glossary():
     render_glossary()
 
 
-# The Briefing note page is hidden at the team's request. Set this to True to
-# bring it back; while False the page is out of the menu and /briefing-note
-# opens the Overview instead.
-SHOW_BRIEFING_NOTE = False
+# Pages hidden at the team's request, by url_path. A hidden page is out of the
+# menu and its URL opens the Overview. Remove a path to bring the page back.
+HIDDEN_PAGES = {"briefing-note", "interventions"}
 
 # Four groups, ordered by how often each is used: today's picture first,
 # live trackers next, documents, then background reading.
@@ -225,8 +224,7 @@ pages = {
     ],
     "Reports": [
         st.Page(page_bulletin, title="IMD bulletin", url_path="imd-bulletin", icon=":material/picture_as_pdf:"),
-        *([st.Page(page_general_info, title="Briefing note", url_path="briefing-note", icon=":material/description:")]
-          if SHOW_BRIEFING_NOTE else []),
+        st.Page(page_general_info, title="Briefing note", url_path="briefing-note", icon=":material/description:"),
         st.Page(page_archive, title="Archive", url_path="archive", icon=":material/history:"),
         st.Page(page_grap, title="GRAP", url_path="grap", icon=":material/gavel:"),
     ],
@@ -236,6 +234,9 @@ pages = {
         st.Page(page_glossary, title="Glossary", url_path="glossary", icon=":material/menu_book:"),
     ],
 }
+
+pages = {group: [p for p in group_pages if p.url_path not in HIDDEN_PAGES]
+         for group, group_pages in pages.items()}
 
 ist = pytz.timezone("Asia/Kolkata")
 
