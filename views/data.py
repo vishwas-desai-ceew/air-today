@@ -212,9 +212,24 @@ def source_health() -> list[dict]:
 
 
 @st.cache_data(ttl=600)
-def insights_today() -> dict:
-    """Structured daily update written by ingestion/get_aqi_summary.py."""
+def _insights_snapshot() -> dict:
     return read_json(INSIGHTS_JSON)
+
+
+def with_live_ventilation(facts: dict, lookup) -> dict:
+    """Fill a missing ventilation index from the live AQEWS file. The summary
+    is a snapshot: if the AQEWS step filled the CSV after the summary ran, the
+    Overview (which reads the CSV live) would show a value that Key insights lacks."""
+    if not facts or facts.get("ventilation_index") is not None or not facts.get("forecast_date"):
+        return facts
+    vi = lookup(datetime.fromisoformat(facts["forecast_date"]).date()).get("ventilation_index")
+    return facts if vi is None else {**facts, "ventilation_index": float(vi)}
+
+
+def insights_today() -> dict:
+    """Structured daily update written by ingestion/get_aqi_summary.py, with
+    the ventilation index filled live when the snapshot is missing it."""
+    return with_live_ventilation(_insights_snapshot(), forecast_for)
 
 
 @st.cache_data(ttl=600)

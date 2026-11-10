@@ -37,3 +37,25 @@ def test_bulletin_not_out_yet():
 
 def test_forecast_note_shows_aqews_not_model():
     assert _by_icon(FACTS)["forecast"]["note"] == "AQEWS"
+
+
+def test_missing_ventilation_is_filled_from_live_aqews():
+    from datetime import date
+    from views.data import with_live_ventilation
+    snap = {**FACTS, "ventilation_index": None}
+    seen = []
+    lookup = lambda d: (seen.append(d), {"ventilation_index": 9500})[1]
+    assert with_live_ventilation(snap, lookup)["ventilation_index"] == 9500.0
+    assert seen == [date(2026, 10, 29)]                      # forecast date, not today
+    assert with_live_ventilation(FACTS, lookup)["ventilation_index"] == 2900.0   # snapshot value kept
+    assert with_live_ventilation(snap, lambda d: {"ventilation_index": None})["ventilation_index"] is None
+
+
+def test_aqi_tone_follows_category_not_the_daily_change():
+    better_but_very_poor = {**FACTS, "aqi": {**FACTS["aqi"], "value": 344, "category": "Very Poor", "prev_value": 376}}
+    items = _by_icon(better_but_very_poor)
+    assert items["aqi"]["tone"] == "bad"
+    assert items["aqi"]["note"].startswith("▼ 32 vs 27 Oct")       # the improvement is still shown
+    assert items["forecast"]["tone"] == "bad"                         # Very Poor forecast
+    sat = {**FACTS, "aqi": {**FACTS["aqi"], "category": "Satisfactory"}, "forecast": {**FACTS["forecast"], "category": "Moderate"}}
+    assert _by_icon(sat)["aqi"]["tone"] == "good" and _by_icon(sat)["forecast"]["tone"] is None
