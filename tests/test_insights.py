@@ -37,3 +37,15 @@ def test_bulletin_not_out_yet():
 
 def test_forecast_note_shows_aqews_not_model():
     assert _by_icon(FACTS)["forecast"]["note"] == "AQEWS"
+
+
+def test_missing_ventilation_is_filled_from_live_aqews():
+    from datetime import date
+    from views.data import with_live_ventilation
+    snap = {**FACTS, "ventilation_index": None}
+    seen = []
+    lookup = lambda d: (seen.append(d), {"ventilation_index": 9500})[1]
+    assert with_live_ventilation(snap, lookup)["ventilation_index"] == 9500.0
+    assert seen == [date(2026, 10, 29)]                      # forecast date, not today
+    assert with_live_ventilation(FACTS, lookup)["ventilation_index"] == 2900.0   # snapshot value kept
+    assert with_live_ventilation(snap, lambda d: {"ventilation_index": None})["ventilation_index"] is None
