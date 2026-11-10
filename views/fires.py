@@ -17,7 +17,7 @@ from config.reference import SOURCES
 from ingestion.creams import STATES
 from views import data
 from views.charts import PLOT_CONFIG, base_layout, hex_rgba
-from views.components import chart_card, danger_card, metric_card, warning_card
+from views.components import chart_card, danger_card, warning_card
 
 STATE_COLOURS = {
     "Punjab": "#e0541b", "Haryana": "#0a3d7a", "Uttar Pradesh": "#2f9e8f", "Delhi": "#7b5ea7",
@@ -56,61 +56,75 @@ def render_header(meta: dict, latest: date):
     )
 
 
+def _state_card(name, colour, day_n, prev_n, prev_day, season_n, last_n, latest, total=False):
+    """One weather-forecast-style card: the day's events, the change from the
+    previous day, and the season so far against the same dates last year."""
+    if prev_n is None:
+        change = "<div class='fire-card-change'>&nbsp;</div>"
+    else:
+        diff = day_n - prev_n
+        cls = "bad" if diff > 0 else "good" if diff < 0 else ""
+        arrow = "▲" if diff > 0 else "▼" if diff < 0 else "•"
+        change = f"<div class='fire-card-change {cls}'>{arrow} {abs(diff):,} vs {prev_day.day} {prev_day:%b}</div>"
+    pct = round(100 * (season_n - last_n) / last_n) if last_n else None
+    pct_cls = "" if not pct else ("bad" if pct > 0 else "good")
+    pct_txt = "—" if pct is None else ("same" if pct == 0 else f"{pct:+d}%")
+    return (
+        f"<article class='wx-day fire-card{' total' if total else ''}' style='border-top-color:{colour}'>"
+        f"<header><strong>{escape(name)}</strong><span>{latest.day} {latest:%b}</span></header>"
+        f"<div class='wx-day-temp'>{day_n:,}<small> events</small></div>{change}"
+        "<div class='wx-day-grid'>"
+        f"<div><span>Since 15 Sep</span><b>{season_n:,}</b></div>"
+        f"<div><span>vs {latest.year - 1}, same dates</span><b class='{pct_cls}'>{pct_txt}</b>"
+        f"<small>{last_n:,}</small></div>"
+        "</div></article>"
+    )
+
+
 def render_state_cards(daily: pd.DataFrame, latest: date):
-    """One card per state: the day's events, change vs the previous day, and
-    the season so far against the same dates last year."""
+    """All seven states plus a total, with the latest bulletin's numbers: the
+    day's events (with the change from the day before) and the season to date
+    against the same dates last year."""
     prev = daily[daily["date"] < latest]["date"].max()
-    season, last = _season(daily, latest.year), _season(daily, latest.year - 1)
-    cutoff_last = date(latest.year - 1, latest.month, latest.day)
-    for row in (STATES[:4], STATES[4:]):
-        cols = st.columns(4)
-        for col, state in zip(cols, row):
-            s = daily[daily["state"] == state]
-            today = s.loc[s["date"] == latest, "events"]
-            if today.empty:
-                continue
-            before = s.loc[s["date"] == prev, "events"]
-            total = int(season.loc[season["state"] == state, "events"].sum())
-            ly = int(last.loc[(last["state"] == state) & (last["date"] <= cutoff_last), "events"].sum())
-            change = round(100 * (total - ly) / ly) if ly else None
-            vs = ("" if change is None else f" · same as {latest.year - 1}" if change == 0
-                  else f" · {change:+d}% vs {latest.year - 1}")
-            with col:
-                metric_card(state, f"{int(today.iloc[0]):,}",
-                            caption=f"Since 15 Sep: {total:,}{vs}",
-                            delta=None if before.empty else int(today.iloc[0] - before.iloc[0]),
-                            delta_good_when="down", color=STATE_COLOURS[state])
-
-
-# Highlight sentences rebuilt from the bulletin's tables as nested lists; the
-# rest (cloud cover and other notes) are shown as published.
-_REBUILT = ("Satellites detected", "state wise events", "burning events were detected in the")
-
-
-def _state_list(counts: dict) -> str:
-    items = "".join(f"<li><span>{escape(s)}</span><b>{counts[s]:,}</b></li>" for s in STATES if s in counts)
-    return f"<ul class='fires-states'>{items}</ul>"
-
-
-def render_highlights(meta: dict, daily: pd.DataFrame, latest: date):
-    day = daily[daily["date"] == latest].set_index("state")["events"].to_dict()
     season = _season(daily, latest.year)
-    season = season[season["date"] <= latest].groupby("state")["events"].sum().to_dict()
-    notes = [s for s in meta.get("highlights", [])
-             if "Standard Protocol" not in s and not any(k in s for k in _REBUILT)]
-    items = []
-    if day:
-        items.append(f"<li><b>{sum(day.values()):,}</b> paddy residue burning events on {_d(latest)}{_state_list(day)}</li>")
-    if season:
-        items.append(f"<li><b>{sum(season.values()):,}</b> events from 15 Sep to {_d(latest)}{_state_list(season)}</li>")
-    items += [f"<li>{escape(n)}</li>" for n in notes]
-    if not items:
+    season = season[season["date"] <= latest]
+    last = _season(daily, latest.year - 1)
+    last = last[last["date"] <= date(latest.year - 1, latest.month, latest.day)]
+
+    def nums(states):
+        pick = lambda df: df[df["state"].isin(states)]["events"]
+        day = pick(daily[daily["date"] == latest])
+        before = pick(daily[daily["date"] == prev])
+        return (int(day.sum()) if not day.empty else None, int(before.sum()) if not before.empty else None,
+                int(pick(season).sum()), int(pick(last).sum()))
+
+    cards = []
+    day_n, prev_n, season_n, last_n = nums(STATES)
+    if day_n is not None:
+        cards.append(_state_card("All seven states", "#0d2440", day_n, prev_n, prev, season_n, last_n, latest, total=True))
+    for state in STATES:
+        day_n, prev_n, season_n, last_n = nums([state])
+        if day_n is not None:
+            cards.append(_state_card(state, STATE_COLOURS[state], day_n, prev_n, prev, season_n, last_n, latest))
+    st.markdown(f"<div class='wx-days fire-cards'>{''.join(cards)}</div>", unsafe_allow_html=True)
+
+
+# Highlight sentences already shown in the cards (counts per state, season totals).
+_IN_CARDS = ("Satellites detected", "state wise events", "burning events were detected in the")
+
+
+def render_notes(meta: dict):
+    """The bulletin's method sentence and its other notes (cloud cover etc.),
+    as published, in one card."""
+    notes = [s for s in meta.get("highlights", []) if not any(k in s for k in _IN_CARDS)]
+    if not notes:
         return
+    items = "".join(f"<li>{escape(n)}</li>" for n in notes)
     st.markdown(
-        "<div class='fires-highlights'><div class='fires-highlights-title'>Bulletin highlights</div>"
-        f"<ul>{''.join(items)}</ul>"
-        "<div class='fires-highlights-legend'>Counts from the bulletin's state-wise tables; notes as published by "
-        "CREAMS. In the bulletin's text, UK = Uttarakhand, UP = Uttar Pradesh and MP = Madhya Pradesh.</div></div>",
+        "<div class='fire-notes'><div class='fire-notes-title'>From the bulletin</div>"
+        f"<ul>{items}</ul>"
+        "<div class='fire-notes-legend'>As published by CREAMS. UK = Uttarakhand, UP = Uttar Pradesh, "
+        "MP = Madhya Pradesh.</div></div>",
         unsafe_allow_html=True,
     )
 
@@ -245,7 +259,7 @@ def render_fires_page():
         if st.button("Data tables and downloads", key="open_fires_data", icon=":material/table_view:"):
             data_dialog(daily, events, latest, st.session_state.get("fires_area") or PB_HR)
     render_state_cards(daily, latest)
-    render_highlights(meta, daily, latest)
+    render_notes(meta)
 
     area = st.segmented_control("**Area**", options=list(AREAS), selection_mode="single",
                                 default=PB_HR, key="fires_area") or PB_HR

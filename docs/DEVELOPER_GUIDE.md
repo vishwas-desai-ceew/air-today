@@ -194,8 +194,8 @@ Paddy residue burning events from the ICAR-IARI CREAMS daily bulletin (replaced 
 
 - **Shows:**
   - The bulletin number, date and a link to the PDF.
-  - A card per state (Punjab, Haryana, Uttar Pradesh, Delhi, Rajasthan, Madhya Pradesh, Uttarakhand): the day's events, change vs the previous day, season total vs the same dates last year.
-  - The bulletin's highlights as published, including its cloud-cover note.
+  - Cards (weather-forecast style) for all seven states together and for each state (Punjab, Haryana, Uttar Pradesh, Delhi, Rajasthan, Madhya Pradesh, Uttarakhand): the day's events, change vs the previous day, total since 15 Sep and the change vs the same dates last year.
+  - A "From the bulletin" card with the bulletin's method sentence and other notes (e.g. cloud cover), as published.
   - An area picker (Punjab + Haryana, each state, all seven) for: cumulative season-to-date for every year from 2020; events per day this season stacked by state, with last year as a line; a map of the day's fires (sized by fire radiative power); top districts.
   - Tables with CSV downloads.
 - **Reads:** `creams_fires.csv`, `creams_fire_events.csv`, `creams_bulletin.json`.

@@ -3930,18 +3930,20 @@ button[data-variant="segmented_control"]:focus-visible {
   border-radius: 999px !important;
 }
 .st-key-open_fires_data button:hover { border-color: #072c59 !important; background: #072c59 !important; }
-.fires-highlights {
-  margin: 1.1rem 0 1rem; padding: 1rem 1.25rem; background: #ffffff;
-  border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary);
+.fire-cards { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); margin-top: 0.2rem; }
+.fire-card .wx-day-temp { font-weight: 600; }
+.fire-card .wx-day-temp small { font-size: 0.85rem; font-weight: 400; }
+.fire-card.total { background: #f4f8fd; }
+.fire-card-change { font-size: 0.82rem; font-weight: 700; margin-bottom: 8px; color: var(--text-secondary); }
+.fire-card-change.bad, .fire-card .wx-day-grid b.bad { color: var(--danger); }
+.fire-card-change.good, .fire-card .wx-day-grid b.good { color: var(--success); }
+.fire-notes {
+  margin: 1rem 0; padding: 0.9rem 1.1rem; background: #ffffff;
+  border: 1px solid var(--border); border-left: 5px solid var(--sky-900); border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(11,107,203,0.06); color: var(--text-primary);
 }
-.fires-highlights-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; }
-.fires-highlights > ul { margin: 0; padding-left: 1.2rem; }
-.fires-highlights > ul > li { margin: 0 0 0.6rem; line-height: 1.5; }
-.fires-states {
-  list-style: disc; margin: 0.3rem 0 0; padding-left: 1.3rem;
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); column-gap: 1.5rem;
-}
-.fires-states li { display: list-item; margin: 0.1rem 0; }
-.fires-states li span { display: inline-block; min-width: 9.5rem; color: var(--text-secondary); }
-.fires-highlights-legend { margin-top: 0.4rem; font-size: 0.78rem; color: var(--text-secondary); border-top: 1px solid var(--border); padding-top: 0.5rem; }
+.fire-notes-title { font-weight: 700; margin-bottom: 0.35rem; }
+.fire-notes ul { margin: 0; padding-left: 1.2rem; }
+.fire-notes li { margin: 0 0 0.35rem; line-height: 1.5; }
+.fire-notes-legend { margin-top: 0.4rem; font-size: 0.76rem; color: var(--text-secondary); }
 .st-key-fires-disclaimer .ceew-danger-card { margin-top: 1rem; padding: 0.75rem 1rem; line-height: 1.55; }
