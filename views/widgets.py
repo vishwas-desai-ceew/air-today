@@ -345,6 +345,17 @@ def _short_date(iso):
     return _date.fromisoformat(iso).strftime("%d %b") if iso else ""
 
 
+def _aqi_tone(category):
+    """Colour an AQI row by its category, not by the change vs yesterday: a
+    Very Poor day that improved on a Severe one is still bad air."""
+    cat = str(category or "").lower()
+    if cat.startswith(("poor", "very poor", "severe")):
+        return "bad"
+    if cat in ("good", "satisfactory"):
+        return "good"
+    return None
+
+
 def insight_items(facts):
     """facts (data/insights_today.json) -> compact rows: icon, label, value, chip, note, tone."""
     items = []
@@ -355,14 +366,14 @@ def insight_items(facts):
         note = "" if diff is None else f'{"▲" if diff > 0 else "▼" if diff < 0 else "•"} {abs(diff)} vs {_short_date(aqi["prev_date"])}'
         items.append(dict(icon="aqi", label=f'AQI · {_short_date(facts["date"])}', value=aqi["value"], unit="",
                           chip=aqi["category"], note=" · ".join(x for x in (note, aqi["pollutant"]) if x), source=cpcb_link,
-                          tone="bad" if diff and diff > 0 else "good" if diff and diff < 0 else None))
+                          tone=_aqi_tone(aqi["category"])))
     else:
         items.append(dict(icon="aqi", label=f'AQI · {_short_date(facts["date"])}', value="—", unit="",
                           chip=None, note="CPCB bulletin not out yet", source=cpcb_src(None), tone=None))
     items.append(dict(icon="forecast", label=f'Forecast · {_short_date(facts["forecast_date"])}',
                       value=fc["aqi"] if fc["aqi"] is not None else "—", unit="", chip=fc["category"],
                       note=(fc["source"] or "AQEWS unavailable").replace("AQEWS model", "AQEWS"),
-                      source=src("aqews", "AQEWS"), tone="bad" if not fc["source"] else None))
+                      source=src("aqews", "AQEWS"), tone=_aqi_tone(fc["category"])))
     wind = facts["wind_ms"]
     items.append(dict(icon="wind", label="Avg wind", value=_fmt(wind, "{:.1f}"), unit="m/s", chip=None,
                       note="needs > 2.8 m/s to disperse",
