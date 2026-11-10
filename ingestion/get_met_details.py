@@ -27,12 +27,12 @@ def get_tomorrow_avg(c_date, csv_file=METEO_CSV):
 
     return min_temp, avg_wind, avg_rainfall
 
-def get_fire_count(p_date):
-    """{state: paddy residue burning events} for p_date in Punjab and Haryana,
-    from the CREAMS bulletin, or None when no bulletin has covered p_date yet
-    (so it isn't reported as 0)."""
-    from ingestion.creams import headline_counts
-    return headline_counts(pd.to_datetime(p_date).date(), CREAMS_HEADLINE_STATES)
+
+def get_latest_fire_count():
+    """(date, {state: events}) for Punjab and Haryana from the newest CREAMS
+    bulletin, or (None, None) if none is stored."""
+    from ingestion.creams import latest_headline
+    return latest_headline(CREAMS_HEADLINE_STATES)
 
 
 def get_fc_aqi(c_date, csv_file=AQI_FC_FILE):

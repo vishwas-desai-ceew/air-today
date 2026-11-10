@@ -174,14 +174,24 @@ def creams_bulletin() -> dict:
     return read_json(CREAMS_BULLETIN_JSON)
 
 
-def fire_counts(day):
-    """{state: CREAMS events} for Punjab and Haryana on `day`, or None if no
-    bulletin has covered it yet."""
-    df = creams_daily()
-    rows = df[df["date"] == day].set_index("state")["events"]
-    if any(s not in rows.index for s in CREAMS_HEADLINE_STATES):
-        return None
-    return {s: int(rows[s]) for s in CREAMS_HEADLINE_STATES}
+def latest_fire_counts():
+    """(date, {state: events}) for Punjab and Haryana from the newest CREAMS
+    bulletin, or (None, None)."""
+    from ingestion.creams import latest_headline
+    return latest_headline(CREAMS_HEADLINE_STATES, creams_daily())
+
+
+def with_live_fires(facts: dict, latest) -> dict:
+    """Swap in a newer CREAMS bulletin than the summary saw (the evening
+    CREAMS run lands after the afternoon summary). `latest` is (date, counts)."""
+    day, counts = latest
+    if not facts or day is None:
+        return facts
+    have = facts.get("fire_date")
+    if facts.get("fires") is not None and have and datetime.fromisoformat(have).date() >= day:
+        return facts
+    return {**facts, "fire_date": day.isoformat(), "fires": {
+        "total": sum(counts.values()), "punjab": counts.get("Punjab", 0), "haryana": counts.get("Haryana", 0)}}
 
 
 SOURCE_FILES = {
@@ -238,8 +248,9 @@ def with_live_ventilation(facts: dict, lookup) -> dict:
 
 def insights_today() -> dict:
     """Structured daily update written by ingestion/get_aqi_summary.py, with
-    the ventilation index filled live when the snapshot is missing it."""
-    return with_live_ventilation(_insights_snapshot(), forecast_for)
+    the ventilation index filled live when the snapshot is missing it and the
+    fires taken from the newest CREAMS bulletin."""
+    return with_live_fires(with_live_ventilation(_insights_snapshot(), forecast_for), latest_fire_counts())
 
 
 @st.cache_data(ttl=600)

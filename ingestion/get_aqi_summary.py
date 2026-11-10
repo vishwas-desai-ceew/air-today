@@ -12,7 +12,7 @@ from config.settings import (
 from config.formatting import ordinal
 from config.logging_config import get_logger
 from ingestion.json_store import read_json, write_json_atomic
-from ingestion.get_met_details import get_tomorrow_avg, get_fire_count, get_fc_aqi, get_v_index_df, get_aqi_cat
+from ingestion.get_met_details import get_tomorrow_avg, get_latest_fire_count, get_fc_aqi, get_v_index_df, get_aqi_cat
 
 logger = get_logger(__name__)
 
@@ -63,7 +63,7 @@ def build_daily_update(df):
     # --- initialize all forecast variables ---
     min_temp = avg_wind = avg_rainfall = None
     aqi_forecast = aqi_forecast_cat = v_index_fc = aqi_cat_fallback = None
-    fire_counts = None
+    fire_counts = fire_date = None
 
     # ---fetch met + forecast data ---
     try:
@@ -87,9 +87,10 @@ def build_daily_update(df):
         logger.warning("get_aqi_cat failed: %s", e)
 
     try:
-        fire_counts = get_fire_count(prev_date)
+        # The newest CREAMS bulletin: usually yesterday's at the afternoon run.
+        fire_date, fire_counts = get_latest_fire_count()
     except Exception as e:
-        logger.warning("get_fire_count failed: %s", e)
+        logger.warning("get_latest_fire_count failed: %s", e)
 
     # --- observed AQI summary ---
     aqi_now = aqi_prev = prev_obs_date = pollutant = category = None
@@ -165,10 +166,10 @@ def build_daily_update(df):
         temp_fc = "Temperature forecast unavailable."
 
     if fire_counts is None:
-        fire_line = f"Fire count for {fmt_date(prev_date)} is currently unavailable."
+        fire_line = "Paddy residue burning fire count (ICAR-IARI CREAMS) is currently unavailable."
     else:
         fire_line = (
-            f"Paddy residue burning fire count on {fmt_date(prev_date)} is {sum(fire_counts.values())} (Punjab: {fire_counts.get('Punjab', 0)}, Haryana: {fire_counts.get('Haryana', 0)}; ICAR-IARI CREAMS)."
+            f"Paddy residue burning fire count on {fmt_date(fire_date)} is {sum(fire_counts.values())} (Punjab: {fire_counts.get('Punjab', 0)}, Haryana: {fire_counts.get('Haryana', 0)}; ICAR-IARI CREAMS)."
         )
 
     # --- Combine all lines into final summary ---
@@ -194,7 +195,7 @@ def build_daily_update(df):
     facts = {
         "date": str(today),
         "forecast_date": str(next_date),
-        "fire_date": str(prev_date),
+        "fire_date": str(fire_date or prev_date),
         "aqi": {"value": aqi_now, "category": category, "pollutant": pollutant,
                 "prev_value": aqi_prev, "prev_date": str(prev_obs_date) if prev_obs_date else None},
         "forecast": {"aqi": None if aqi_forecast is None else int(aqi_forecast),

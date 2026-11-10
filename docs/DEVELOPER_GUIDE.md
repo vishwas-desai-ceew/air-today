@@ -1,3 +1,9 @@
+---
+noteId: "b2c6baf0dcf611f1af23e5f38b676ab5"
+tags: []
+
+---
+
 # Air Today: developer guide
 
 How the dashboard is built, page by page: what each page shows, where every value comes from, the assumptions behind it, and what still needs review. The [README](../README.md) has the short overview and setup.
@@ -119,7 +125,7 @@ Each entry lists what the page shows, the files it reads, the sources it credits
   - Rain chances are shown only from 10% upwards (`RAIN_SHOW_PCT`).
 - **Review:**
   - The KPI and insight thresholds (§7) are fixed in code.
-  - The fires card shows yesterday's CREAMS paddy residue burning events for Punjab + Haryana, even when that evening's bulletin for today is already out (it matches the daily update).
+  - The fires card and Key insights show Punjab + Haryana from the newest CREAMS bulletin, so they move to that day's count once the evening bulletin is fetched (21:30 run). The archived daily-update sentence keeps the bulletin the afternoon summary saw.
 
 ### 3.2 Daily update (`/daily-update`, `page_today`)
 

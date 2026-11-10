@@ -506,7 +506,7 @@ def render_kpi_grid():
     aqi_row, prev_row = data.aqi_today_and_yesterday()
     fc = data.forecast_for(tomorrow)
     wx = data.current_weather()
-    fires = data.fire_counts(today - timedelta(days=1))
+    fire_date, fires = data.latest_fire_counts()
     at = _obs_time(wx)
     at_stamp = f"{at} IST" if at else ""
 
@@ -566,7 +566,7 @@ def render_kpi_grid():
     cards.append(kpi_card("rain", "Rain", _fmt(wx.get("precipitation"), "{:.1f}"), " mm",
                           "Rain helps wash out PM" if (wx.get("precipitation") or 0) > 0 else "Dry",
                           source=src("open_meteo_model"), stamp="Last hour"))
-    fire_day = _d(today - timedelta(days=1))
+    fire_day = _d(fire_date) if fire_date else ""
     if fires is None:
         cards.append(kpi_card("fire", "Fires PB + HR", "—", "", "CREAMS bulletin not out yet",
                               source=src("creams", "ICAR-IARI CREAMS"), stamp=fire_day))

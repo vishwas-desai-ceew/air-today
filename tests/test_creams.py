@@ -78,7 +78,7 @@ def test_highlights_and_cover():
                                   "Thick clouds cover northern Punjab."]
 
 
-def test_save_upserts_and_headline_counts(tmp_path, monkeypatch):
+def test_save_upserts_and_latest_headline(tmp_path, monkeypatch):
     daily_path, events_path = tmp_path / "creams_fires.csv", tmp_path / "creams_fire_events.csv"
     first = pd.DataFrame([(date(2026, 11, 8), "Punjab", 10), (date(2026, 11, 8), "Haryana", 1)], columns=creams.DAILY_COLUMNS)
     creams.save({"daily": first, "events": pd.DataFrame(columns=creams.EVENT_COLUMNS)}, daily_path, events_path)
@@ -86,9 +86,24 @@ def test_save_upserts_and_headline_counts(tmp_path, monkeypatch):
                            (date(2026, 11, 9), "Haryana", 17)], columns=creams.DAILY_COLUMNS)
     creams.save({"daily": second, "events": pd.DataFrame(columns=creams.EVENT_COLUMNS)}, daily_path, events_path)
 
-    assert creams.headline_counts(date(2026, 11, 8), ["Punjab", "Haryana"], daily_path) == {"Punjab": 12, "Haryana": 1}
-    assert creams.headline_counts(date(2026, 11, 10), ["Punjab", "Haryana"], daily_path) is None   # not out yet
+    df = creams.read_daily(daily_path)
+    assert df[(df["date"] == date(2026, 11, 8)) & (df["state"] == "Punjab")]["events"].item() == 12   # replaced
+    assert creams.latest_headline(["Punjab", "Haryana"], df) == (date(2026, 11, 9), {"Punjab": 198, "Haryana": 17})
+    # A day only some states have (a partial row) isn't "latest"
+    partial = pd.concat([df, pd.DataFrame([(date(2026, 11, 10), "Punjab", 5)], columns=creams.DAILY_COLUMNS)])
+    assert creams.latest_headline(["Punjab", "Haryana"], partial)[0] == date(2026, 11, 9)
+    assert creams.latest_headline(["Punjab"], df.iloc[0:0]) == (None, None)
 
-    monkeypatch.setattr(creams, "CREAMS_FIRES_CSV", daily_path)
-    monkeypatch.setattr(creams.headline_counts, "__defaults__", (daily_path,))
-    assert get_met_details.get_fire_count("2026-11-09") == {"Punjab": 198, "Haryana": 17}
+    monkeypatch.setattr(creams, "read_daily", lambda path=None: df)
+    assert get_met_details.get_latest_fire_count() == (date(2026, 11, 9), {"Punjab": 198, "Haryana": 17})
+
+
+def test_insights_take_a_newer_bulletin_than_the_summary():
+    from views.data import with_live_fires
+    facts = {"fire_date": "2026-11-08", "fires": {"total": 1232, "punjab": 1152, "haryana": 80}}
+    newer = with_live_fires(facts, (date(2026, 11, 9), {"Punjab": 198, "Haryana": 17}))
+    assert newer["fire_date"] == "2026-11-09" and newer["fires"] == {"total": 215, "punjab": 198, "haryana": 17}
+    assert with_live_fires(facts, (date(2026, 11, 8), {"Punjab": 1, "Haryana": 1})) is facts      # not newer
+    assert with_live_fires({"fire_date": "2026-11-08", "fires": None},
+                           (date(2026, 11, 8), {"Punjab": 1, "Haryana": 2}))["fires"]["total"] == 3   # fills a gap
+    assert with_live_fires(facts, (None, None)) is facts

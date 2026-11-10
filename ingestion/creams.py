@@ -234,14 +234,19 @@ def save(parsed: dict, daily_path=CREAMS_FIRES_CSV, events_path=CREAMS_EVENTS_CS
         _write_csv(events[EVENT_COLUMNS], events_path)
 
 
-def headline_counts(day, states, path=CREAMS_FIRES_CSV):
-    """{state: events} for `day`, or None when no bulletin has covered `day`
-    yet (so a missing day is never shown as 0)."""
-    df = read_daily(path)
+def latest_headline(states, df: pd.DataFrame = None):
+    """(date, {state: events}) for the newest day every one of `states` has a
+    count for, i.e. the latest bulletin; (None, None) if there is none.
+    `df` defaults to data/creams_fires.csv."""
+    df = read_daily() if df is None else df
+    df = df[df["state"].isin(states)]
+    full = df.groupby("date")["state"].nunique()
+    full = full[full == len(set(states))]
+    if full.empty:
+        return None, None
+    day = max(full.index)
     rows = df[df["date"] == day].set_index("state")["events"]
-    if any(s not in rows.index for s in states):
-        return None
-    return {s: int(rows[s]) for s in states}
+    return day, {s: int(rows[s]) for s in states}
 
 
 # ---------------------------------------------------------------------- run --
