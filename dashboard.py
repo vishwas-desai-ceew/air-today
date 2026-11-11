@@ -18,6 +18,7 @@ from views.aqews_bulletin import render_bulletin_button
 from views.components import hr, outage_banner, section_header
 from views.home import render_home_overview
 from views.glossary import render_glossary
+from views.home_screen import render_home_screen_help
 from views.widgets import render_hero, render_insights_panel, render_topbar
 from pathlib import Path
 from config.access import is_allowed_user, origin_mismatch, ALLOWED_EMAIL_DOMAIN
@@ -127,6 +128,7 @@ if AUTH_CONFIGURED:
                     st.caption(f"Sign-in only works from {canonical}.")
                 else:
                     st.button("Sign in with Google", on_click=st.login, key="login_button", type="primary", icon=":material/login:", width='stretch')
+                render_home_screen_help(st.context.headers.get("User-Agent", ""))
         st.stop()
     if not is_allowed_user(st.user):
         st.error(f"Access is restricted to verified @{ALLOWED_EMAIL_DOMAIN} Google Workspace accounts.")
