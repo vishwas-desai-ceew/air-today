@@ -15,6 +15,8 @@ from views.render_google_doc import render_google_doc
 from views.render_aqi_fc import aqews_outage, render_aqi_categories_button, render_aqi_fc
 from views.render_pm25_fc import render_pm10_fc, render_pm25_fc
 from views.aqews_bulletin import render_bulletin_button
+from views.source_apportionment import render_source_button
+from views.station_aqi import render_stations_button
 from views.components import hr, outage_banner, section_header
 from views.home import render_home_overview
 from views.glossary import render_glossary
@@ -168,7 +170,8 @@ def page_today():
 
 
 def page_forecast():
-    section_header("AQEWS Forecast", caption="IITM Air Quality Early Warning System, next 10 days for Delhi")
+    section_header("AQEWS", caption="IITM Air Quality Early Warning System: 10-day forecast, bulletin, "
+                                    "source apportionment and live station AQI for Delhi")
     st.markdown(
         '<a class="portal-link" href="https://ews.tropmet.res.in/" target="_blank" rel="noopener">'
         'Open the AQEWS portal ↗</a>',
@@ -176,6 +179,8 @@ def page_forecast():
     )
     with st.container(horizontal=True, gap="small", key="fc-actions"):
         render_bulletin_button()
+        render_source_button(compact=is_mobile)
+        render_stations_button()
         render_aqi_categories_button()
     fc_options = ["AQI", "PM2.5", "PM10"]
     selection = st.segmented_control(
@@ -203,7 +208,7 @@ def page_fires():
     render_fires_page()
 
 def page_pm25():
-    section_header("Pollutants and AQI", caption="Delhi hourly PM2.5 and PM10 against the CPCB bands, the last 7 days of CPCB AQI, and where Delhi's PM2.5 comes from")
+    section_header("Pollutants and AQI", caption="Delhi's hourly PM2.5 and PM10 against the CPCB bands, and the last 7 days of CPCB AQI")
     render_pollutants_page(compact=is_mobile)
 
 def page_bulletin():
@@ -249,7 +254,7 @@ pages = {
     "Today": [
         st.Page(page_overview, title="Overview", icon=":material/partly_cloudy_day:", default=True),
         st.Page(page_today, title="Daily update", url_path="daily-update", icon=":material/article:"),
-        st.Page(page_forecast, title="AQEWS Forecast", url_path="forecast", icon=":material/trending_up:"),
+        st.Page(page_forecast, title="AQEWS", url_path="forecast", icon=":material/trending_up:"),
     ],
     "Trackers": [
         st.Page(page_pm25, title="Pollutants and AQI", url_path="pollutants", icon=":material/aq:"),

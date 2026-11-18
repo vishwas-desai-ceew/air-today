@@ -70,6 +70,90 @@ def source_line(*keys, note=""):
 
 PLOT_CONFIG = {"displayModeBar": False}
 
+# Trace types drawn without x/y axes: the axis tuning below must leave them alone
+_NO_AXES = {"pie", "scattermap", "scattermapbox", "scattergeo", "choropleth", "choroplethmap",
+            "choroplethmapbox", "densitymap", "densitymapbox"}
+MOBILE_MAX_HEIGHT = 300
+MOBILE_MAX_LABELS = 8   # more on-point value labels than this are dropped on a phone
+
+
+def is_mobile():
+    return bool(st.session_state.get("is_mobile"))
+
+
+def _date_span_days(fig):
+    """Days covered by the first date x-axis series, or None when x isn't dates."""
+    import pandas as pd
+    for t in fig.data:
+        x = getattr(t, "x", None)
+        if x is not None and len(x):
+            try:
+                xs = pd.Series(list(x))
+                if not pd.api.types.is_datetime64_any_dtype(xs):
+                    return None
+                return (xs.max() - xs.min()).total_seconds() / 86400
+            except Exception:
+                return None
+    return None
+
+
+def mobile_tune(fig, height=None):
+    """Make a chart readable at phone width (~360 px), in the spirit of
+    hindustantimes.com/breathe: shorter, thin margins, few ticks, larger text,
+    no labels crammed into the right margin.
+
+    - band names printed in the right margin (add_bands) are dropped; every
+      banded chart already has a colour legend underneath it
+    - per-point value labels are dropped when there are too many to read
+    - x/y axes get at most 4-5 ticks; the legend sits on one line above the plot
+    """
+    if any(getattr(t, "type", "") in _NO_AXES for t in fig.data):
+        fig.update_layout(margin=dict(l=4, r=4, t=8, b=8),
+                          legend=dict(font=dict(size=11)))
+        if height:
+            fig.update_layout(height=height)
+        return fig
+    kept = [a for a in (fig.layout.annotations or [])
+            if not (str(a.xref or "").endswith("domain") and (a.x or 0) > 1)]
+    fig.layout.annotations = kept
+    for t in fig.data:
+        mode = getattr(t, "mode", None) or ""
+        n = len(t.x) if getattr(t, "x", None) is not None else 0
+        if "text" in mode and n > MOBILE_MAX_LABELS:
+            t.mode = mode.replace("+text", "").replace("text+", "").replace("text", "") or "markers"
+        if getattr(t, "type", "") == "bar" and n > MOBILE_MAX_LABELS and getattr(t, "text", None) is not None:
+            t.textposition = "none"
+    current = fig.layout.height or 380
+    fig.update_layout(
+        height=height or min(current, MOBILE_MAX_HEIGHT),
+        margin=dict(l=8, r=8, t=24, b=8),
+        font=dict(size=12),
+        legend=dict(orientation="h", yanchor="bottom", y=1.0, x=0, font=dict(size=11),
+                    itemwidth=30, tracegroupgap=0),
+        hoverlabel=dict(font=dict(size=12)),
+    )
+    fig.update_xaxes(nticks=5, tickfont=dict(size=11), title_font=dict(size=11), automargin=True)
+    span = _date_span_days(fig)
+    if span is not None and span <= 10:
+        # Horizontal two-line ticks ("Tue / 10 Nov") instead of long rotated labels
+        fig.update_xaxes(tickformat="%a<br>%d %b", tickangle=0, dtick=None, tick0=None, nticks=4)
+    elif span is not None:
+        fig.update_xaxes(tickangle=0)
+    # The unit is in each chart's title, tiles or legend; the rotated axis title
+    # costs ~40 px of a 360 px screen
+    fig.update_yaxes(nticks=5, tickfont=dict(size=11), title_text=None, automargin=True)
+    return fig
+
+
+def show_chart(fig, key=None, mobile_height=None, **kwargs):
+    """st.plotly_chart with the app's defaults, tuned for phones when the
+    visitor is on one (st.session_state.is_mobile, set from the User-Agent)."""
+    if is_mobile():
+        mobile_tune(fig, mobile_height)
+    kwargs.setdefault("width", "stretch")
+    kwargs.setdefault("config", PLOT_CONFIG)
+    st.plotly_chart(fig, key=key, **kwargs)
+
 
 def empty_fig():
     return go.Figure()

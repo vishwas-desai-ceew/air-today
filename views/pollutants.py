@@ -1,5 +1,7 @@
 """Pollutants and AQI page: Delhi hourly PM2.5 / PM10 over the CPCB bands, and
-the last 7 days of CPCB bulletin AQI.
+the last 7 days of CPCB bulletin AQI, as one tracker with a PM / AQI switch
+(PM by default). The latest PM2.5, PM10 and AQI sit in their own row of tiles
+above it, apart from the explanatory text.
 
 Replaces the embedded Earthmetry Signals dashboard (an iframe) with charts
 drawn from data the app already has:
@@ -22,9 +24,9 @@ import streamlit as st
 
 from config.reference import AQI_BANDS, NAAQS_24H, PM10_BANDS, PM25_BANDS, band_for
 from views import data
-from views.charts import PLOT_CONFIG, add_bands, base_layout
-from views.render_aqi_fc import aqi_chart, band_legend_html
-from views.widgets import cpcb_src, icon, side_points, side_source, src
+from views.charts import add_bands, base_layout, show_chart
+from views.render_aqi_fc import TEXT_ON_WHITE, aqi_chart, band_legend_html
+from views.widgets import cpcb_src, icon, side_points, src
 
 POLLUTANTS = {
     "PM2.5": dict(label="PM₂.₅", bands=PM25_BANDS, colour="#0a3d7a", y_floor=300),
@@ -47,6 +49,7 @@ def pm_chart(df, cols, band_col, height=420, compact=False):
         limit = NAAQS_24H.get(c)
         if limit:
             fig.add_hline(y=limit, line=dict(color="#0d2440", width=1.5, dash="dash"))
+        if limit and not compact:   # on a phone the two labels overlap; the points below give the limits
             fig.add_annotation(x=0.005, xref="x domain", y=limit, yref="y", yanchor="bottom", xanchor="left",
                                showarrow=False, font=dict(size=11, color="#0d2440"),
                                text=f"<b>NAAQS 24-hour {c}: {limit} µg/m³</b>", bgcolor="rgba(255,255,255,0.75)")
@@ -67,53 +70,118 @@ def pm_chart(df, cols, band_col, height=420, compact=False):
 
 
 CHART_HEIGHT = 340          # the weather page's strips are 230
-CHART_HEIGHT_COMPACT = 300
-
-
-def _info_html(icon_name, title, period, stat_html, points, source):
-    """Left panel of a strip, in the weather page's style: title, period,
-    the latest value, two or three short points and a linked source line."""
-    return (
-        f"<div class='wx-info pol-info'><div class='wx-info-head'>{icon(icon_name, 22)}<span>{escape(title)}</span></div>"
-        f"<div class='pol-period'>{escape(period)}</div>"
-        f"<div class='pol-info-stat'>{stat_html}</div>{side_points(points)}{source}</div>"
-    )
+CHART_HEIGHT_COMPACT = 260
+TRACKERS = {"PM": "PM₂.₅ and PM₁₀", "AQI": "AQI"}
 
 
 def _cat_chip(cat, colour):
     return f"<em class='pol-chip' style='--c:{colour}'>{escape(cat)}</em>"
 
 
-def _pm_source_text(info):
-    if info["source"] != "live":
-        return "Earthmetry Signals, <code>read_cpcb</code>, city = Delhi (<b>sample data</b>)"
-    return (f"Earthmetry Signals, <code>read_cpcb</code> (CPCB CAAQMS), city = Delhi, all stations averaged; "
-            f"fetched {info['fetched_at']:%H:%M, %d %b} IST, refreshed hourly")
+def _pm_source_line(meta):
+    """One line under the tracker: Earthmetry Signals (last refreshed ...) · CPCB AQI bands."""
+    if meta["source"] == "live":
+        signals = f"Earthmetry Signals (last refreshed: {meta['fetched_at']:%H:%M, %d %b} IST)"
+    else:
+        signals = "Earthmetry Signals (sample data)"
+    return f"<div class='chart-source pol-source'>Source: {signals} · {src('cpcb_aqi', 'CPCB AQI bands')}</div>"
 
 
-def render_pm_tracker(compact=False):
+def _aqi_source_line(latest_row, latest):
+    return (f"<div class='chart-source pol-source'>Source: {cpcb_src(latest_row)} ({latest.day} {latest:%b}) · "
+            f"{src('cpcb_aqi', 'CPCB AQI bands')} · "
+            "<a href='/archive' target='_self'>earlier days in the Archive</a></div>")
+
+
+def _stat_tile(label, stamp, value, unit, cat=None, colour=None):
+    chip = _cat_chip(cat, colour) if cat else ""
+    ink = TEXT_ON_WHITE.get(cat, colour or "#46607f")
+    return (f"<div class='pol-tile' style='--c:{colour or '#46607f'};--t:{ink}'>"
+            f"<div class='pol-tile-label'>{label}</div><div class='pol-tile-stamp'>{escape(stamp)}</div>"
+            f"<div class='pol-tile-value'><b>{value}</b><span>{unit}</span></div>{chip}</div>")
+
+
+def _load_pm():
     df, meta = data.pm_hourly()
     cols = [c for c in ("PM2.5", "PM10") if c in df.columns and df[c].notna().any()]
+    if cols:
+        df = df.dropna(subset=cols, how="all").reset_index(drop=True)
+    return df, meta, cols
+
+
+def _load_aqi_week():
+    hist = data.cpcb_history()
+    hist = hist[hist["aqi"].notna()] if not hist.empty else hist
+    if hist.empty:
+        return None
+    latest = hist["date"].max()
+    start = latest - timedelta(days=AQI_DAYS - 1)
+    week = hist[hist["date"] >= start].rename(
+        columns={"aqi": "AQI_overall", "pollutant": "prominent_pollutant"}).copy()
+    week["date"] = pd.to_datetime(week["date"])
+    latest_row = hist[hist["date"] == latest].iloc[0].to_dict()
+    return dict(week=week, start=start, latest=latest, latest_row=latest_row)
+
+
+def stats_html(df, cols, aqi):
+    """The headline numbers, on their own row above the tracker: latest hourly
+    PM2.5 and PM10 (Earthmetry Signals) and the latest CPCB bulletin AQI."""
+    tiles = []
+    if cols:
+        last = df.iloc[-1]
+        for c in ("PM2.5", "PM10"):
+            cfg = POLLUTANTS[c]
+            if c in cols and pd.notna(last[c]):
+                cat, colour = band_for(last[c], cfg["bands"])
+                tiles.append(_stat_tile(cfg["label"], f"{last['time']:%H:%M, %d %b} · hourly",
+                                        f"{last[c]:.0f}", "µg/m³", cat, colour))
+            else:
+                tiles.append(_stat_tile(cfg["label"], "not available", "—", "µg/m³"))
+    if aqi:
+        row, latest = aqi["latest_row"], aqi["latest"]
+        cat, colour = band_for(row["aqi"], AQI_BANDS)
+        tiles.append(_stat_tile("AQI", f"{latest.day} {latest:%b} · CPCB daily", f"{int(row['aqi'])}", "",
+                                cat, colour))
+    return f"<div class='pol-tiles'>{''.join(tiles)}</div>" if tiles else ""
+
+
+def _layout(compact, key, head_html, points_html, draw_chart):
+    """Desktop: explainer panel left, chart right. Phone: heading, chart, then the points."""
+    with st.container(border=True, key=key):
+        if compact:
+            st.markdown(f"<div class='wx-info pol-info'>{head_html}</div>", unsafe_allow_html=True)
+            draw_chart()
+            st.markdown(f"<div class='wx-info pol-info'>{points_html}</div>", unsafe_allow_html=True)
+            return
+        info, chart = st.columns([1, 3], gap="medium")
+        with chart:
+            draw_chart()
+        with info:
+            st.markdown(f"<div class='wx-info pol-info'>{head_html}{points_html}</div>", unsafe_allow_html=True)
+
+
+def _head(icon_name, title, period):
+    return (f"<div class='wx-info-head'>{icon(icon_name, 22)}<span>{escape(title)}</span></div>"
+            f"<div class='pol-period'>{escape(period)}</div>")
+
+
+def render_pm_tracker(compact=False, loaded=None):
+    df, meta, cols = loaded or _load_pm()
     if not cols:
         st.info("Hourly PM data is not available yet.")
         return
-    df = df.dropna(subset=cols, how="all").reset_index(drop=True)
-    last = df.iloc[-1]
     names = " and ".join(POLLUTANTS[c]["label"] for c in cols)
 
-    stat, points = "", []
+    points = []
     for c in cols:
         cfg = POLLUTANTS[c]
-        if pd.isna(last[c]):
-            continue
-        _, colour = band_for(last[c], cfg["bands"])
         peak = df.loc[df[c].idxmax()]
-        stat += (f"<div class='pol-stat-line'><small>{cfg['label']} · {last['time']:%H:%M, %d %b}</small>"
-                 f"<b style='color:{colour}'>{last[c]:.0f}</b><span>µg/m³</span></div>")
         points.append(f"<b>{cfg['label']}</b> peak {peak[c]:.0f} at {peak['time']:%H:%M, %d %b}; "
                       f"average {df[c].mean():.0f} µg/m³.")
-    points.append("Shading shows CPCB bands; the dashed line is the 24-hour NAAQS limit. Both are set for "
-                  "daily averages, so single hours are a guide.")
+    limits = ", ".join(f"{POLLUTANTS[c]['label']} {NAAQS_24H[c]}" for c in cols if NAAQS_24H.get(c))
+    points.append("Shading shows CPCB bands; the dashed line is the 24-hour NAAQS limit"
+                  + (f" ({limits} µg/m³)" if limits else "") + ". Both are set for daily averages, "
+                  "so single hours are a guide.")
     if meta["source"] == "live":
         points.append("Each hour is the average across all CPCB monitoring stations in Delhi.")
         if meta["stale"]:
@@ -124,67 +192,53 @@ def render_pm_tracker(compact=False):
     if "PM10" not in cols:
         points.append("<i>PM₁₀ isn't in the current data yet.</i>")
 
-    with st.container(border=True, key="pol-strip-pm"):
-        info, chart = st.columns([1, 3], gap="medium")
+    def draw():
         band_col = cols[0]
-        with chart:
-            if len(cols) > 1:
-                band_col = st.segmented_control("**Shade CPCB bands for**", options=cols, default=cols[0],
-                                                key="pol_band_col") or cols[0]
-            st.plotly_chart(pm_chart(df, cols, band_col, compact=compact,
-                                     height=CHART_HEIGHT_COMPACT if compact else CHART_HEIGHT),
-                            key="pol_pm_chart", width="stretch", config=PLOT_CONFIG)
-            st.markdown(band_legend_html(POLLUTANTS[band_col]["bands"], " µg/m³"), unsafe_allow_html=True)
-        with info:
-            st.markdown(_info_html(
-                "fog", f"{names}, hourly",
-                f"{_period(df['time'].min(), df['time'].max(), '%d %b, %H:%M')} IST · {len(df)} hours",
-                stat, points,
-                side_source(_pm_source_text(meta),
-                            src("cpcb_aqi", "CPCB AQI bands"), src("cpcb_naaqs", "CPCB NAAQS (2009)")),
-            ), unsafe_allow_html=True)
+        if len(cols) > 1:
+            band_col = st.segmented_control("**Shade CPCB bands for**", options=cols, default=cols[0],
+                                            key="pol_band_col") or cols[0]
+        show_chart(pm_chart(df, cols, band_col, compact=compact,
+                            height=CHART_HEIGHT_COMPACT if compact else CHART_HEIGHT),
+                   key="pol_pm_chart", mobile_height=CHART_HEIGHT_COMPACT)
+        st.markdown(band_legend_html(POLLUTANTS[band_col]["bands"], " µg/m³"), unsafe_allow_html=True)
+
+    _layout(compact, "pol-strip-pm",
+            _head("fog", f"{names}, hourly",
+                  f"{_period(df['time'].min(), df['time'].max(), '%d %b, %H:%M')} IST · {len(df)} hours"),
+            side_points(points), draw)
+    st.markdown(_pm_source_line(meta), unsafe_allow_html=True)
 
 
-def render_aqi_tracker(compact=False):
-    hist = data.cpcb_history()
-    hist = hist[hist["aqi"].notna()] if not hist.empty else hist
-    if hist.empty:
+def render_aqi_tracker(compact=False, loaded=None):
+    aqi = loaded if loaded is not None else _load_aqi_week()
+    if not aqi:
         st.info("No CPCB bulletin AQI is available yet.")
         return
-    latest = hist["date"].max()
-    start = latest - timedelta(days=AQI_DAYS - 1)
-    week = hist[hist["date"] >= start].rename(
-        columns={"aqi": "AQI_overall", "pollutant": "prominent_pollutant"}).copy()
-    week["date"] = pd.to_datetime(week["date"])
+    week, start, latest, latest_row = aqi["week"], aqi["start"], aqi["latest"], aqi["latest_row"]
     missing = AQI_DAYS - len(week)
-    latest_row = hist[hist["date"] == latest].iloc[0].to_dict()
-    cat, colour = band_for(latest_row["aqi"], AQI_BANDS)
     lo, hi = week["AQI_overall"].min(), week["AQI_overall"].max()
+    points = ([f"7-day range <b>{lo:.0f}–{hi:.0f}</b>.",
+               "CPCB's daily bulletin AQI: the 24-hour average up to 4 PM IST."]
+              + ([f"<i>{missing} of {AQI_DAYS} days have no bulletin.</i>"] if missing > 0 else []))
 
-    with st.container(border=True, key="pol-strip-aqi"):
-        info, chart = st.columns([1, 3], gap="medium")
-        with chart:
-            st.plotly_chart(aqi_chart(week, compact=compact,
-                                      height=CHART_HEIGHT_COMPACT if compact else CHART_HEIGHT),
-                            key="pol_aqi_chart", width="stretch", config=PLOT_CONFIG)
-            st.markdown(band_legend_html(AQI_BANDS), unsafe_allow_html=True)
-        with info:
-            st.markdown(_info_html(
-                "aqi", "Delhi AQI, last 7 days",
-                f"{start.day} {start:%b} – {latest.day} {latest:%b %Y}",
-                f"<div class='pol-stat-line'><small>{latest.day} {latest:%b}</small>"
-                f"<b style='color:{colour}'>{int(latest_row['aqi'])}</b><span>AQI</span>{_cat_chip(cat, colour)}</div>",
-                [f"7-day range <b>{lo:.0f}–{hi:.0f}</b>.",
-                 "CPCB's daily bulletin AQI: the 24-hour average up to 4 PM IST."]
-                + ([f"<i>{missing} of {AQI_DAYS} days have no bulletin.</i>"] if missing > 0 else []),
-                side_source(cpcb_src(latest_row) + f" ({latest.day} {latest:%b})",
-                            src("cpcb_aqi", "CPCB AQI bands"),
-                            "<a href='/archive' target='_self'>earlier days in the Archive</a>"),
-            ), unsafe_allow_html=True)
+    def draw():
+        show_chart(aqi_chart(week, compact=compact, height=CHART_HEIGHT_COMPACT if compact else CHART_HEIGHT),
+                   key="pol_aqi_chart", mobile_height=CHART_HEIGHT_COMPACT)
+        st.markdown(band_legend_html(AQI_BANDS), unsafe_allow_html=True)
+
+    _layout(compact, "pol-strip-aqi",
+            _head("aqi", "Delhi AQI, last 7 days", f"{start.day} {start:%b} – {latest.day} {latest:%b %Y}"),
+            side_points(points), draw)
+    st.markdown(_aqi_source_line(latest_row, latest), unsafe_allow_html=True)
 
 
 def render_pollutants_page(compact=False):
-    from views.source_apportionment import render_source_strip
-    render_pm_tracker(compact)
-    render_aqi_tracker(compact)
-    render_source_strip(compact)
+    pm = _load_pm()
+    aqi = _load_aqi_week()
+    st.markdown(stats_html(pm[0], pm[2], aqi), unsafe_allow_html=True)
+    choice = st.segmented_control("**Tracker**", options=list(TRACKERS), format_func=TRACKERS.get,
+                                  default="PM", key="pol_tracker") or "PM"
+    if choice == "AQI":
+        render_aqi_tracker(compact, aqi)
+    else:
+        render_pm_tracker(compact, pm)

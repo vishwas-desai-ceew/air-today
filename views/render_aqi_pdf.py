@@ -18,12 +18,55 @@ def load_pdf_base64():
     return base64.b64encode(pdf_bytes).decode("utf-8")
 
 
+@st.cache_data(ttl=3600, show_spinner="Preparing the bulletin pages...")
+def pdf_page_images(mtime, scale=2.0):
+    """Each PDF page as PNG bytes. Phone browsers can't show a PDF inside an
+    iframe (Android Chrome shows nothing, iOS Safari only the first page), so
+    on phones the pages are shown as images. `mtime` keys the cache to the file."""
+    import io
+    import pypdfium2 as pdfium
+    pdf = pdfium.PdfDocument(str(PDF_PATH))
+    pages = []
+    for i in range(len(pdf)):
+        img = pdf[i].render(scale=scale).to_pil()
+        buf = io.BytesIO()
+        img.save(buf, format="PNG", optimize=True)
+        pages.append(buf.getvalue())
+    pdf.close()
+    return pages
+
+
+def render_aqi_pdf_mobile(modification_time, formatted_time):
+    st.markdown(
+        "<div class='imd-mobile-head'><p>India Meteorological Department</p>"
+        "<h3>Daily Air Quality Bulletin</h3>"
+        f"<span>Updated {formatted_time} IST</span></div>",
+        unsafe_allow_html=True,
+    )
+    with open(PDF_PATH, "rb") as f:
+        st.download_button("Download PDF", f.read(), file_name="imd_air_quality_bulletin.pdf",
+                           mime="application/pdf", icon=":material/download:", type="primary",
+                           width="stretch", key="imd_pdf_download")
+    try:
+        pages = pdf_page_images(modification_time)
+    except Exception:
+        st.info("The bulletin pages couldn't be shown here; use Download PDF to read it.")
+        return
+    st.caption(f"{len(pages)} page{'s' if len(pages) != 1 else ''} · pinch to zoom")
+    with st.container(key="imd-pages"):
+        for i, png in enumerate(pages, 1):
+            st.image(png, caption=f"Page {i} of {len(pages)}", width="stretch")
+
+
 def render_aqi_pdf():
     try:
         modification_time = os.path.getmtime(PDF_PATH)
         utc_dt = datetime.fromtimestamp(modification_time, tz=pytz.utc)
         ist_dt = utc_dt.astimezone(pytz.timezone("Asia/Kolkata"))
         formatted_time = ist_dt.strftime("%d %B %Y · %I:%M %p")
+        if st.session_state.get("is_mobile"):
+            render_aqi_pdf_mobile(modification_time, formatted_time)
+            return
         b64_pdf = load_pdf_base64()
 
         pdf_display = f"""

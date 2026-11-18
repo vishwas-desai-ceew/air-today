@@ -32,6 +32,7 @@ AQEWS_CATEGORY_CSV = DATA_DIR / "AQI_forecast_category.csv"
 VENTILATION_CSV = DATA_DIR / "ventilation_index_forecast.csv"
 AQEWS_BULLETIN_DAYS_CSV = DATA_DIR / "aqews_bulletin_days.csv"  # day cards: sky, temps, wind, MD, VI
 AQEWS_SOURCES_JSON = DATA_DIR / "aqews_source_apportionment.json"  # DSS shares of Delhi PM2.5
+AQEWS_STATIONS_JSON = DATA_DIR / "aqews_station_aqi.json"  # AQEWS "Live station AQI" ticker (CPCB stations)
 # Paddy residue burning events from the ICAR-IARI CREAMS daily bulletin (ingestion/creams.py).
 CREAMS_FIRES_CSV = DATA_DIR / "creams_fires.csv"  # date, state, events (every season 2020 onwards)
 CREAMS_EVENTS_CSV = DATA_DIR / "creams_fire_events.csv"  # one row per fire: district, lat/lon, satellite, FRP

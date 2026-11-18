@@ -16,6 +16,7 @@ Writes:
   AQI_forecast_category.csv       date, category
   aqews_bulletin_days.csv         the bulletin's day cards in full (sky, temps, wind, MD, VI)
   aqews_source_apportionment.json DSS source shares of Delhi's daily-mean PM2.5
+  aqews_station_aqi.json          the home page's "Live station AQI" ticker (hourly CPCB station AQI)
 
 The home page was redesigned around 7 Nov 2026: the prose bulletin
 ("The ventilation index is likely to be ... on 25.10.2026") was replaced by
@@ -39,7 +40,8 @@ PARENT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PARENT_DIR))
 from config.settings import (
     AQEWS_10DAY_URL, AQEWS_AQI_CSV, AQEWS_BULLETIN_JSON, AQEWS_CATEGORY_CSV, AQEWS_HOME_URL,
-    AQEWS_BULLETIN_DAYS_CSV, AQEWS_PM10_CSV, AQEWS_PM25_CSV, AQEWS_SOURCES_JSON, HTTP_HEADERS, IST,
+    AQEWS_BULLETIN_DAYS_CSV, AQEWS_PM10_CSV, AQEWS_PM25_CSV, AQEWS_SOURCES_JSON, AQEWS_STATIONS_JSON,
+    HTTP_HEADERS, IST,
     VENTILATION_CSV,
 )
 from config.logging_config import get_logger
@@ -310,6 +312,49 @@ def extract_source_apportionment(html: str, ref=None) -> dict:
     }
 
 
+# ------------------------------------------- live station AQI ticker (CPCB) --
+def extract_station_aqi(html: str) -> dict:
+    """The home page's "Live station AQI" ticker (section.ews-cpcb-ticker):
+    one card per CPCB monitoring station with its AQI, category, main
+    pollutant and reading time, as AQEWS publishes them from the CPCB feed."""
+    soup = BeautifulSoup(html, "html.parser")
+    track = soup.select_one("#ewsCpcbTrack") or soup.select_one(".ews-cpcb-ticker")
+    if track is None:
+        raise ValueError("AQEWS live station AQI ticker (#ewsCpcbTrack) not found")
+    stations = []
+    for card in track.select(".ews-cpcb-card"):
+        place = card.select_one(".ews-cpcb-place")
+        value = card.select_one(".ews-cpcb-bottom b")
+        cat = card.select_one(".ews-cpcb-bottom span")
+        meta = card.select_one(".ews-cpcb-meta")
+        aqi = NUM_RE.search(value.get_text() if value else "")
+        if not (place and aqi):
+            continue
+        meta_txt = meta.get_text(" ", strip=True) if meta else ""
+        pol = re.search(r"pollutant:\s*([^·]+)", meta_txt)
+        when = re.search(r"(\d{2})-(\d{2})-(\d{4})\s+(\d{2}):(\d{2})", meta_txt)
+        colour = re.search(r"--aqi-color:\s*(#[0-9a-fA-F]{3,8})", cat.get("style", "") if cat else "")
+        stations.append({
+            "station": place.get_text(" ", strip=True),
+            "aqi": int(float(aqi.group())),
+            "category": cat.get_text(" ", strip=True) if cat else None,
+            "colour": colour.group(1) if colour else None,
+            "pollutant": pol.group(1).strip() if pol else None,
+            "observed_at": (datetime(int(when.group(3)), int(when.group(2)), int(when.group(1)),
+                                     int(when.group(4)), int(when.group(5))).isoformat(timespec="minutes")
+                            if when else None),
+        })
+    if not stations:
+        raise ValueError("AQEWS live station AQI ticker is empty")
+    times = sorted(s["observed_at"] for s in stations if s["observed_at"])
+    return {
+        "observed_at": times[-1] if times else None,
+        "stations": stations,
+        "source_url": AQEWS_HOME_URL,
+        "fetched_at": datetime.now(IST).isoformat(timespec="minutes"),
+    }
+
+
 def save_bulletin(parsed: dict):
     days = sorted(set(parsed["mixing_depth"]) | set(parsed["ventilation_index"]))
     if days:
@@ -372,6 +417,12 @@ def run() -> dict:
             result["source_apportionment_date"] = sa["date"]
         except Exception as e:
             logger.warning("AQEWS source apportionment not saved: %s", e)
+        try:
+            st_aqi = extract_station_aqi(home)
+            write_json_atomic(AQEWS_STATIONS_JSON, st_aqi, indent=2, ensure_ascii=False)
+            result["station_aqi"] = len(st_aqi["stations"])
+        except Exception as e:
+            logger.warning("AQEWS live station AQI not saved: %s", e)
     except Exception as e:
         logger.error("AQEWS bulletin failed: %s", e)
         result["bulletin_error"] = str(e)

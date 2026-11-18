@@ -12,7 +12,7 @@ import streamlit as st
 
 from config.reference import PM10_BANDS, PM25_BANDS, band_for
 from config.settings import AQEWS_PM10_CSV, AQEWS_PM25_CSV
-from views.charts import PLOT_CONFIG, add_bands, base_layout, source_line
+from views.charts import PLOT_CONFIG, add_bands, base_layout, show_chart, source_line
 from views.render_aqi_fc import band_legend_html
 
 # column, label, bands, file, y floor, "Very Poor" lower bound, chart key
@@ -114,7 +114,7 @@ def render_pm_fc(col="PM2.5", compact=False):
             f"{cfg['label']} band they fall in.</div>",
             unsafe_allow_html=True,
         )
-        st.plotly_chart(pm_chart(df, daily, col, height=320 if compact else 400), key=f"{col}_chart",
+        show_chart(pm_chart(df, daily, col, height=320 if compact else 400), key=f"{col}_chart",
                         width="stretch", config=PLOT_CONFIG)
         st.markdown(band_legend_html(cfg["bands"], " µg/m³"), unsafe_allow_html=True)
         source_line("iitm_aqews", "cpcb_aqi", note=cfg["note"])

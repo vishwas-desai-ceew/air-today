@@ -10,8 +10,8 @@ An internal Streamlit dashboard for Delhi's winter air quality, used by the CEEW
 |---|---|---|
 | Today | **Overview** | Hero with today's CPCB AQI, key insights and live weather; ten KPI cards; the Delhi weather card (current conditions, daylight curve, 24-hour and 3-day outlook) |
 | | **Daily update** | The latest CPCB bulletin and recent days, key insights with the archived text, and a health advisory for the day's AQI category |
-| | **AQEWS Forecast** | IITM AQEWS 10-day AQI, PM2.5 and PM10 forecast; the AQEWS bulletin; what the AQI categories mean |
-| Trackers | **Pollutants and AQI** | Hourly PM2.5/PM10 against the CPCB bands, the last 7 days of CPCB AQI, and where Delhi's PM2.5 comes from (AQEWS DSS) |
+| | **AQEWS** | IITM AQEWS 10-day AQI, PM2.5 and PM10 forecast; pop-ups for the AQEWS bulletin, source apportionment of Delhi's PM2.5 (donut chart), live station AQI (carousel of CPCB stations) and what the AQI categories mean |
+| Trackers | **Pollutants and AQI** | Latest PM2.5, PM10 and AQI as tiles, then one tracker with a PM (default) / AQI switch: hourly PM2.5/PM10 against the CPCB bands, or the last 7 days of CPCB AQI |
 | | **Weather Forecast** | 3-day forecast read for dispersion: temperature and humidity, wind, mixing height, rain |
 | | **Paddy residue burning** | Events from the ICAR-IARI CREAMS daily bulletin: today's count per state, the season against 2020 onwards, a map and district breakdown of the day's fires |
 | Reports | **IMD bulletin** | The day's IMD air quality bulletin (PDF) |

@@ -106,7 +106,7 @@ def render_bulletin_button():
     if not (b.get("paragraphs") or b.get("days")):
         return
     day = date.fromisoformat(b["date"]) if b.get("date") else None
-    label = f"Read the AQEWS bulletin{f' · {day.day} {day:%b %Y}' if day else ''}"
+    label = f"AQEWS bulletin{f' · {day.day} {day:%b}' if day else ''}"
     with st.container(key="aqews-bulletin-open"):
         if st.button(label, key="open_aqews_bulletin", icon=":material/description:", type="primary"):
             bulletin_dialog(b)
