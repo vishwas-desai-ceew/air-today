@@ -17,6 +17,8 @@ certifi==2025.8.3       # ingestion/get_hist_aqi.py (one-off historical backfill
 numpy==2.3.0
 pandas==2.3.0
 pdfplumber==0.11.7
+pypdfium2==4.30.0       # IMD bulletin pages drawn as images on phones (also a pdfplumber dependency)
+pillow==11.2.1          # used with pypdfium2 to save those page images
 plotly==6.1.2
 py-mini-racer==0.6.0    # ingestion/aqews.py evaluates the AQEWS Chart.js datasets
 pytz==2026.3.post1

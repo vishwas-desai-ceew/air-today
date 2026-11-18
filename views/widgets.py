@@ -374,19 +374,22 @@ def insight_items(facts):
                       value=fc["aqi"] if fc["aqi"] is not None else "—", unit="", chip=fc["category"],
                       note=(fc["source"] or "AQEWS unavailable").replace("AQEWS model", "AQEWS"),
                       source=src("aqews", "AQEWS"), tone=_aqi_tone(fc["category"])))
+    # Wind, ventilation index, min temperature and rain are all forecasts for
+    # forecast_date (the day after the update), as in the archived text.
+    fc_for = f'Forecast · {_short_date(facts["forecast_date"])}'
     wind = facts["wind_ms"]
-    items.append(dict(icon="wind", label="Avg wind", value=_fmt(wind, "{:.1f}"), unit="m/s", chip=None,
+    items.append(dict(icon="wind", label=f"Avg wind · {fc_for}", value=_fmt(wind, "{:.1f}"), unit="m/s", chip=None,
                       note="needs > 2.8 m/s to disperse",
                       source=src("open_meteo_model", "Open-Meteo forecast"), tone=None if wind is None else ("good" if wind > 2.8 else "bad")))
     vi = facts["ventilation_index"]
-    items.append(dict(icon="vent", label="Ventilation index", value=_fmt(vi, "{:,.0f}"), unit="m²/s", chip=None,
+    items.append(dict(icon="vent", label=f"Ventilation index · {fc_for}", value=_fmt(vi, "{:,.0f}"), unit="m²/s", chip=None,
                       note="needs > 6,000 m²/s", source=src("aqews", "AQEWS"), tone=None if vi is None else ("good" if vi > 6000 else "bad")))
     tmin = facts["min_temp_c"]
-    items.append(dict(icon="temp", label="Min temperature", value=_fmt(tmin, "{:.1f}"), unit="°C", chip=None,
+    items.append(dict(icon="temp", label=f"Min temperature · {fc_for}", value=_fmt(tmin, "{:.1f}"), unit="°C", chip=None,
                       note="< 10 °C raises biomass burning",
                       source=src("open_meteo_model", "Open-Meteo forecast"), tone=None if tmin is None else ("bad" if tmin < 10 else None)))
     rain = facts["rain_mm"]
-    items.append(dict(icon="rain", label="Rain (avg)", value=_fmt(rain, "{:.1f}"), unit="mm/h", chip=None,
+    items.append(dict(icon="rain", label=f"Rain (avg) · {fc_for}", value=_fmt(rain, "{:.1f}"), unit="mm/h", chip=None,
                       note="washout likely (≥ 0.1 mm/h)" if (rain or 0) >= 0.1 else "dry (< 0.1 mm/h)",
                       source=src("open_meteo_model", "Open-Meteo forecast"),
                       tone="good" if (rain or 0) >= 0.1 else None))

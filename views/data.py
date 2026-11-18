@@ -11,7 +11,7 @@ import pandas as pd
 import streamlit as st
 
 from config.settings import (
-    AQEWS_AQI_CSV, AQEWS_CATEGORY_CSV, AQEWS_SOURCES_JSON, ARCHIVE_TEMP, CPCB_AQI_CSV, CREAMS_BULLETIN_JSON, CREAMS_FIRES_CSV, CREAMS_HEADLINE_STATES, IMD_BULLETIN_PDF, INSIGHTS_JSON,
+    AQEWS_AQI_CSV, AQEWS_CATEGORY_CSV, AQEWS_SOURCES_JSON, AQEWS_STATIONS_JSON, ARCHIVE_TEMP, CPCB_AQI_CSV, CREAMS_BULLETIN_JSON, CREAMS_FIRES_CSV, CREAMS_HEADLINE_STATES, IMD_BULLETIN_PDF, INSIGHTS_JSON,
     IST, METEO_HOURLY_CSV, PIPELINE_STATUS_JSON, SIGNALS_HOURLY_CSV, VENTILATION_CSV, effective_today,
 )
 from ingestion.json_store import read_json
@@ -273,3 +273,23 @@ def aqews_sources() -> dict:
     """AQEWS DSS source apportionment of Delhi's daily-mean PM2.5, saved by
     ingestion/aqews.py: date, local/non-local split and per-source shares."""
     return read_json(AQEWS_SOURCES_JSON) or {}
+
+
+@st.cache_data(ttl=1800, show_spinner="Fetching live station AQI from AQEWS...")
+def aqews_stations() -> dict:
+    """AQEWS's "Live station AQI" ticker (hourly CPCB station readings).
+
+    Fetched live from the AQEWS home page and cached for 30 minutes, since the
+    daily cron snapshot would be hours old; falls back to that snapshot
+    (data/aqews_station_aqi.json) when AQEWS can't be reached. "live" in the
+    result says which one it is."""
+    from config.settings import AQEWS_HOME_URL, HTTP_HEADERS
+    from ingestion.aqews import extract_station_aqi
+    import requests
+    try:
+        r = requests.get(AQEWS_HOME_URL, headers=HTTP_HEADERS, timeout=20)
+        r.raise_for_status()
+        return {**extract_station_aqi(r.text), "live": True}
+    except Exception:
+        saved = read_json(AQEWS_STATIONS_JSON) or {}
+        return {**saved, "live": False} if saved else {}

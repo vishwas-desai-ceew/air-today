@@ -46,7 +46,7 @@ live, at page view:  METAR + Open-Meteo (5 min cache) · news RSS (30 min) · pu
   - renders the sidebar (IST clock, CEEW footer).
 - **Caching:** `views/data.py` wraps every file read in `st.cache_data`. TTLs are 5–10 minutes for files, 5 minutes for live weather and 30 minutes for news.
 - **App menu:** `client.toolbarMode = "minimal"` in `.streamlit/config.toml` limits the ⋮ menu to the items in `st.set_page_config`: Get help, Report a bug (both email vishwas.desai@ceew.in) and About. Rerun, theme settings, Print, Record and Deploy are hidden for everyone.
-- **AQEWS outage check:** `views/render_aqi_fc.aqews_outage()` runs only on Overview, Daily update and AQEWS Forecast. It reads through the cached `data.aqews_daily()` and never raises: a missing, empty, stale (by IST date) or flat forecast is reported as an outage.
+- **AQEWS outage check:** `views/render_aqi_fc.aqews_outage()` runs only on Overview, Daily update and AQEWS. It reads through the cached `data.aqews_daily()` and never raises: a missing, empty, stale (by IST date) or flat forecast is reported as an outage.
 - **Styling:** one stylesheet, `style.css`, for every page. Components are mostly HTML strings rendered with `st.markdown(..., unsafe_allow_html=True)`. CSS targets Streamlit containers through their `key=` (Streamlit adds the class `st-key-<key>`).
 
 ### Sign-in
@@ -144,16 +144,18 @@ Each entry lists what the page shows, the files it reads, the sources it credits
   - The "Insufficient AQI Data" card always mentions an AQEWS outage, even when only CPCB is missing (`views/delhi_weather.get_aqi_error_html`).
   - `delhi_weather.STYLES[...]["impact"]` paraphrases CPCB's health statements and is still used on the bulletin cards. The exact wording is in `AQI_HEALTH`.
 
-### 3.3 AQEWS Forecast (`/forecast`, `page_forecast`)
+### 3.3 AQEWS (`/forecast`, `page_forecast`)
 
 - **Shows:**
   - A link to the AQEWS portal.
-  - **Read the AQEWS bulletin** (navy button): a dialog with the day cards, showing date, category, sky, max/min temperature, wind, mixing depth, ventilation index and the dispersion flag.
+  - **AQEWS bulletin** (navy button): a dialog with the day cards, showing date, category, sky, max/min temperature, wind, mixing depth, ventilation index and the dispersion flag.
+  - **Source apportionment**: a dialog with the AQEWS DSS shares of Delhi's daily-mean PM2.5 as a donut chart (Delhi sources in blues, outside Delhi in ambers; the 9 largest named sources, the rest grouped on their side of the split) and a two-column legend. Code: `views/source_apportionment.py`. Sources starting with "Delhi" count as local.
+  - **Live station AQI**: a dialog with the AQEWS home page's "Live station AQI" ticker (hourly AQI at each CPCB station in Delhi) as a swipeable carousel, with category counts and a sort switch. Fetched live and cached 30 minutes (`data.aqews_stations`), falling back to the cron snapshot `aqews_station_aqi.json`. Code: `views/station_aqi.py`.
   - **What the AQI categories mean** (white button): a dialog with CPCB Table 3.12.
   - An AQI / PM2.5 / PM10 switch:
     - **AQI:** the Daily AQI forecast card, with the day cards above a line chart over the CPCB bands.
     - **PM2.5 / PM10:** 2-hourly concentration charts with a summary box.
-- **Reads:** `AQEWS_AQI_forecast.csv`, `AQEWS_PM25_forecast.csv`, `AQEWS_PM10_forecast.csv`, `aqews_bulletin.json`.
+- **Reads:** `AQEWS_AQI_forecast.csv`, `AQEWS_PM25_forecast.csv`, `AQEWS_PM10_forecast.csv`, `aqews_bulletin.json`, `aqews_source_apportionment.json`, `aqews_station_aqi.json` (fallback; live fetch first).
 - **Assumptions:**
   - The daily AQI is computed by `ingestion/aqews.save_aqi_to_csv` from AQEWS's hourly sub-indices. Steps:
     1. Shift the hourly timestamps by 8 hours, to line up with CPCB's 4 PM-to-4 PM bulletin day.
@@ -164,14 +166,14 @@ Each entry lists what the page shows, the files it reads, the sources it credits
 
 ### 3.4 Pollutants and AQI (`/pollutants`, `page_pm25`)
 
-- **Shows:** three panels, each with a short side panel and a linked source line:
-  1. **Hourly PM2.5 / PM10:** CPCB band shading and the 24-hour NAAQS line.
-  2. **Delhi AQI, last 7 days:** CPCB bulletin values.
-  3. **Where Delhi's PM2.5 comes from:**
-     - AQEWS DSS source apportionment: Delhi vs outside-Delhi split, and the top 12 sources.
-     - Sources starting with "Delhi" count as local. A test checks this matches AQEWS's own local share.
-     - Code: `views/source_apportionment.py`.
-- **Reads:** `signalsfunc_pm25_sample_data.csv`, `delhi_aqi_cpcb.csv`, `aqews_source_apportionment.json`.
+- **Shows:**
+  - A row of tiles with the latest hourly PM2.5 and PM10 (Earthmetry Signals) and the latest CPCB bulletin AQI, kept apart from the explanatory text.
+  - A **Tracker** switch, PM by default:
+    1. **PM:** hourly PM2.5 / PM10 with CPCB band shading and the 24-hour NAAQS line.
+    2. **AQI:** Delhi AQI, last 7 days, from the CPCB bulletin.
+  - A single source line under the tracker: "Earthmetry Signals (last refreshed: …) · CPCB AQI bands", or the CPCB bulletin for AQI.
+  - The source apportionment strip moved to a pop-up on the AQEWS page.
+- **Reads:** `signalsfunc_pm25_sample_data.csv`, `delhi_aqi_cpcb.csv`.
 - **Review:**
   - **The hourly PM data is a hand-placed sample file**, labelled "sample data" on the page. No pipeline step writes it, and it has no PM10. It needs a live source; `docs/data-sources.md` recommends the data.gov.in CPCB API.
   - The DSS shares are model estimates, and the page says so.
@@ -305,7 +307,7 @@ Paddy residue burning events from the ICAR-IARI CREAMS daily bulletin (replaced 
 | # | Step | Code | Writes |
 |---|---|---|---|
 | 1 | `weather` | `weather.run()` | `meteo_api_hourly.csv` |
-| 2 | `aqews` | `aqews.run()` | `AQEWS_{AQI,PM25,PM10}_forecast.csv`, `ventilation_index_forecast.csv`, `AQI_forecast_category.csv`, `aqews_bulletin.json`, `aqews_bulletin_days.csv`, `aqews_source_apportionment.json` |
+| 2 | `aqews` | `aqews.run()` | `AQEWS_{AQI,PM25,PM10}_forecast.csv`, `ventilation_index_forecast.csv`, `AQI_forecast_category.csv`, `aqews_bulletin.json`, `aqews_bulletin_days.csv`, `aqews_source_apportionment.json`, `aqews_station_aqi.json` |
 | 3 | `cpcb` | `cpcb.run()` | `delhi_aqi_cpcb.csv` |
 | 4 | `imd` | `download_imd_bulletin.download_pdf()` | `imd_bulletin_today.pdf` |
 | 5 | `creams` | `creams.run()` | `creams_fires.csv`, `creams_fire_events.csv`, `creams_bulletin.json` |

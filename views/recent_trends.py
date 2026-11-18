@@ -19,7 +19,7 @@ import streamlit as st
 
 from config.reference import AQI_BANDS, band_for
 from config.settings import IST
-from views.charts import PLOT_CONFIG, add_bands, base_layout, source_line
+from views.charts import PLOT_CONFIG, add_bands, base_layout, show_chart, source_line
 from views.grap import grap_dialog, orders_by_day
 from views import data
 from views.render_aqi_fc import band_legend_html
@@ -257,7 +257,7 @@ def season_dialog(s, season, orders, in_progress):
         "<div class='chart-sub'>One point per day, in its CPCB colour"
         + (" · ▼ GRAP order: red invoked, green revoked; hover to read it" if orders else "") + "</div>",
         unsafe_allow_html=True)
-    st.plotly_chart(season_chart(s, orders, height=520), key=f"trend_chart_big_{season}", width="stretch",
+    show_chart(season_chart(s, orders, height=520), key=f"trend_chart_big_{season}", width="stretch",
                     config=PLOT_CONFIG)
     source_line("cpcb_aqi", note="daily bulletin" + ("; GRAP: team archive" if orders else ""))
 
@@ -268,7 +268,7 @@ def compare_dialog(df, seasons):
     if not picked:
         st.info("Pick at least one winter.")
         return
-    st.plotly_chart(compare_chart(df, sorted(picked, reverse=True)), width="stretch", config=PLOT_CONFIG)
+    show_chart(compare_chart(df, sorted(picked, reverse=True)), width="stretch", config=PLOT_CONFIG)
     source_line("cpcb_aqi", note="daily AQI from the CPCB bulletin, one value per day, not averaged")
 
 
@@ -322,7 +322,7 @@ def render_recent_trends():
             "<div class='chart-sub'>One point per day, in its CPCB colour"
             + (" · ▼ GRAP order: red invoked, green revoked" if grap else "")
             + "</div>", unsafe_allow_html=True)
-        st.plotly_chart(season_chart(s, grap), key=f"trend_chart_{season}", width="stretch", config=PLOT_CONFIG)
+        show_chart(season_chart(s, grap), key=f"trend_chart_{season}", width="stretch", config=PLOT_CONFIG)
         source_line("cpcb_aqi", note="daily bulletin" + ("; GRAP: team archive" if grap else ""))
     with right, st.container(border=True, key="trend-compare-card"):
         # Always today (IST): today's AQI against the same date in earlier winters

@@ -16,7 +16,7 @@ import streamlit as st
 from config.reference import SOURCES
 from ingestion.creams import STATES
 from views import data
-from views.charts import PLOT_CONFIG, base_layout, hex_rgba
+from views.charts import PLOT_CONFIG, base_layout, hex_rgba, show_chart
 from views.components import chart_card, danger_card, warning_card
 
 STATE_COLOURS = {
@@ -272,22 +272,22 @@ def render_fires_page():
         left, right = st.columns([3, 2])
         with left, chart_card(title=f"Where the fires were · {_d(latest)}",
                               caption="One point per fire; larger points had higher fire radiative power. Drag to move, double-click to zoom in."):
-            st.plotly_chart(fire_map(day_events), key="fires_map", width="stretch",
+            show_chart(fire_map(day_events), key="fires_map", width="stretch",
                             config={**PLOT_CONFIG, "scrollZoom": False})
             st.markdown(_source_line(), unsafe_allow_html=True)
         with right, chart_card(title=f"Top districts · {_d(latest)}", caption=f"{len(day_events):,} fires in {area}."):
-            st.plotly_chart(district_chart(day_events), key="fires_districts", width="stretch", config=PLOT_CONFIG)
+            show_chart(district_chart(day_events), key="fires_districts", width="stretch", config=PLOT_CONFIG)
 
     left, right = st.columns(2)
     with left, chart_card(title=f"Season so far against earlier years · {area}",
                           caption=f"Cumulative events from 15 September. Earlier years run to the same date "
                                   f"({latest:%d %b}), as in the bulletin."):
-        st.plotly_chart(cumulative_chart(daily, states, latest), key="fires_cumulative", width="stretch",
+        show_chart(cumulative_chart(daily, states, latest), key="fires_cumulative", width="stretch",
                         config=PLOT_CONFIG)
         st.markdown(_source_line(), unsafe_allow_html=True)
     with right, chart_card(title=f"Events per day, {latest.year} season · {area}",
                            caption=f"Bars: {latest.year}, by state. Dotted line: {latest.year - 1} on the same dates."):
-        st.plotly_chart(daily_chart(daily, states, latest, height=400), key="fires_daily", width="stretch",
+        show_chart(daily_chart(daily, states, latest, height=400), key="fires_daily", width="stretch",
                         config=PLOT_CONFIG)
         st.markdown(_source_line(), unsafe_allow_html=True)
 

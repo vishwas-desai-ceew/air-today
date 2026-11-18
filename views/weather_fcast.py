@@ -14,7 +14,7 @@ import streamlit as st
 
 from config.reference import RAIN_CLASSES_24H, VENTILATION_INDEX_UNFAVOURABLE, WIND_UNFAVOURABLE_KMH
 from views import data
-from views.charts import PLOT_CONFIG, base_layout, hex_rgba
+from views.charts import base_layout, hex_rgba, is_mobile, show_chart
 from views.sky import solar_elevation
 from views.widgets import compass, icon, side_points, side_source, src
 
@@ -227,18 +227,23 @@ def render_weather_fcast():
         f"<span><i style='background:{GOOD}'></i>Favourable</span></div>",
         unsafe_allow_html=True,
     )
+    mobile = is_mobile()
     for p in PARAMS:
+        head = (f"<div class='wx-info-head'>{icon(p['icon'], 22)}<span>{escape(p['title'])}</span></div>"
+                f"<div class='wx-info-stat'>{escape(p['stat'](df))}</div>")
+        body = (f"{side_points([escape(t) for t in p['points']])}"
+                f"{side_source(*(src(k, SHORT_LABELS.get(k)) for k in p['sources']))}")
         with st.container(border=True, key=f"wx-strip-{p['key']}"):
+            if mobile:
+                # Phone: title and headline number, the chart, then the explainer
+                st.markdown(f"<div class='wx-info wx-info--head'>{head}</div>", unsafe_allow_html=True)
+                show_chart(p["chart"](df, spans), key=f"wx_{p['key']}", mobile_height=230)
+                st.markdown(f"<div class='wx-info wx-info--body'>{body}</div>", unsafe_allow_html=True)
+                continue
             info, chart = st.columns([1, 3], gap="medium")
             with info:
-                st.markdown(
-                    f"<div class='wx-info'><div class='wx-info-head'>{icon(p['icon'], 22)}<span>{escape(p['title'])}</span></div>"
-                    f"<div class='wx-info-stat'>{escape(p['stat'](df))}</div>"
-                    f"{side_points([escape(t) for t in p['points']])}"
-                    f"{side_source(*(src(k, SHORT_LABELS.get(k)) for k in p['sources']))}</div>",
-                    unsafe_allow_html=True,
-                )
+                st.markdown(f"<div class='wx-info'>{head}{body}</div>", unsafe_allow_html=True)
             with chart:
-                st.plotly_chart(p["chart"](df, spans), key=f"wx_{p['key']}", width="stretch", config=PLOT_CONFIG)
+                show_chart(p["chart"](df, spans), key=f"wx_{p['key']}")
     st.caption("Forecast: Open-Meteo model for central Delhi, hourly, next 3 days. Model output, not IMD's forecast; "
                "night shading is computed from the sun's position.")

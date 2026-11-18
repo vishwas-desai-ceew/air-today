@@ -13,7 +13,7 @@ import streamlit as st
 from config.reference import AQI_BANDS, AQI_HEALTH, band_for
 from config.settings import IST
 from views import data
-from views.charts import PLOT_CONFIG, add_bands, base_layout, source_line
+from views.charts import PLOT_CONFIG, add_bands, base_layout, show_chart, source_line
 
 AQEWS_PORTAL = "https://ews.tropmet.res.in/"
 # Category colours as text on a white tile: Moderate's yellow is too pale to read, so darken it
@@ -141,7 +141,7 @@ def render_aqi_fc(isMobile=False, compact=False):
             "marks the AQI category bands.</div>" + _tiles_html(df),
             unsafe_allow_html=True,
         )
-        st.plotly_chart(aqi_chart(df, height=320 if compact else 400, compact=compact), key="aqi_forecast_chart",
+        show_chart(aqi_chart(df, height=320 if compact else 400, compact=compact), key="aqi_forecast_chart",
                         width="stretch", config=PLOT_CONFIG)
         st.markdown(band_legend_html(AQI_BANDS), unsafe_allow_html=True)
         source_line("iitm_aqews", "cpcb_aqi", note="forecast AQI from AQEWS; category bands from CPCB Table 3.2")
